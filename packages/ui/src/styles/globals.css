@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Clean off-white surface */
+    --background: 220 20% 97%;
+    --foreground: 222 22% 10%;
+
+    /* Pure white cards for contrast against background */
+    --card: 0 0% 100%;
+    --card-foreground: 222 22% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 22% 10%;
+
+    /* Signal orange — primary CTA */
+    --primary: 14 80% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Neutral gray secondary surfaces */
+    --secondary: 220 16% 93%;
+    --secondary-foreground: 222 22% 20%;
+
+    --muted: 220 16% 93%;
+    --muted-foreground: 220 8% 46%;
+
+    --accent: 14 80% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 14 80% 53%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 20% 7%;
+    --foreground: 220 20% 95%;
+    --card: 222 20% 10%;
+    --card-foreground: 220 20% 95%;
+    --popover: 222 20% 10%;
+    --popover-foreground: 220 20% 95%;
+    --primary: 14 82% 57%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 16% 16%;
+    --secondary-foreground: 220 20% 95%;
+    --muted: 222 16% 16%;
+    --muted-foreground: 220 12% 60%;
+    --accent: 14 82% 57%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 16% 20%;
+    --input: 222 16% 20%;
+    --ring: 14 82% 57%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+  ::selection {
+    background-color: hsl(var(--primary) / 0.22);
+    color: hsl(var(--foreground));
+  }
+  /* Display-quality serif numerals everywhere we use `.font-serif` */
+  .font-serif {
+    font-feature-settings: "lnum" 1, "kern" 1, "liga" 1;
+  }
+  /* Tabular numerals for data — keep numbers aligned in tables and stats */
+  .tabular-nums,
+  table,
+  td,
+  th {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  /* Clean background surface */
+  .bg-paper {
+    background-color: hsl(var(--background));
+  }
+
+  /* Subtle dark section background */
+  .bg-paper-dark {
+    background-color: hsl(var(--foreground));
+  }
+
+  /* Editorial 1px hairline rule */
+  .rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      hsl(var(--foreground) / 0.18) 12%,
+      hsl(var(--foreground) / 0.18) 88%,
+      transparent
+    );
+  }
+
+  /* Tracked, mono micro-label used everywhere — caps, wide letter-spacing */
+  .label-micro {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* Display oldstyle serif numeral — for KPI cards, stats */
+  .display-numeral {
+    font-family: var(--font-serif), Georgia, serif;
+    font-feature-settings: "lnum" 1, "ss01" 1;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+  }
+
+  /* Soft outline focus ring matching the brand */
+  .ring-brand {
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.18);
+  }
+}

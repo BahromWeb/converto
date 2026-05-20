@@ -1,0 +1,7 @@
+{
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "jsx": "preserve"
+  },
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@converto/data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tools": "./src/tools.ts",
+    "./site": "./src/site.ts",
+    "./mock": "./src/mock.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@converto/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@converto/typescript-config": "workspace:*",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
+  }
+}
