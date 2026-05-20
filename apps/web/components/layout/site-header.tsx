@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@converto/ui/components/button";
 import { siteConfig } from "@converto/data";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useT } from "@/lib/i18n/context";
 
 const navItems = [
@@ -45,6 +46,7 @@ export function SiteHeader() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LanguageSwitcher />
           <Button
             variant="ghost"

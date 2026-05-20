@@ -5,6 +5,7 @@ import { siteConfig } from "@converto/data";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { LanguageProvider } from "@/lib/i18n/context";
+import { Providers } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -60,13 +61,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} bg-paper font-sans`}
       >
-        <LanguageProvider>
-          <div className="flex min-h-screen flex-col">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-          </div>
-        </LanguageProvider>
+        <Providers>
+          <LanguageProvider>
+            <div className="flex min-h-screen flex-col">
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
+            </div>
+          </LanguageProvider>
+        </Providers>
       </body>
     </html>
   );
