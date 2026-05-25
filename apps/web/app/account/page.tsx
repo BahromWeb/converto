@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@converto/ui/components/button";
-import { Card } from "@converto/ui/components/card";
+"use client";
 
-export const metadata: Metadata = { title: "Sign In" };
+import Link from "next/link";
+import { SignInCard } from "@/components/auth/sign-in-card";
+import { useT } from "@/lib/i18n/context";
 
 export default function AccountPage() {
+  const t = useT();
+
   return (
     <div className="container flex min-h-[70vh] flex-col items-center justify-center py-16">
       <div className="mx-auto w-full max-w-sm">
@@ -17,49 +18,20 @@ export default function AccountPage() {
             </span>
             <span className="text-lg font-bold tracking-tight text-foreground">converto</span>
           </Link>
-          <h1 className="mt-6 text-2xl font-bold text-foreground">Welcome back</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Sign in to your account</p>
+          <h1 className="mt-6 text-2xl font-bold text-foreground">{t.auth.welcomeBack}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{t.auth.signInSubtitle}</p>
         </div>
 
-        <Card className="mt-8 p-8">
-          <form className="flex flex-col gap-5">
-            <div>
-              <label className="block text-sm font-semibold text-foreground">Email</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-foreground">Password</label>
-              <input
-                type="password"
-                placeholder="Your password"
-                className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-            </div>
-            <Button size="lg" className="w-full">
-              Sign in →
-            </Button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <a href="#" className="font-semibold text-primary hover:underline">
-              Sign up free
-            </a>
-          </p>
-        </Card>
+        <SignInCard className="mt-8" />
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          By signing in you agree to our{" "}
+          {t.auth.agreePrefix}{" "}
           <Link href="/terms" className="underline hover:text-foreground">
-            Terms
+            {t.auth.terms}
           </Link>{" "}
           and{" "}
           <Link href="/privacy" className="underline hover:text-foreground">
-            Privacy Policy
+            {t.auth.privacyPolicy}
           </Link>
           .
         </p>

@@ -65,13 +65,12 @@ export function ToolsGrid() {
       <div className="container">
         {/* Section header */}
         <AnimateIn animation="fade-up" className="mx-auto mb-14 max-w-2xl text-center">
-          <span className="text-sm font-semibold text-primary">37 tools, all free</span>
+          <span className="text-sm font-semibold text-primary">{t.toolsGrid.badge}</span>
           <h2 className="mt-2 text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-            Everything your PDF needs
+            {t.toolsGrid.heading}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From simple conversions to AI-powered tools — organized so you find what you need
-            in seconds. No menus, no paywalls.
+            {t.toolsGrid.subheading}
           </p>
         </AnimateIn>
 
@@ -130,7 +129,7 @@ export function ToolsGrid() {
                                   (isPopular || isAi) && "bg-primary/10 text-primary",
                                 )}
                               >
-                                {isAi ? "AI" : "Popular"}
+                                {isAi ? "AI" : t.toolsGrid.popular}
                               </span>
                             )}
                           </div>
@@ -141,7 +140,7 @@ export function ToolsGrid() {
                             </p>
                           </div>
                           <span className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                            Open tool <ArrowRight className="size-3" />
+                            {t.toolsGrid.openTool} <ArrowRight className="size-3" />
                           </span>
                         </Link>
                       </AnimateIn>
@@ -162,7 +161,7 @@ export function ToolsGrid() {
             className="transition-transform hover:scale-105"
           >
             <Link href="/tools">
-              Browse all 37 tools
+              {t.toolsGrid.browseAll}
               <ArrowRight className="size-4" />
             </Link>
           </Button>

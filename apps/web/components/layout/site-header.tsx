@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LogOut, User } from "lucide-react";
 import { Button } from "@converto/ui/components/button";
 import { siteConfig } from "@converto/data";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useT } from "@/lib/i18n/context";
+import { useAuth } from "@/lib/auth/context";
+import { useState } from "react";
 
 const navItems = [
   { href: "/tools", key: "tools" as const },
@@ -14,8 +16,64 @@ const navItems = [
   { href: "/chat", key: "aiChat" as const },
 ];
 
+function UserMenu() {
+  const { user, logout } = useAuth();
+  const t = useT();
+  const [open, setOpen] = useState(false);
+
+  if (!user) return null;
+
+  const initials = user.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground"
+        aria-label="Account menu"
+      >
+        {initials}
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-10 z-50 min-w-[180px] rounded-lg border border-border bg-card p-1 shadow-lg">
+            <div className="px-3 py-2">
+              <p className="text-sm font-semibold text-foreground">{user.name}</p>
+              <p className="text-xs text-muted-foreground">{user.email}</p>
+            </div>
+            <div className="my-1 h-px bg-border" />
+            <Link
+              href="/account/profile"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
+            >
+              <User className="size-3.5" />
+              {t.auth.profile}
+            </Link>
+            <button
+              onClick={() => { setOpen(false); logout(); }}
+              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-muted"
+            >
+              <LogOut className="size-3.5" />
+              {t.auth.signOut}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function SiteHeader() {
   const t = useT();
+  const { user, loading } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-card/95 backdrop-blur-md">
@@ -48,20 +106,29 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <LanguageSwitcher />
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
-            asChild
-          >
-            <Link href="/account">{t.nav.signIn}</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/#hero">
-              {t.nav.getStarted}
-              <ArrowRight className="size-3.5" />
-            </Link>
-          </Button>
+
+          {!loading && (
+            user ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
+                  asChild
+                >
+                  <Link href="/account">{t.nav.signIn}</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link href="/#hero">
+                    {t.nav.getStarted}
+                    <ArrowRight className="size-3.5" />
+                  </Link>
+                </Button>
+              </>
+            )
+          )}
         </div>
       </div>
     </header>

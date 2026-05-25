@@ -9,43 +9,19 @@ import {
 import { AnimateIn } from "@/components/ui/animate-in";
 import { useT } from "@/lib/i18n/context";
 
-const faqs = [
-  {
-    q: "Is Converto really free?",
-    a: "Yes. Every tool, no daily limit, no watermark. We've committed to staying free until at least 2027 — and even after that, the basic web tools stay free forever.",
-  },
-  {
-    q: "Are my files private and secure?",
-    a: "Most processing happens entirely in your browser. When server-side processing is required, files are encrypted in transit (TLS 1.3) and at rest (AES-256), and are deleted within one hour.",
-  },
-  {
-    q: "Do you add watermarks to output files?",
-    a: "No. Zero watermarks. Ever. Output files are bit-for-bit clean.",
-  },
-  {
-    q: "What is the file size limit?",
-    a: "Up to 2 GB per file. There is no daily limit on the number of files you can process.",
-  },
-  {
-    q: "Do I need to create an account?",
-    a: "No account, no email verification, nothing. Open the page, do the job, leave.",
-  },
-  {
-    q: "Which languages does Converto support?",
-    a: "32 languages, all translated by native speakers — including Uzbek, Russian, Turkish, Arabic, Chinese, Hindi, Spanish, French, German, and more.",
-  },
-  {
-    q: "Is there a desktop app?",
-    a: "Not yet. The web app handles every file size and format we currently support. A desktop wrapper is on the roadmap for late 2026.",
-  },
-  {
-    q: "Can I use Converto for commercial work?",
-    a: "Yes. The tools and their outputs are yours — use them in commercial work, client deliverables, or internal pipelines without restriction.",
-  },
-];
-
 export function FaqSection() {
   const t = useT();
+
+  const faqs = [
+    { q: t.faq.q1, a: t.faq.a1 },
+    { q: t.faq.q2, a: t.faq.a2 },
+    { q: t.faq.q3, a: t.faq.a3 },
+    { q: t.faq.q4, a: t.faq.a4 },
+    { q: t.faq.q5, a: t.faq.a5 },
+    { q: t.faq.q6, a: t.faq.a6 },
+    { q: t.faq.q7, a: t.faq.a7 },
+    { q: t.faq.q8, a: t.faq.a8 },
+  ];
 
   return (
     <section id="faq" className="py-24">
@@ -64,7 +40,7 @@ export function FaqSection() {
             >
               {t.faq.emailUs}
             </a>{" "}
-            — we reply within a day.
+            {t.faq.replyTime}
           </p>
         </AnimateIn>
 
