@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import { Upload, X, FileText, Plus } from "lucide-react";
 
 export interface FileDropzoneProps {
@@ -43,6 +43,39 @@ export function FileDropzone({
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Consume a file the homepage Hero may have staged in sessionStorage.
+  // Lets the user drop a file on the landing page, get routed to the
+  // right tool, and have it auto-populate here instead of having to
+  // re-select it. Runs once on mount.
+  useEffect(() => {
+    if (typeof window === "undefined" || files.length > 0) return;
+    const raw = sessionStorage.getItem("pendingUpload");
+    if (!raw) return;
+    try {
+      const staged = JSON.parse(raw) as {
+        name: string;
+        type: string;
+        data: string;
+        stagedAt: number;
+      };
+      // 60-second staleness window — don't surface ancient leftovers.
+      if (Date.now() - staged.stagedAt > 60_000) {
+        sessionStorage.removeItem("pendingUpload");
+        return;
+      }
+      const byteString = atob(staged.data.split(",")[1] ?? "");
+      const bytes = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) bytes[i] = byteString.charCodeAt(i);
+      const f = new File([bytes], staged.name, { type: staged.type });
+      onChange([f]);
+      sessionStorage.removeItem("pendingUpload");
+    } catch {
+      sessionStorage.removeItem("pendingUpload");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   function addFiles(incoming: FileList | File[]) {
     const arr = Array.from(incoming);

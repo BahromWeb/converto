@@ -1,8 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useState, type DragEvent } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@converto/ui/components/button";
-import { UploadCloud, GitMerge, Scissors, Minimize2, FileText, ArrowRight } from "lucide-react";
+import {
+  UploadCloud,
+  GitMerge,
+  Scissors,
+  Minimize2,
+  FileText,
+  ArrowRight,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 import { useT } from "@/lib/i18n/context";
 
 const quickTools = [
@@ -14,8 +25,106 @@ const quickTools = [
 
 const fileTypes = ["PDF", "DOCX", "JPG", "PNG", "XLSX", "PPTX"];
 
+/**
+ * Map a dropped/picked file's extension to the most useful tool page for
+ * it. PDFs get sent to /tools so the user picks the operation (compress,
+ * merge, split, ...) — anything else has a single obvious destination
+ * (Word→PDF for .docx, Excel→PDF for .xlsx, etc.).
+ *
+ * Returns `null` for unsupported types so the UI can show a friendly
+ * error instead of silently swallowing the upload.
+ */
+function pickDestination(filename: string): string | null {
+  const ext = filename.toLowerCase().split(".").pop();
+  switch (ext) {
+    case "pdf":
+      return "/tools";
+    case "doc":
+    case "docx":
+    case "rtf":
+    case "odt":
+      return "/word-to-pdf";
+    case "xls":
+    case "xlsx":
+    case "csv":
+    case "ods":
+      return "/excel-to-pdf";
+    case "ppt":
+    case "pptx":
+    case "odp":
+      return "/ppt-to-pdf";
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "webp":
+      return "/jpg-to-pdf";
+    case "html":
+    case "htm":
+      return "/html-to-pdf";
+    default:
+      return null;
+  }
+}
+
 export function Hero() {
   const t = useT();
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const [routing, setRouting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const openPicker = () => inputRef.current?.click();
+
+  function handleFiles(fl: FileList | null) {
+    if (!fl || fl.length === 0) return;
+    const file = fl[0];
+    if (!file) return;
+    setError(null);
+    const dest = pickDestination(file.name);
+    if (!dest) {
+      setError(
+        `Sorry — .${file.name.split(".").pop()} files aren't supported yet. Try a PDF, Word, Excel, PowerPoint, image, or HTML file.`,
+      );
+      return;
+    }
+    // Stash the file so the destination tool can pick it up without
+    // making the user re-select it. The destination reads "pendingUpload"
+    // from sessionStorage on mount and clears it after consumption.
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result !== "string") return;
+        sessionStorage.setItem(
+          "pendingUpload",
+          JSON.stringify({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: reader.result, // data:URL
+            stagedAt: Date.now(),
+          }),
+        );
+        setRouting(true);
+        router.push(dest);
+      };
+      reader.onerror = () => {
+        setError("Couldn't read that file. Try again or pick a different one.");
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      // sessionStorage full or unavailable — just route without staging.
+      setRouting(true);
+      router.push(dest);
+    }
+  }
+
+  function onDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setDragging(false);
+    if (routing) return;
+    handleFiles(e.dataTransfer.files);
+  }
 
   return (
     <section id="hero" className="relative overflow-hidden">
@@ -25,7 +134,7 @@ export function Hero() {
       </div>
 
       <div className="container relative pt-16 pb-24 lg:pt-24">
-        {/* Headline — staggered CSS animations (above fold) */}
+        {/* Headline */}
         <div className="mx-auto max-w-3xl text-center">
           <span
             className="inline-flex animate-fade-in items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary"
@@ -71,18 +180,45 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Upload zone */}
+        {/* Upload zone — now actually interactive */}
         <div
           className="mx-auto mt-10 max-w-2xl animate-fade-in-up"
           style={{ animationDelay: "300ms" }}
         >
-          <div className="group relative cursor-pointer rounded-2xl border-2 border-dashed border-border bg-card p-10 text-center shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:-translate-y-0.5">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={routing ? undefined : openPicker}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && !routing) {
+                e.preventDefault();
+                openPicker();
+              }
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (!routing) setDragging(true);
+            }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={onDrop}
+            className={`group relative cursor-pointer rounded-2xl border-2 border-dashed bg-card p-10 text-center shadow-sm transition-all duration-300 ${
+              dragging
+                ? "border-primary bg-primary/5 scale-[1.01] shadow-lg"
+                : "border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-0.5"
+            } ${routing ? "pointer-events-none opacity-70" : ""}`}
+          >
             <div className="flex flex-col items-center gap-5">
               <div className="grid h-16 w-16 place-items-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110">
-                <UploadCloud className="size-8" />
+                {routing ? (
+                  <Loader2 className="size-8 animate-spin" />
+                ) : (
+                  <UploadCloud className="size-8" />
+                )}
               </div>
               <div>
-                <p className="text-xl font-bold text-foreground">{t.hero.dropzone}</p>
+                <p className="text-xl font-bold text-foreground">
+                  {routing ? "Opening your tool…" : t.hero.dropzone}
+                </p>
                 <p className="mt-1.5 text-sm text-muted-foreground">
                   {t.hero.dropzoneSub.split("·")[0]}
                   <span className="font-semibold text-primary underline underline-offset-4">
@@ -92,19 +228,50 @@ export function Hero() {
                 </p>
               </div>
               <div className="flex flex-wrap justify-center gap-2.5">
-                <Button size="lg" className="min-w-36 shadow-sm transition-transform hover:scale-105">
+                <Button
+                  size="lg"
+                  className="min-w-36 shadow-sm transition-transform hover:scale-105"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openPicker();
+                  }}
+                  disabled={routing}
+                >
                   <UploadCloud className="size-4" />
                   {t.hero.chooseFiles}
                 </Button>
-                <Button size="lg" variant="outline" className="transition-transform hover:scale-105">
+                <Link
+                  href="/account/connections"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
+                >
                   Dropbox
-                </Button>
-                <Button size="lg" variant="outline" className="transition-transform hover:scale-105">
+                </Link>
+                <Link
+                  href="/account/connections"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
+                >
                   Google Drive
-                </Button>
+                </Link>
               </div>
             </div>
+
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".pdf,.doc,.docx,.rtf,.odt,.xls,.xlsx,.csv,.ods,.ppt,.pptx,.odp,.jpg,.jpeg,.png,.webp,.html,.htm"
+              hidden
+              onChange={(e) => handleFiles(e.target.files)}
+            />
           </div>
+
+          {error && (
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm">
+              <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" />
+              <p className="text-destructive">{error}</p>
+            </div>
+          )}
 
           <p className="mt-3 text-center text-xs text-muted-foreground">
             <span className="font-bold text-primary">●</span> {t.hero.security}
