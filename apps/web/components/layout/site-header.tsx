@@ -50,7 +50,7 @@ function UserMenu() {
             </div>
             <div className="my-1 h-px bg-border" />
             <Link
-              href="/account/profile"
+              href="/account"
               onClick={() => setOpen(false)}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
             >

@@ -1,22 +1,25 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { setTokens } from "@/lib/api";
 
-// Swagger: GET /auth/google/callback returns { access_token, refresh_token } directly.
-// Backend may also return tokens as query params depending on OAuth flow config.
-// This page handles both cases.
+// Swagger: GET /auth/google/callback returns { access_token, refresh_token } either
+// in the query string or in the URL hash, depending on backend OAuth config.
+// We handle both, store the tokens via setTokens(), and force a *full* page
+// navigation back to /. The full reload is intentional — AuthProvider
+// hydrates user state from localStorage only on initial mount, so a
+// router.replace() (SPA navigation) leaves the user state as `null` even
+// though the token is sitting in localStorage. window.location.href forces
+// a fresh React tree where AuthProvider sees the token and fetches /me.
 
 function CallbackHandler() {
-  const router = useRouter();
   const params = useSearchParams();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Parse both query string (?key=val) and hash fragment (#key=val)
     const hashParams = new URLSearchParams(
-      typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : ""
+      typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : "",
     );
 
     const getParam = (key: string) => params.get(key) ?? hashParams.get(key);
@@ -31,12 +34,18 @@ function CallbackHandler() {
     const refreshToken = getParam("refresh_token");
     if (accessToken && refreshToken) {
       setTokens(accessToken, refreshToken);
-      router.replace("/");
+      // Optional: respect a `redirect` param so the OAuth flow can deep-link
+      // a user back to a tool page after sign-in.
+      const next = getParam("redirect") || "/account";
+      // Hard nav so AuthProvider re-hydrates from the freshly-stored token.
+      window.location.href = next;
       return;
     }
 
-    router.replace("/");
-  }, [params, router]);
+    // No tokens in the URL — bail back to the sign-in page so the user
+    // can retry instead of getting silently dropped on the home page.
+    window.location.href = "/account";
+  }, [params]);
 
   if (error) {
     return (
