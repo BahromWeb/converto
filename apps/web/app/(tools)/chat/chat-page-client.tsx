@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AuthGate } from "@/components/auth/auth-gate";
 import {
   Send,
   Loader2,
@@ -56,9 +57,11 @@ export interface ChatPageClientProps {
 
 export function ChatPageClient(props: ChatPageClientProps = {}) {
   return (
-    <ToastProvider>
-      <ChatPageInner {...props} />
-    </ToastProvider>
+    <AuthGate>
+      <ToastProvider>
+        <ChatPageInner {...props} />
+      </ToastProvider>
+    </AuthGate>
   );
 }
 

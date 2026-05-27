@@ -3,21 +3,21 @@ import { notFound } from "next/navigation";
 import { AuthGate } from "@/components/auth/auth-gate";
 import { ToolPageShell } from "@/components/tools/tool-page-shell";
 import { getToolBySlug } from "@converto/data";
-import { OcrCard } from "./ocr-card";
+import { ScanToPdfClient } from "./scan-to-pdf-client";
 
 export const metadata: Metadata = {
-  title: "OCR PDF",
-  description: "Make scanned PDFs searchable and copy-pasteable with AI OCR.",
-  alternates: { canonical: "/ocr" },
+  title: "Scan to PDF",
+  description: "Photos of paper into one searchable PDF.",
+  alternates: { canonical: "/scan-to-pdf" },
 };
 
-export default function OcrPage() {
-  const tool = getToolBySlug("ocr");
+export default function Page() {
+  const tool = getToolBySlug("scan-to-pdf");
   if (!tool) notFound();
 
   return (
-    <ToolPageShell tool={tool} index="11" variant="AI-powered"><AuthGate>
-      <OcrCard />
+    <ToolPageShell tool={tool} index="32"><AuthGate>
+      <ScanToPdfClient />
     </AuthGate></ToolPageShell>
   );
 }
