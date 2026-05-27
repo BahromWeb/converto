@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type DragEvent } from "react";
-import { Upload, X, FileText, Plus } from "lucide-react";
+import { Upload, X, FileText, Plus, Cloud } from "lucide-react";
+import { getPickerConfig, pickFromDropbox } from "@/lib/cloud-picker";
 
 export interface FileDropzoneProps {
   /** Accept string for the underlying <input>. Defaults to PDFs only. */
@@ -42,7 +43,24 @@ export function FileDropzone({
 }: FileDropzoneProps) {
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dropboxOn, setDropboxOn] = useState(false);
+  const [cloudBusy, setCloudBusy] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Only render the Dropbox button when the server tells us the
+  // Chooser app key is configured — otherwise it'd be a dead button on
+  // self-hosted deploys that didn't wire that env.
+  useEffect(() => {
+    let alive = true;
+    getPickerConfig()
+      .then((cfg) => {
+        if (alive) setDropboxOn(Boolean(cfg.dropbox_app_key));
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // Consume a file the homepage Hero may have staged in sessionStorage.
   // Lets the user drop a file on the landing page, get routed to the
@@ -86,6 +104,34 @@ export function FileDropzone({
     }
     setError(null);
     onChange(multiple ? [...files, ...arr] : arr.slice(0, 1));
+  }
+
+  /**
+   * Open the Dropbox Chooser, fetch the chosen file via its direct
+   * link (Dropbox direct links are CORS-friendly), and feed the
+   * resulting Blob through addFiles so the rest of the form treats it
+   * like any other local pick.
+   */
+  async function handleDropbox() {
+    setError(null);
+    try {
+      setCloudBusy(true);
+      const picked = await pickFromDropbox({
+        sizeLimit: maxSizeMB * 1024 * 1024,
+      });
+      if (!picked) return; // user cancelled
+      const resp = await fetch(picked.link);
+      if (!resp.ok) throw new Error(`Dropbox download failed (HTTP ${resp.status})`);
+      const blob = await resp.blob();
+      const file = new File([blob], picked.name, {
+        type: blob.type || "application/octet-stream",
+      });
+      addFiles([file]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't import from Dropbox");
+    } finally {
+      setCloudBusy(false);
+    }
   }
 
   function onDrop(e: DragEvent<HTMLDivElement>) {
@@ -194,6 +240,27 @@ export function FileDropzone({
           className="hidden"
           onChange={(e) => e.target.files && addFiles(e.target.files)}
         />
+
+        {/* Cloud picker row — only renders when the server has the
+            Dropbox app key configured. Click-bubbling is stopped so
+            the picker doesn't also re-open the local file dialog. */}
+        {dropboxOn && (
+          <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+            <span>or import from</span>
+            <button
+              type="button"
+              disabled={cloudBusy}
+              onClick={(e) => {
+                e.stopPropagation();
+                void handleDropbox();
+              }}
+              className="inline-flex items-center gap-1 rounded-md border bg-card px-2.5 py-1 font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-50"
+            >
+              <Cloud className="size-3" />
+              Dropbox
+            </button>
+          </div>
+        )}
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}

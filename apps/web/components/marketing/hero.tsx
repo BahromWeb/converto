@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@converto/ui/components/button";
 import {
@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useT } from "@/lib/i18n/context";
+import { getPickerConfig, pickFromDropbox } from "@/lib/cloud-picker";
 
 const quickTools = [
   { slug: "merge", labelKey: "Merge PDF", icon: GitMerge },
@@ -73,8 +74,71 @@ export function Hero() {
   const [dragging, setDragging] = useState(false);
   const [routing, setRouting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Whether the server has been configured with Dropbox / Drive app
+  // keys. We hide the buttons rather than show "Connect failed" if a
+  // self-hosted deploy never set these.
+  const [dropboxOn, setDropboxOn] = useState(false);
+
+  // Warm the picker config cache + decide which cloud buttons to show.
+  useEffect(() => {
+    let alive = true;
+    getPickerConfig()
+      .then((cfg) => {
+        if (!alive) return;
+        setDropboxOn(Boolean(cfg.dropbox_app_key));
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const openPicker = () => inputRef.current?.click();
+
+  /**
+   * Dropbox "direct" links serve the file with CORS enabled, so we just
+   * fetch + read it as a Blob in the browser and reuse the existing
+   * local-file routing. No backend round-trip needed — keeps the flow
+   * consistent with drag-drop and avoids paying for the bytes twice.
+   */
+  async function handleDropbox() {
+    setError(null);
+    try {
+      const picked = await pickFromDropbox({
+        extensions: [
+          ".pdf",
+          ".doc",
+          ".docx",
+          ".xls",
+          ".xlsx",
+          ".csv",
+          ".ppt",
+          ".pptx",
+          ".jpg",
+          ".jpeg",
+          ".png",
+          ".webp",
+          ".html",
+          ".htm",
+        ],
+        sizeLimit: 50 * 1024 * 1024,
+      });
+      if (!picked) return; // user cancelled
+      const resp = await fetch(picked.link);
+      if (!resp.ok) throw new Error(`Dropbox download failed (HTTP ${resp.status})`);
+      const blob = await resp.blob();
+      const file = new File([blob], picked.name, {
+        type: blob.type || "application/octet-stream",
+      });
+      // Feed it through the existing handler — pickDestination + stash
+      // + router.push all live there already.
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      handleFiles(dt.files);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Dropbox import failed");
+    }
+  }
 
   function handleFiles(fl: FileList | null) {
     if (!fl || fl.length === 0) return;
@@ -240,17 +304,34 @@ export function Hero() {
                   <UploadCloud className="size-4" />
                   {t.hero.chooseFiles}
                 </Button>
+                {dropboxOn ? (
+                  <Button
+                    type="button"
+                    size="lg"
+                    variant="outline"
+                    disabled={routing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void handleDropbox();
+                    }}
+                    className="transition-transform hover:scale-105"
+                  >
+                    Dropbox
+                  </Button>
+                ) : (
+                  <Link
+                    href="/account/connections"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
+                  >
+                    Dropbox
+                  </Link>
+                )}
                 <Link
                   href="/account/connections"
                   onClick={(e) => e.stopPropagation()}
                   className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
-                >
-                  Dropbox
-                </Link>
-                <Link
-                  href="/account/connections"
-                  onClick={(e) => e.stopPropagation()}
-                  className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
+                  title="Google Drive picker coming soon — connect first to enable cloud exports"
                 >
                   Google Drive
                 </Link>
