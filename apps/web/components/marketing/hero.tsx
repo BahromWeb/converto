@@ -15,7 +15,11 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useT } from "@/lib/i18n/context";
-import { getPickerConfig, pickFromDropbox } from "@/lib/cloud-picker";
+import {
+  getPickerConfig,
+  pickFromDropbox,
+  pickFromGoogleDrive,
+} from "@/lib/cloud-picker";
 
 const quickTools = [
   { slug: "merge", labelKey: "Merge PDF", icon: GitMerge },
@@ -78,6 +82,7 @@ export function Hero() {
   // keys. We hide the buttons rather than show "Connect failed" if a
   // self-hosted deploy never set these.
   const [dropboxOn, setDropboxOn] = useState(false);
+  const [googleOn, setGoogleOn] = useState(false);
 
   // Warm the picker config cache + decide which cloud buttons to show.
   useEffect(() => {
@@ -86,6 +91,7 @@ export function Hero() {
       .then((cfg) => {
         if (!alive) return;
         setDropboxOn(Boolean(cfg.dropbox_app_key));
+        setGoogleOn(Boolean(cfg.google_client_id));
       })
       .catch(() => undefined);
     return () => {
@@ -94,6 +100,24 @@ export function Hero() {
   }, []);
 
   const openPicker = () => inputRef.current?.click();
+
+  /**
+   * Google Drive Picker. The Picker SDK takes care of the consent
+   * popup + file UI; cloud-picker.ts already downloads the chosen
+   * file as a File so we can drop it straight into handleFiles().
+   */
+  async function handleGoogleDrive() {
+    setError(null);
+    try {
+      const file = await pickFromGoogleDrive();
+      if (!file) return;
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      handleFiles(dt.files);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Google Drive import failed");
+    }
+  }
 
   /**
    * Dropbox "direct" links serve the file with CORS enabled, so we just
@@ -327,14 +351,29 @@ export function Hero() {
                     Dropbox
                   </Link>
                 )}
-                <Link
-                  href="/account/connections"
-                  onClick={(e) => e.stopPropagation()}
-                  className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
-                  title="Google Drive picker coming soon — connect first to enable cloud exports"
-                >
-                  Google Drive
-                </Link>
+                {googleOn ? (
+                  <Button
+                    type="button"
+                    size="lg"
+                    variant="outline"
+                    disabled={routing}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void handleGoogleDrive();
+                    }}
+                    className="transition-transform hover:scale-105"
+                  >
+                    Google Drive
+                  </Button>
+                ) : (
+                  <Link
+                    href="/account/connections"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-medium shadow-sm transition-transform hover:scale-105 hover:bg-accent"
+                  >
+                    Google Drive
+                  </Link>
+                )}
               </div>
             </div>
 

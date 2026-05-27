@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState, type DragEvent } from "react";
 import { Upload, X, FileText, Plus, Cloud } from "lucide-react";
-import { getPickerConfig, pickFromDropbox } from "@/lib/cloud-picker";
+import {
+  getPickerConfig,
+  pickFromDropbox,
+  pickFromGoogleDrive,
+} from "@/lib/cloud-picker";
 
 export interface FileDropzoneProps {
   /** Accept string for the underlying <input>. Defaults to PDFs only. */
@@ -44,17 +48,20 @@ export function FileDropzone({
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dropboxOn, setDropboxOn] = useState(false);
+  const [googleOn, setGoogleOn] = useState(false);
   const [cloudBusy, setCloudBusy] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Only render the Dropbox button when the server tells us the
-  // Chooser app key is configured — otherwise it'd be a dead button on
-  // self-hosted deploys that didn't wire that env.
+  // Only render the cloud buttons when the server tells us their
+  // public keys are configured — otherwise they'd be dead UI on
+  // self-hosted deploys that didn't wire the envs.
   useEffect(() => {
     let alive = true;
     getPickerConfig()
       .then((cfg) => {
-        if (alive) setDropboxOn(Boolean(cfg.dropbox_app_key));
+        if (!alive) return;
+        setDropboxOn(Boolean(cfg.dropbox_app_key));
+        setGoogleOn(Boolean(cfg.google_client_id));
       })
       .catch(() => undefined);
     return () => {
@@ -104,6 +111,25 @@ export function FileDropzone({
     }
     setError(null);
     onChange(multiple ? [...files, ...arr] : arr.slice(0, 1));
+  }
+
+  /**
+   * Open the Google Drive Picker. cloud-picker.ts already returns the
+   * chosen file as a File (it downloads via the Drive API with the
+   * user's OAuth token), so we just drop it into addFiles.
+   */
+  async function handleGoogleDrive() {
+    setError(null);
+    try {
+      setCloudBusy(true);
+      const file = await pickFromGoogleDrive();
+      if (!file) return;
+      addFiles([file]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't import from Google Drive");
+    } finally {
+      setCloudBusy(false);
+    }
   }
 
   /**
@@ -241,24 +267,40 @@ export function FileDropzone({
           onChange={(e) => e.target.files && addFiles(e.target.files)}
         />
 
-        {/* Cloud picker row — only renders when the server has the
-            Dropbox app key configured. Click-bubbling is stopped so
-            the picker doesn't also re-open the local file dialog. */}
-        {dropboxOn && (
-          <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+        {/* Cloud picker row — only renders providers the server has
+            keys for. Click-bubbling is stopped so the cloud picker
+            doesn't also re-open the local file dialog. */}
+        {(dropboxOn || googleOn) && (
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
             <span>or import from</span>
-            <button
-              type="button"
-              disabled={cloudBusy}
-              onClick={(e) => {
-                e.stopPropagation();
-                void handleDropbox();
-              }}
-              className="inline-flex items-center gap-1 rounded-md border bg-card px-2.5 py-1 font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-50"
-            >
-              <Cloud className="size-3" />
-              Dropbox
-            </button>
+            {dropboxOn && (
+              <button
+                type="button"
+                disabled={cloudBusy}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleDropbox();
+                }}
+                className="inline-flex items-center gap-1 rounded-md border bg-card px-2.5 py-1 font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-50"
+              >
+                <Cloud className="size-3" />
+                Dropbox
+              </button>
+            )}
+            {googleOn && (
+              <button
+                type="button"
+                disabled={cloudBusy}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleGoogleDrive();
+                }}
+                className="inline-flex items-center gap-1 rounded-md border bg-card px-2.5 py-1 font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-50"
+              >
+                <Cloud className="size-3" />
+                Google Drive
+              </button>
+            )}
           </div>
         )}
       </div>
