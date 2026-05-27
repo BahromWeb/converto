@@ -53,6 +53,12 @@ export const PdfViewer = forwardRef<PdfViewerHandle, {
   fileName?: string;
   pageCount?: number;
 }>(function PdfViewer({ fileId, fileName, pageCount }, ref) {
+  // We store the raw Blob (not just the URL) because Chromium's embedded
+  // PDFium viewer caches the rendered state per object URL — changing
+  // only the `#page=N` fragment doesn't re-scroll it. So on every page
+  // change we mint a fresh object URL from the same Blob, which forces
+  // a clean load + honours the fragment.
+  const [blob, setBlob] = useState<Blob | null>(null);
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -62,7 +68,7 @@ export const PdfViewer = forwardRef<PdfViewerHandle, {
   // ─── Fetch PDF as blob whenever the file changes ─────────────────────
   useEffect(() => {
     let alive = true;
-    setBlobUrl(null);
+    setBlob(null);
     setError(null);
     setPage(1);
     setZoom(100);
@@ -76,14 +82,12 @@ export const PdfViewer = forwardRef<PdfViewerHandle, {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.blob();
       })
-      .then((blob) => {
+      .then((raw) => {
         if (!alive) return;
-        // /file/<id>/download still serves legacy uploads with a wrong
-        // Content-Type (".pdf"). Wrap the body in a fresh blob with the
-        // right MIME so the iframe renders it as a PDF, not as text.
-        const pdfBlob = new Blob([blob], { type: "application/pdf" });
-        const url = URL.createObjectURL(pdfBlob);
-        setBlobUrl(url);
+        // /file/<id>/download still serves some legacy uploads with the
+        // wrong Content-Type (".pdf"). Wrap in a fresh blob with the
+        // right MIME so the iframe renders it as a PDF.
+        setBlob(new Blob([raw], { type: "application/pdf" }));
       })
       .catch((e: unknown) => {
         if (!alive) return;
@@ -93,15 +97,20 @@ export const PdfViewer = forwardRef<PdfViewerHandle, {
     return () => {
       alive = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileId]);
 
-  // Free the object URL when it changes or the component unmounts.
+  // Re-mint a fresh object URL every time the page or zoom changes so
+  // the embedded viewer treats it as a brand-new document and respects
+  // the #page=N fragment on (re-)load.
   useEffect(() => {
-    return () => {
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
-    };
-  }, [blobUrl]);
+    if (!blob) {
+      setBlobUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    setBlobUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [blob, page, zoom]);
 
   useImperativeHandle(ref, () => ({
     jumpToPage(p: number) {
