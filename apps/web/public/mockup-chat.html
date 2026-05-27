@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDF Chat AI — Mockup · convertpdfgo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: 'hsl(221 83% 53%)',
+          'primary-foreground': 'hsl(0 0% 100%)',
+          background: 'hsl(0 0% 100%)',
+          foreground: 'hsl(222 47% 11%)',
+          card: 'hsl(0 0% 100%)',
+          border: 'hsl(214 32% 91%)',
+          muted: 'hsl(210 40% 96%)',
+          'muted-foreground': 'hsl(215 16% 47%)',
+          accent: 'hsl(210 40% 96%)',
+          secondary: 'hsl(210 40% 96%)',
+          destructive: 'hsl(0 84% 60%)',
+        }
+      }
+    }
+  };
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(214 32% 85%); border-radius: 3px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: hsl(215 16% 65%); }
+
+  /* Citation badge */
+  .citation {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 1px 6px;
+    margin: 0 2px;
+    border-radius: 4px;
+    background: hsl(221 83% 53% / 0.1);
+    color: hsl(221 83% 53%);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .citation:hover {
+    background: hsl(221 83% 53% / 0.2);
+    transform: translateY(-1px);
+  }
+
+  /* Streaming cursor animation */
+  @keyframes blink { 50% { opacity: 0; } }
+  .cursor::after {
+    content: '▊';
+    margin-left: 2px;
+    animation: blink 1s steps(2) infinite;
+    color: hsl(221 83% 53%);
+  }
+
+  /* Pulse for indexing */
+  @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+  /* PDF page mock */
+  .pdf-page {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+    aspect-ratio: 8.5 / 11;
+  }
+  .pdf-page.highlighted {
+    box-shadow: 0 0 0 3px hsl(221 83% 53%), 0 4px 16px rgba(0,0,0,0.12);
+    transition: box-shadow 0.3s;
+  }
+</style>
+</head>
+<body class="bg-muted/30 text-foreground min-h-screen">
+
+<!-- ============ Header (ToolPageShell mimic) ============ -->
+<header class="border-b bg-background sticky top-0 z-50">
+  <div class="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="size-9 rounded-xl bg-primary/10 grid place-items-center">
+        <svg class="size-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+      </div>
+      <div>
+        <div class="text-xs font-mono text-muted-foreground">Tool 04 / AI-powered</div>
+        <h1 class="text-base font-bold">Chat with PDF</h1>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-muted-foreground">10 questions left today</span>
+      <button class="px-3 py-1.5 text-xs font-semibold rounded-lg border hover:bg-accent transition-colors">
+        Sign in for more
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ Main 3-column layout ============ -->
+<div class="max-w-[1600px] mx-auto p-4">
+  <div class="grid grid-cols-[240px_1fr_440px] gap-4 h-[calc(100vh-100px)]">
+
+    <!-- ━━━━━━━━━━━━ LEFT: SESSIONS SIDEBAR ━━━━━━━━━━━━ -->
+    <aside class="bg-card border rounded-2xl overflow-hidden flex flex-col">
+      <div class="p-3 border-b">
+        <button class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity">
+          <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          New chat
+        </button>
+      </div>
+
+      <div class="p-2 overflow-y-auto scrollbar-thin flex-1">
+        <p class="px-2 py-1 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Today</p>
+
+        <!-- Active session -->
+        <button class="w-full text-left p-2.5 rounded-lg bg-primary/8 border border-primary/20 mb-1">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="size-3.5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+            <span class="text-xs font-semibold truncate">Q3 Financial Report.pdf</span>
+          </div>
+          <p class="text-[11px] text-muted-foreground line-clamp-1 pl-5">Last: What is the net revenue?</p>
+          <p class="text-[10px] text-muted-foreground mt-1 pl-5">2 hours ago · 8 messages</p>
+        </button>
+
+        <button class="w-full text-left p-2.5 rounded-lg hover:bg-accent mb-1 transition-colors">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="size-3.5 text-muted-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+            <span class="text-xs font-semibold truncate">invoice-march-2026.pdf</span>
+          </div>
+          <p class="text-[10px] text-muted-foreground pl-5">5 hours ago · 3 messages</p>
+        </button>
+
+        <p class="px-2 py-1 mt-3 text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Yesterday</p>
+
+        <button class="w-full text-left p-2.5 rounded-lg hover:bg-accent mb-1 transition-colors">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="size-3.5 text-muted-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+            <span class="text-xs font-semibold truncate">research-paper-NLP.pdf</span>
+          </div>
+          <p class="text-[10px] text-muted-foreground pl-5">12 messages</p>
+        </button>
+
+        <button class="w-full text-left p-2.5 rounded-lg hover:bg-accent mb-1 transition-colors">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="size-3.5 text-muted-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+            <span class="text-xs font-semibold truncate">contract-template.pdf</span>
+          </div>
+          <p class="text-[10px] text-muted-foreground pl-5">5 messages</p>
+        </button>
+      </div>
+
+      <div class="p-3 border-t bg-muted/40">
+        <div class="flex items-center gap-2 text-[11px] text-muted-foreground">
+          <div class="size-7 rounded-full bg-primary/15 grid place-items-center text-[10px] font-bold text-primary">Z</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-foreground truncate">zarifjorayev1999</p>
+            <p class="truncate">Free plan</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ━━━━━━━━━━━━ CENTER: PDF VIEWER ━━━━━━━━━━━━ -->
+    <main class="bg-card border rounded-2xl overflow-hidden flex flex-col">
+      <!-- PDF toolbar -->
+      <div class="px-4 py-2.5 border-b flex items-center justify-between bg-muted/30">
+        <div class="flex items-center gap-2 min-w-0">
+          <svg class="size-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+          <h2 class="text-sm font-semibold truncate">Q3 Financial Report.pdf</h2>
+          <span class="text-xs text-muted-foreground shrink-0">· 12 pages</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <button class="size-7 grid place-items-center rounded hover:bg-accent" title="Zoom out">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+          </button>
+          <span class="text-xs font-mono w-12 text-center text-muted-foreground">100%</span>
+          <button class="size-7 grid place-items-center rounded hover:bg-accent" title="Zoom in">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          </button>
+          <div class="w-px h-5 bg-border mx-1"></div>
+          <button class="px-2 py-1 text-xs rounded hover:bg-accent" title="Download">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- PDF pages -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-muted/40 scrollbar-thin">
+        <!-- Page 1 -->
+        <div class="mx-auto pdf-page max-w-[600px] p-12">
+          <h2 class="text-3xl font-bold mb-2 text-gray-900">Q3 2026 Financial Report</h2>
+          <p class="text-sm text-gray-500 mb-8">Acme Corporation · Confidential</p>
+          <div class="space-y-3 text-sm text-gray-700">
+            <p>This document presents the financial results for the third quarter of fiscal year 2026, covering the period from July 1 to September 30.</p>
+            <p>Key highlights include strong revenue growth, expanded operating margins, and improved cash flow from operations.</p>
+            <h3 class="text-lg font-bold pt-4 text-gray-900">Executive Summary</h3>
+            <p>Revenue increased 23% year-over-year, reaching $42.1M for the quarter. Net income margins expanded to 18%, up from 12% in Q3 2025.</p>
+          </div>
+          <div class="mt-6 text-xs text-gray-400">Page 1 of 12</div>
+        </div>
+
+        <!-- Page 2 -->
+        <div class="mx-auto pdf-page max-w-[600px] p-12">
+          <h3 class="text-xl font-bold mb-4 text-gray-900">2. Revenue Breakdown</h3>
+          <div class="space-y-3 text-sm text-gray-700">
+            <p>Total revenue for Q3 was <strong>$42.1M</strong>, compared to $34.2M in Q3 2025.</p>
+            <ul class="space-y-1 pl-5 list-disc">
+              <li>Product revenue: $28.4M (+18%)</li>
+              <li>Services revenue: $9.2M (+31%)</li>
+              <li>Other: $4.5M (+42%)</li>
+            </ul>
+            <p class="pt-3">Subscription business reached $15M ARR, growing 67% year-over-year.</p>
+          </div>
+          <div class="mt-6 text-xs text-gray-400">Page 2 of 12</div>
+        </div>
+
+        <!-- Page 3 — HIGHLIGHTED because last citation -->
+        <div class="mx-auto pdf-page highlighted max-w-[600px] p-12 relative">
+          <div class="absolute -top-3 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">Cited in chat</div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900">3. Net Revenue Calculation</h3>
+          <div class="space-y-3 text-sm text-gray-700">
+            <p>After deducting refunds, discounts, and channel commissions, <strong class="bg-yellow-100 px-1">net revenue for Q3 2026 was $4.2M</strong>, representing a 27% increase compared to the prior year.</p>
+            <table class="w-full text-xs border mt-3">
+              <thead class="bg-gray-50">
+                <tr><th class="border p-2 text-left">Line item</th><th class="border p-2 text-right">Q3 2026</th><th class="border p-2 text-right">Q3 2025</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="border p-2">Gross revenue</td><td class="border p-2 text-right">$42.1M</td><td class="border p-2 text-right">$34.2M</td></tr>
+                <tr><td class="border p-2">– Refunds</td><td class="border p-2 text-right">($1.2M)</td><td class="border p-2 text-right">($0.9M)</td></tr>
+                <tr><td class="border p-2">– Discounts</td><td class="border p-2 text-right">($0.6M)</td><td class="border p-2 text-right">($0.5M)</td></tr>
+                <tr class="font-bold bg-gray-50"><td class="border p-2">Net revenue</td><td class="border p-2 text-right">$4.2M</td><td class="border p-2 text-right">$3.3M</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-6 text-xs text-gray-400">Page 3 of 12</div>
+        </div>
+
+        <!-- Page 4 placeholder -->
+        <div class="mx-auto pdf-page max-w-[600px] p-12 opacity-60">
+          <h3 class="text-xl font-bold mb-4 text-gray-900">4. Operating Expenses</h3>
+          <div class="space-y-2 text-sm text-gray-700">
+            <p>Operating expenses totaled $11.3M, an increase of 8% YoY...</p>
+            <div class="h-2 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-2 bg-gray-200 rounded w-5/6"></div>
+            <div class="h-2 bg-gray-200 rounded w-2/3"></div>
+            <div class="h-2 bg-gray-200 rounded w-4/5"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page navigation strip -->
+      <div class="border-t bg-background p-2 flex items-center gap-1.5 overflow-x-auto scrollbar-thin">
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold">1</button>
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold">2</button>
+        <button class="shrink-0 size-8 grid place-items-center rounded bg-primary text-primary-foreground text-xs font-bold ring-2 ring-primary/30">3</button>
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold text-muted-foreground">4</button>
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold text-muted-foreground">5</button>
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold text-muted-foreground">6</button>
+        <span class="shrink-0 text-xs text-muted-foreground px-1">···</span>
+        <button class="shrink-0 size-8 grid place-items-center rounded hover:bg-accent text-xs font-semibold text-muted-foreground">12</button>
+      </div>
+    </main>
+
+    <!-- ━━━━━━━━━━━━ RIGHT: CHAT PANEL ━━━━━━━━━━━━ -->
+    <section class="bg-card border rounded-2xl overflow-hidden flex flex-col">
+      <!-- Chat header -->
+      <div class="p-4 border-b flex items-center justify-between">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="size-7 rounded-lg bg-primary/10 grid place-items-center shrink-0">
+            <svg class="size-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+          </div>
+          <h2 class="text-sm font-bold truncate">Chat</h2>
+        </div>
+        <div class="flex items-center gap-1">
+          <button class="size-7 grid place-items-center rounded hover:bg-accent" title="Export chat">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+          </button>
+          <button class="size-7 grid place-items-center rounded hover:bg-accent" title="Share">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages scroll area -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+
+        <!-- Summary card -->
+        <div class="rounded-xl border bg-gradient-to-br from-primary/5 to-transparent p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="size-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-primary">Summary</h3>
+          </div>
+          <p class="text-xs text-foreground/80 leading-relaxed">Acme Corp's Q3 2026 financial report. Revenue grew 23% YoY to <strong>$42.1M</strong>, with net income margins expanding to 18%. Subscription ARR reached $15M (+67%).</p>
+        </div>
+
+        <!-- Suggested questions -->
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-2">💡 Try asking</p>
+          <div class="flex flex-col gap-1.5">
+            <button class="text-left text-xs px-3 py-2 rounded-lg border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors">
+              What is the net revenue and how was it calculated?
+            </button>
+            <button class="text-left text-xs px-3 py-2 rounded-lg border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors">
+              How does Q3 2026 compare to Q3 2025?
+            </button>
+            <button class="text-left text-xs px-3 py-2 rounded-lg border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors">
+              What is the subscription ARR growth rate?
+            </button>
+            <button class="text-left text-xs px-3 py-2 rounded-lg border bg-card hover:border-primary/40 hover:bg-primary/5 transition-colors">
+              Were there any major one-time expenses?
+            </button>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-dashed pt-2"></div>
+
+        <!-- User message -->
+        <div class="flex gap-2 justify-end">
+          <div class="max-w-[85%] rounded-2xl rounded-tr-md bg-primary text-primary-foreground px-3.5 py-2.5">
+            <p class="text-sm">What is the net revenue and how was it calculated?</p>
+          </div>
+          <div class="size-7 rounded-full bg-primary/15 grid place-items-center shrink-0 text-[10px] font-bold text-primary">Z</div>
+        </div>
+
+        <!-- Assistant message -->
+        <div class="flex gap-2">
+          <div class="size-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 grid place-items-center shrink-0">
+            <svg class="size-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+          </div>
+          <div class="max-w-[85%]">
+            <div class="rounded-2xl rounded-tl-md bg-muted px-3.5 py-2.5">
+              <p class="text-sm leading-relaxed">
+                Net revenue for Q3 2026 was <strong>$4.2M</strong>, calculated by deducting refunds and discounts from gross revenue<a class="citation" href="#">📄 page 3</a>.
+              </p>
+              <p class="text-sm leading-relaxed mt-2">
+                The calculation breakdown:
+              </p>
+              <ul class="text-sm leading-relaxed mt-1 ml-4 list-disc">
+                <li>Gross revenue: $42.1M<a class="citation" href="#">📄 page 2</a></li>
+                <li>Refunds: ($1.2M)<a class="citation" href="#">📄 page 3</a></li>
+                <li>Discounts: ($0.6M)<a class="citation" href="#">📄 page 3</a></li>
+                <li><strong>Net revenue: $4.2M</strong> (27% YoY growth)</li>
+              </ul>
+            </div>
+            <div class="flex items-center gap-2 mt-1 px-1">
+              <button class="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1">
+                <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" /></svg>
+              </button>
+              <button class="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1">
+                <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 15h2.25m8.024-9.75c.011.05.028.1.052.148.591 1.2.924 2.55.924 3.977a8.96 8.96 0 0 1-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398C20.613 14.547 19.833 15 19 15h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 0 0 .303-.54m1.023-8.25H16.48a4.5 4.5 0 0 1-1.423-.23l-3.114-1.04a4.5 4.5 0 0 0-1.423-.23H6.504c-.618 0-1.217.247-1.605.729A11.95 11.95 0 0 0 2.25 12c0 .434.023.863.068 1.285C2.427 14.306 3.346 15 4.372 15h3.126c.618 0 .991.724.725 1.282A7.471 7.471 0 0 0 7.5 19.5a2.25 2.25 0 0 0 2.25 2.25.75.75 0 0 0 .75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 0 0 2.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384" /></svg>
+              </button>
+              <button class="text-[10px] text-muted-foreground hover:text-foreground">📋 Copy</button>
+              <span class="text-[10px] text-muted-foreground ml-auto">12s · 247 tokens</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- User message 2 -->
+        <div class="flex gap-2 justify-end">
+          <div class="max-w-[85%] rounded-2xl rounded-tr-md bg-primary text-primary-foreground px-3.5 py-2.5">
+            <p class="text-sm">How does it compare to Q3 2025?</p>
+          </div>
+          <div class="size-7 rounded-full bg-primary/15 grid place-items-center shrink-0 text-[10px] font-bold text-primary">Z</div>
+        </div>
+
+        <!-- Streaming assistant message -->
+        <div class="flex gap-2">
+          <div class="size-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 grid place-items-center shrink-0">
+            <svg class="size-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+          </div>
+          <div class="max-w-[85%]">
+            <div class="rounded-2xl rounded-tl-md bg-muted px-3.5 py-2.5">
+              <p class="text-sm leading-relaxed cursor">
+                Comparing Q3 2026 to Q3 2025<a class="citation" href="#">📄 page 3</a>:<br><br>
+                • <strong>Net revenue grew 27%</strong> from $3.3M to $4.2M<br>
+                • Gross revenue grew 23% from $34.2M to $42.1M<br>
+                • Subscription ARR grew 67% YoY to $15M<a class="citation" href="#">📄 page 2</a><br><br>
+                The growth was driven primarily by
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Chat input bar -->
+      <div class="border-t p-3 bg-background">
+        <div class="flex items-end gap-2 rounded-xl border bg-card focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary p-2 transition-all">
+          <button class="size-8 grid place-items-center rounded hover:bg-accent text-muted-foreground hover:text-foreground" title="Voice input">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" /></svg>
+          </button>
+          <textarea
+            class="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground resize-none py-1.5 leading-relaxed"
+            placeholder="Ask anything about this PDF..."
+            rows="1"
+          ></textarea>
+          <button class="size-8 grid place-items-center rounded-lg bg-primary text-primary-foreground hover:opacity-90" title="Send">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
+          </button>
+        </div>
+        <div class="flex items-center justify-between mt-2 px-1">
+          <p class="text-[10px] text-muted-foreground">Gemini 2.5 Flash · responses may not be accurate</p>
+          <p class="text-[10px] text-muted-foreground">Enter ↵ to send · Shift+↵ for new line</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━ Footer note ━━━━━━━━━━━━ -->
+<div class="max-w-[1600px] mx-auto px-6 py-4 text-center">
+  <p class="text-xs text-muted-foreground">
+    🎨 This is a UI mockup for convertpdfgo.com /chat tool ·
+    <a href="/PDF_CHAT_AI_PRD.md" class="text-primary hover:underline">View PRD</a> ·
+    Functional version coming in 3 weeks
+  </p>
+</div>
+
+</body>
+</html>
