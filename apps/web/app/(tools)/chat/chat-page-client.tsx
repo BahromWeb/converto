@@ -10,6 +10,9 @@ import {
   Download,
   PanelLeftClose,
   PanelLeft,
+  Paperclip,
+  X,
+  Image as ImageIcon,
 } from "lucide-react";
 import {
   createChatSession,
@@ -99,6 +102,20 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showPdf, setShowPdf] = useState(true);
 
+  // Pending image attachment: kept in state until the user hits send.
+  // We also stash an object-URL preview so the thumbnail can render
+  // without re-reading the file on every render.
+  const [attachment, setAttachment] = useState<{
+    file: File;
+    previewUrl: string;
+  } | null>(null);
+  const attachInputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    return () => {
+      if (attachment) URL.revokeObjectURL(attachment.previewUrl);
+    };
+  }, [attachment]);
+
   const abortRef = useRef<AbortController | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pdfRef = useRef<PdfViewerHandle | null>(null);
@@ -180,17 +197,28 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
   // ─── Send message + consume SSE stream ──────────────────────────────
   const handleSend = useCallback(
     async (content: string) => {
-      if (!activeId || !content.trim() || streaming) return;
+      if (!activeId || streaming) return;
+      // Allow attachment-only sends — fall back to a default prompt so
+      // the backend still has text for retrieval/embedding.
+      const hasText = content.trim().length > 0;
+      if (!hasText && !attachment) return;
+      const effectiveText = hasText ? content : "What's in this image?";
+
       setInput("");
       setStreamError(null);
       setStreaming(true);
       setStreamingText("");
 
+      // Capture the attachment for this send + clear the staging UI
+      // before the optimistic message renders.
+      const pendingAttachment = attachment;
+      setAttachment(null);
+
       const optimistic: ChatMessage = {
         id: `tmp-${Date.now()}`,
         session_id: activeId,
         role: "user",
-        content,
+        content: effectiveText,
         created_at: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, optimistic]);
@@ -204,7 +232,7 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
 
         await streamChatMessage(
           activeId,
-          content,
+          effectiveText,
           (ev) => {
             if (ev.type === "meta") {
               setMessages((prev) =>
@@ -237,6 +265,9 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
             }
           },
           ctrl.signal,
+          pendingAttachment
+            ? { blob: pendingAttachment.file, mime: pendingAttachment.file.type || "image/jpeg" }
+            : undefined,
         );
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
@@ -512,6 +543,31 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
 
             {/* Input bar */}
             <div className="border-t p-3">
+              {/* Staged image preview (shown above the input bar) */}
+              {attachment && (
+                <div className="mb-2 flex items-center gap-2 rounded-lg border bg-muted/30 p-2">
+                  <img
+                    src={attachment.previewUrl}
+                    alt="Attachment preview"
+                    className="size-12 shrink-0 rounded object-cover"
+                  />
+                  <div className="flex-1 min-w-0 text-xs">
+                    <p className="truncate font-medium">{attachment.file.name}</p>
+                    <p className="text-muted-foreground">
+                      {(attachment.file.size / 1024).toFixed(0)} KB · attached to next message
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAttachment(null)}
+                    className="grid size-7 shrink-0 place-items-center rounded text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                    aria-label="Remove attachment"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
+              )}
+
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -519,6 +575,37 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
                 }}
                 className="flex items-end gap-2 rounded-xl border bg-card p-2 transition-all focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30"
               >
+                {/* Attach image button */}
+                <button
+                  type="button"
+                  onClick={() => attachInputRef.current?.click()}
+                  disabled={detail.status !== "ready" || streaming}
+                  className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
+                  aria-label="Attach image"
+                  title="Attach image"
+                >
+                  <Paperclip className="size-4" />
+                </button>
+                <input
+                  ref={attachInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  hidden
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    e.target.value = ""; // allow re-selecting the same file
+                    if (!f) return;
+                    if (f.size > 10 * 1024 * 1024) {
+                      toast.show("error", "Image too large — max 10 MB");
+                      return;
+                    }
+                    setAttachment({
+                      file: f,
+                      previewUrl: URL.createObjectURL(f),
+                    });
+                  }}
+                />
+
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -530,7 +617,9 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
                   }}
                   placeholder={
                     detail.status === "ready"
-                      ? "Ask anything about this PDF…"
+                      ? attachment
+                        ? "Add a question about the image (optional)…"
+                        : "Ask anything about this PDF…"
                       : "Waiting for indexing to finish…"
                   }
                   disabled={detail.status !== "ready" || streaming}
@@ -540,7 +629,9 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
                 <button
                   type="submit"
                   disabled={
-                    !input.trim() || detail.status !== "ready" || streaming
+                    (!input.trim() && !attachment) ||
+                    detail.status !== "ready" ||
+                    streaming
                   }
                   className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
                   aria-label="Send"
@@ -553,7 +644,10 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
                 </button>
               </form>
               <p className="mt-2 flex items-center justify-between gap-2 px-1 text-[10px] text-muted-foreground">
-                <span>Gemini 2.5 Flash · answers grounded in the PDF</span>
+                <span className="flex items-center gap-1">
+                  <ImageIcon className="size-3" />
+                  Gemini 2.5 Flash · text + image · answers cite the PDF
+                </span>
                 <span className="hidden sm:inline">
                   Enter to send · Shift+Enter for newline
                 </span>

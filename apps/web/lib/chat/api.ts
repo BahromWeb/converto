@@ -50,6 +50,17 @@ export type { FileUploadResult };
 // ─── SSE streaming send-message ────────────────────────────────────────
 
 /**
+ * Optional image attachment to send alongside a text question. The Blob
+ * is read as base64 client-side and posted inline — no separate upload
+ * round-trip, keeps the multimodal call path as cheap as the text-only
+ * one.
+ */
+export interface ChatAttachment {
+  blob: Blob;
+  mime: string;
+}
+
+/**
  * Streams an assistant reply via Server-Sent Events. EventSource doesn't
  * support POST/auth headers so we use fetch + a manual frame parser.
  *
@@ -63,6 +74,7 @@ export async function streamChatMessage(
   content: string,
   onEvent: (event: StreamEvent) => void,
   signal?: AbortSignal,
+  attachment?: ChatAttachment,
 ): Promise<void> {
   const token = getAccessToken();
   const headers: Record<string, string> = {
@@ -71,10 +83,16 @@ export async function streamChatMessage(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
+  const body: Record<string, string> = { content };
+  if (attachment) {
+    body.image_base64 = await blobToBase64(attachment.blob);
+    body.image_mime = attachment.mime;
+  }
+
   const res = await fetch(`${API_BASE}/api/chat/sessions/${sessionId}/messages`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ content }),
+    body: JSON.stringify(body),
     signal,
   });
 
@@ -119,6 +137,29 @@ export async function streamChatMessage(
       if (parsed) onEvent(parsed);
     }
   }
+}
+
+/**
+ * Reads a Blob's binary content and returns the base64 string portion of
+ * a FileReader data URL. We strip the "data:image/...;base64," prefix so
+ * the backend doesn't have to guess where the actual data starts (it
+ * still accepts the full data URL too, this is just cleaner on the wire).
+ */
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error("read failed"));
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") {
+        reject(new Error("unexpected reader result"));
+        return;
+      }
+      const comma = result.indexOf(",");
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.readAsDataURL(blob);
+  });
 }
 
 function parseFrame(frame: string): StreamEvent | null {
