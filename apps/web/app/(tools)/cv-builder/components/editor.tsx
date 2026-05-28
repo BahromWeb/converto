@@ -76,7 +76,10 @@ export function CVEditor({
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
         updateCVSection(detail.id, sectionID, newContent)
-          .then(() => setPreviewTick((t) => t + 1))
+          .then(() => {
+            setPreviewTick((t) => t + 1);
+            setError(null);
+          })
           .catch(() =>
             setError("Couldn't save — your edits are still local"),
           );
