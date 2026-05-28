@@ -101,7 +101,20 @@ async function apiFetch<T = unknown>(
     }
   }
 
-  return res.json();
+  // 204 No Content (or any empty body) — synthesise a wrapper so callers
+  // that share the ApiResponse<T> type don't blow up on res.json() of "".
+  if (res.status === 204) {
+    return { StatusCode: res.status, Description: res.statusText || "No Content", Data: null } as unknown as T;
+  }
+  const text = await res.text();
+  if (!text) {
+    return { StatusCode: res.status, Description: res.statusText || "OK", Data: null } as unknown as T;
+  }
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return { StatusCode: res.status, Description: text, Data: null } as unknown as T;
+  }
 }
 
 // ─── Public API surface ───────────────────────────────────────────────────────
