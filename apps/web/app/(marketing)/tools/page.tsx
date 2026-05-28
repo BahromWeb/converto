@@ -85,12 +85,13 @@ export default function ToolsPage() {
                   const isPopular = tool.badge === "popular";
 
                   return (
-                    <Link
+                    <ToolCard
                       key={tool.slug}
-                      href={`/${tool.slug}`}
+                      tool={tool}
                       className={cn(
                         "group flex h-full flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all duration-200",
-                        "hover:-translate-y-1 hover:shadow-lg",
+                        !tool.comingSoon && "hover:-translate-y-1 hover:shadow-lg",
+                        tool.comingSoon && "opacity-60 cursor-not-allowed",
                         isPopular && "ring-1 ring-primary/25",
                       )}
                     >
@@ -119,7 +120,7 @@ export default function ToolsPage() {
                       <span className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                         Open tool <ArrowRight className="size-3" />
                       </span>
-                    </Link>
+                    </ToolCard>
                   );
                 })}
               </div>
@@ -128,5 +129,28 @@ export default function ToolsPage() {
         })}
       </div>
     </div>
+  );
+}
+
+function ToolCard({
+  tool,
+  className,
+  children,
+}: {
+  tool: import("@converto/types").Tool;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (tool.comingSoon) {
+    return (
+      <div className={className} aria-disabled="true" title="Coming soon">
+        {children}
+      </div>
+    );
+  }
+  return (
+    <Link href={`/${tool.slug}`} className={className}>
+      {children}
+    </Link>
   );
 }

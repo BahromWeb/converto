@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, getAccessToken } from "@/lib/api";
 import type {
   CVSession,
   CVSessionDetail,
@@ -179,4 +179,38 @@ export async function generateCoverLetter(
   );
   if (res.StatusCode >= 400) throw new Error(res.Description);
   return res.Data;
+}
+
+// ─── Audio transcription (universal mic mode) ────────────────────────
+
+export async function transcribeAudio(
+  cvID: string,
+  audio: Blob,
+  localeHint?: string,
+): Promise<string> {
+  const fd = new FormData();
+  const ext = audio.type.includes("mp4") ? "mp4" : "webm";
+  fd.append("audio", audio, `clip.${ext}`);
+  if (localeHint) fd.append("locale", localeHint);
+
+  const token = getAccessToken();
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}/api/cv/sessions/${cvID}/transcribe`, {
+    method: "POST",
+    headers,
+    body: fd,
+  });
+  if (!res.ok) {
+    let msg = `Transcription failed (HTTP ${res.status})`;
+    try {
+      const j = await res.json();
+      if (j?.Description) msg = j.Description;
+      else if (j?.Data) msg = String(j.Data);
+    } catch { /* keep generic message */ }
+    throw new Error(msg);
+  }
+  const j = await res.json();
+  return (j?.Data?.text as string | undefined) ?? "";
 }

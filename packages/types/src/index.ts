@@ -20,6 +20,8 @@ export interface Tool {
   category: ToolCategory;
   /** Marketing tag (e.g. "popular", "new", "ai"). */
   badge?: ToolBadge;
+  /** When true, the tool is announced but not yet shippable — show a "Coming soon" pill and disable navigation. */
+  comingSoon?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────

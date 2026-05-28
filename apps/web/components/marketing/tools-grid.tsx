@@ -106,14 +106,12 @@ export function ToolsGrid() {
                         animation="scale-in"
                         delay={catIdx * 60 + toolIdx * 50}
                       >
-                        <Link
-                          href={`/${tool.slug}`}
-                          className={cn(
-                            "group flex h-full flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all duration-200",
-                            "hover:-translate-y-1 hover:shadow-lg",
-                            isPopular && "ring-1 ring-primary/25",
-                          )}
-                        >
+                        <ToolCard tool={tool} isPopular={isPopular} className={cn(
+                          "group flex h-full flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm transition-all duration-200",
+                          !tool.comingSoon && "hover:-translate-y-1 hover:shadow-lg",
+                          tool.comingSoon && "opacity-60 cursor-not-allowed",
+                          isPopular && "ring-1 ring-primary/25",
+                        )}>
                           <div className="flex items-start justify-between">
                             <span
                               className={cn(
@@ -124,7 +122,11 @@ export function ToolsGrid() {
                             >
                               <Icon className="size-5" />
                             </span>
-                            {tool.badge && (
+                            {tool.comingSoon ? (
+                              <span className="rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                                Soon
+                              </span>
+                            ) : tool.badge && (
                               <span
                                 className={cn(
                                   "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
@@ -144,7 +146,7 @@ export function ToolsGrid() {
                           <span className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                             {t.toolsGrid.openTool} <ArrowRight className="size-3" />
                           </span>
-                        </Link>
+                        </ToolCard>
                       </AnimateIn>
                     );
                   })}
@@ -170,5 +172,29 @@ export function ToolsGrid() {
         </AnimateIn>
       </div>
     </section>
+  );
+}
+
+function ToolCard({
+  tool,
+  className,
+  children,
+}: {
+  tool: import("@converto/types").Tool;
+  isPopular: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (tool.comingSoon) {
+    return (
+      <div className={className} aria-disabled="true" title="Coming soon">
+        {children}
+      </div>
+    );
+  }
+  return (
+    <Link href={`/${tool.slug}`} className={className}>
+      {children}
+    </Link>
   );
 }

@@ -261,6 +261,7 @@ export const tools: Tool[] = [
     description: "Build, redesign, or talk to your CV — in 20 languages.",
     category: "career",
     badge: "new",
+    comingSoon: true,
   },
   {
     slug: "cv-from-pdf",
@@ -268,6 +269,7 @@ export const tools: Tool[] = [
     description: "Scan or upload an existing CV, redesign it with AI.",
     category: "career",
     badge: "new",
+    comingSoon: true,
   },
   {
     slug: "cv-voice",
@@ -275,36 +277,42 @@ export const tools: Tool[] = [
     description: "Talk through your career, AI structures it into a CV.",
     category: "career",
     badge: "new",
+    comingSoon: true,
   },
   {
     slug: "ats-check",
     name: "ATS Checker",
     description: "Score your CV against any job description.",
     category: "career",
+    comingSoon: true,
   },
   {
     slug: "resume-translate",
     name: "Resume Translator",
     description: "One CV in 20 languages, native quality.",
     category: "career",
+    comingSoon: true,
   },
   {
     slug: "cover-letter",
     name: "Cover Letter",
     description: "AI cover letter from your CV + job description.",
     category: "career",
+    comingSoon: true,
   },
   {
     slug: "resume-to-docx",
     name: "Resume → DOCX",
     description: "Editable Word from your PDF resume.",
     category: "career",
+    comingSoon: true,
   },
   {
     slug: "chat-with-cv",
     name: "Chat with CV",
     description: "Ask AI about your own resume — reuses the chat pipeline.",
     category: "career",
+    comingSoon: true,
   },
 ];
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Play, Square, X, Loader2, CheckCircle2, Keyboard, Sparkles, RotateCcw, AlertCircle } from "lucide-react";
-import { parseCVVoice } from "@/lib/cv/api";
+import { Play, Square, X, Loader2, CheckCircle2, Keyboard, Sparkles, RotateCcw, AlertCircle, Zap, Cloud } from "lucide-react";
+import { parseCVVoice, transcribeAudio } from "@/lib/cv/api";
 import type { CVParsedSection } from "@/lib/cv/types";
 
 type SR = {
@@ -12,8 +12,6 @@ type SR = {
   onresult: ((e: { results: ArrayLike<{ 0: { transcript: string }; isFinal: boolean }> & { length: number } }) => void) | null;
   onerror: ((e: { error?: string }) => void) | null;
   onend: (() => void) | null;
-  onstart: (() => void) | null;
-  onspeechstart: (() => void) | null;
   continuous: boolean;
   interimResults: boolean;
   lang: string;
@@ -23,6 +21,8 @@ interface SpeechRecognitionWindow extends Window {
   SpeechRecognition?: { new (): SR };
   webkitSpeechRecognition?: { new (): SR };
 }
+
+type Mode = "fast" | "universal" | "type";
 
 const SECTION_OPTIONS: Array<{ id: string; label: string; example: string }> = [
   { id: "personal",   label: "Personal",   example: "I'm Zarif Jurayev, backend engineer based in Tashkent…" },
@@ -59,15 +59,14 @@ const SPEECH_LOCALES: Array<{ code: string; tag: string; label: string; flag: st
 ];
 
 function localeToTag(locale: string): string {
-  const m = SPEECH_LOCALES.find((l) => l.code === locale);
-  return m?.tag ?? "en-US";
+  return SPEECH_LOCALES.find((l) => l.code === locale)?.tag ?? "en-US";
 }
 
 function friendlyError(code?: string): string {
   switch (code) {
     case "not-allowed":
     case "service-not-allowed":
-      return "Microphone is blocked. Click the lock icon in the address bar and allow microphone access for this site.";
+      return "Microphone is blocked. Click the lock icon in the address bar and allow microphone access.";
     case "no-speech":
       return "We didn't hear anything. Speak closer to the mic.";
     case "audio-capture":
@@ -75,7 +74,7 @@ function friendlyError(code?: string): string {
     case "network":
       return "Speech recognition needs the internet — check your connection.";
     case "language-not-supported":
-      return "Your browser doesn't support that language for speech. Switch to English or Russian for best results.";
+      return "Your browser doesn't support that language for speech. Switch to English or Russian.";
     default:
       return code ? `Recognition error: ${code}` : "Recognition failed.";
   }
@@ -90,6 +89,7 @@ export function VoiceMode({
   locale: string;
   onDone: () => void;
 }) {
+  const [mode, setMode] = useState<Mode>("fast");
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [hint, setHint] = useState("experience");
@@ -97,23 +97,39 @@ export function VoiceMode({
   const [busy, setBusy] = useState(false);
   const [parsed, setParsed] = useState<CVParsedSection[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [typeMode, setTypeMode] = useState(false);
-  // elapsedSec ticks while listening so we can show progress and warn if
-  // recognition starts but never produces a single word.
   const [elapsedSec, setElapsedSec] = useState(0);
   const [heard, setHeard] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
 
+  // Web Speech API refs
   const recRef = useRef<SR | null>(null);
   const userWantsListening = useRef(false);
 
-  const supported =
+  // MediaRecorder refs (universal mode)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+
+  const supportedFast =
     typeof window !== "undefined" &&
     Boolean(
       (window as SpeechRecognitionWindow).SpeechRecognition ||
         (window as SpeechRecognitionWindow).webkitSpeechRecognition,
     );
+  const supportedUniversal =
+    typeof navigator !== "undefined" &&
+    typeof window !== "undefined" &&
+    !!navigator.mediaDevices?.getUserMedia &&
+    typeof window.MediaRecorder !== "undefined";
 
-  // Tick the elapsed seconds while listening.
+  // Auto-pick universal if fast isn't supported (Yandex tends to expose
+  // webkitSpeechRecognition but not actually transmit audio — covered
+  // by the stuck banner below if user keeps fast mode).
+  useEffect(() => {
+    if (!supportedFast && supportedUniversal) setMode("universal");
+  }, [supportedFast, supportedUniversal]);
+
+  // Tick elapsed seconds while listening.
   useEffect(() => {
     if (!listening) return;
     setElapsedSec(0);
@@ -121,6 +137,8 @@ export function VoiceMode({
     const id = setInterval(() => setElapsedSec((s) => s + 1), 1000);
     return () => clearInterval(id);
   }, [listening]);
+
+  // ─── Fast (Web Speech API) ──────────────────────────────────────
 
   function buildRecognizer(): SR | null {
     const W = window as SpeechRecognitionWindow;
@@ -148,7 +166,7 @@ export function VoiceMode({
     };
     rec.onend = () => {
       if (userWantsListening.current) {
-        try { rec.start(); } catch { /* ignored — next tick */ }
+        try { rec.start(); } catch { /* ignore */ }
       } else {
         setListening(false);
       }
@@ -156,18 +174,16 @@ export function VoiceMode({
     return rec;
   }
 
-  function start() {
+  function startFast() {
     setError(null);
-    if (!supported) {
-      setError("Voice mode needs Chrome, Edge, Safari, or another browser that supports the Web Speech API. Use 'Type instead' below if your browser can't.");
+    if (!supportedFast) {
+      setError("Voice mode needs Chrome / Edge / Safari. Switch to Universal mode below.");
       return;
     }
     const rec = buildRecognizer();
     if (!rec) return;
     userWantsListening.current = true;
-    try {
-      rec.start();
-    } catch (e) {
+    try { rec.start(); } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't start the mic.");
       return;
     }
@@ -175,11 +191,104 @@ export function VoiceMode({
     setListening(true);
   }
 
-  function stop() {
+  function stopFast() {
     userWantsListening.current = false;
     recRef.current?.stop();
     recRef.current = null;
     setListening(false);
+  }
+
+  // ─── Universal (MediaRecorder + server transcription) ───────────
+
+  async function startUniversal() {
+    setError(null);
+    if (!supportedUniversal) {
+      setError("Your browser doesn't support audio recording. Try 'Type instead' below.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
+
+      // Pick a MIME the recorder can actually produce. Chromium → webm,
+      // Safari → mp4. Letting MediaRecorder pick a default also works.
+      const mime =
+        typeof MediaRecorder.isTypeSupported === "function" && MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : typeof MediaRecorder.isTypeSupported === "function" && MediaRecorder.isTypeSupported("audio/mp4")
+            ? "audio/mp4"
+            : "";
+      const rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      rec.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      rec.onstop = async () => {
+        const blob = new Blob(audioChunksRef.current, { type: rec.mimeType });
+        audioChunksRef.current = [];
+        // Close the mic so the browser tab indicator goes away.
+        audioStreamRef.current?.getTracks().forEach((t) => t.stop());
+        audioStreamRef.current = null;
+        if (blob.size === 0) {
+          setError("No audio captured. Speak a bit louder and try again.");
+          return;
+        }
+        await uploadForTranscription(blob);
+      };
+      rec.onerror = (e: Event) => {
+        setError(`Recorder error: ${(e as ErrorEvent).message || "unknown"}`);
+      };
+      mediaRecorderRef.current = rec;
+      rec.start();
+      setListening(true);
+      setHeard(true); // suppress the "stuck" banner — server transcription happens after stop
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Couldn't start the mic.";
+      if (msg.toLowerCase().includes("permission") || msg.toLowerCase().includes("denied")) {
+        setError("Microphone permission was denied. Allow it in your browser settings and retry.");
+      } else {
+        setError(msg);
+      }
+    }
+  }
+
+  function stopUniversal() {
+    const rec = mediaRecorderRef.current;
+    if (rec && rec.state !== "inactive") {
+      rec.stop(); // triggers onstop → uploadForTranscription
+    }
+    mediaRecorderRef.current = null;
+    setListening(false);
+  }
+
+  async function uploadForTranscription(blob: Blob) {
+    setTranscribing(true);
+    setError(null);
+    try {
+      const tag = speechTag.split("-")[0] ?? "en";
+      const text = await transcribeAudio(cvID, blob, tag);
+      if (text) {
+        setTranscript((prev) => (prev ? `${prev} ${text}`.trim() : text));
+      } else {
+        setError("AI didn't pick up any words. Speak a bit closer and try again.");
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Transcription failed.");
+    } finally {
+      setTranscribing(false);
+    }
+  }
+
+  // ─── Switch / cleanup ───────────────────────────────────────────
+
+  function toggleRecording() {
+    if (listening) {
+      if (mode === "fast") stopFast();
+      else if (mode === "universal") stopUniversal();
+      return;
+    }
+    if (mode === "fast") startFast();
+    else if (mode === "universal") startUniversal();
   }
 
   async function flush() {
@@ -201,17 +310,9 @@ export function VoiceMode({
     }
   }
 
+  // Restart fast recognizer when speechTag changes mid-session.
   useEffect(() => {
-    return () => {
-      userWantsListening.current = false;
-      recRef.current?.abort();
-    };
-  }, []);
-
-  // Restart recognition with the new language tag when the user picks
-  // a different language mid-session.
-  useEffect(() => {
-    if (!listening) return;
+    if (mode !== "fast" || !listening) return;
     recRef.current?.stop();
     setTimeout(() => {
       if (userWantsListening.current) {
@@ -221,13 +322,21 @@ export function VoiceMode({
       }
     }, 150);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [speechTag]);
+  }, [speechTag, mode]);
+
+  // Cleanup on unmount.
+  useEffect(() => {
+    return () => {
+      userWantsListening.current = false;
+      recRef.current?.abort();
+      mediaRecorderRef.current?.stop();
+      audioStreamRef.current?.getTracks().forEach((t) => t.stop());
+    };
+  }, []);
 
   const currentLang = SPEECH_LOCALES.find((l) => l.tag === speechTag) ?? SPEECH_LOCALES[0]!;
   const activeSection = SECTION_OPTIONS.find((s) => s.id === hint) ?? SECTION_OPTIONS[2]!;
-  // After 10s of listening with zero words captured, the browser likely
-  // isn't sending audio to a speech backend — guide the user.
-  const stuck = listening && !heard && elapsedSec >= 10;
+  const stuckFast = mode === "fast" && listening && !heard && elapsedSec >= 10;
 
   return (
     <div className="container py-8">
@@ -248,7 +357,35 @@ export function VoiceMode({
           </button>
         </div>
 
-        {/* Step 1 — what to describe */}
+        {/* Mode picker */}
+        <div className="mt-6 grid gap-2 sm:grid-cols-3">
+          <ModeCard
+            icon={Zap}
+            title="Fast (browser)"
+            hint="Live, free. Chrome / Edge / Safari only."
+            active={mode === "fast"}
+            disabled={!supportedFast}
+            onClick={() => { if (listening) { stopFast(); stopUniversal(); } setMode("fast"); }}
+          />
+          <ModeCard
+            icon={Cloud}
+            title="Universal (AI)"
+            hint="Records audio, AI transcribes. Works in any browser."
+            active={mode === "universal"}
+            disabled={!supportedUniversal}
+            onClick={() => { if (listening) { stopFast(); stopUniversal(); } setMode("universal"); }}
+            recommended={!supportedFast || (mode === "fast" && stuckFast)}
+          />
+          <ModeCard
+            icon={Keyboard}
+            title="Type"
+            hint="Just type the same content."
+            active={mode === "type"}
+            onClick={() => { if (listening) { stopFast(); stopUniversal(); } setMode("type"); }}
+          />
+        </div>
+
+        {/* Step 1 — section */}
         <div className="mt-6">
           <Step n="1" label="Pick a section to describe" />
           <div className="mt-2 flex flex-wrap gap-2">
@@ -258,64 +395,51 @@ export function VoiceMode({
                 type="button"
                 onClick={() => setHint(s.id)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  hint === s.id
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border hover:border-primary/40"
+                  hint === s.id ? "border-primary bg-primary/10 text-primary" : "border-border hover:border-primary/40"
                 }`}
               >
                 {s.label}
               </button>
             ))}
           </div>
-          <p className="mt-2 text-xs italic text-muted-foreground">
-            e.g. {activeSection.example}
-          </p>
+          <p className="mt-2 text-xs italic text-muted-foreground">e.g. {activeSection.example}</p>
         </div>
 
-        {/* Step 2 — language picker (always visible, scroll strip) */}
-        <div className="mt-6">
-          <Step n="2" label="Which language will you speak?" right={<span className="text-xs text-muted-foreground">{currentLang.flag} {currentLang.label}</span>} />
-          <div className="mt-2 overflow-x-auto">
-            <div className="flex gap-1.5 pb-2">
-              {SPEECH_LOCALES.map((l) => (
-                <button
-                  key={l.tag}
-                  type="button"
-                  onClick={() => setSpeechTag(l.tag)}
-                  className={`shrink-0 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    l.tag === speechTag
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:border-primary/40"
-                  }`}
-                >
-                  <span className="text-sm leading-none">{l.flag}</span>
-                  <span>{l.label}</span>
-                </button>
-              ))}
+        {/* Step 2 — language (hide for type mode) */}
+        {mode !== "type" && (
+          <div className="mt-6">
+            <Step n="2" label="Which language will you speak?" right={<span className="text-xs text-muted-foreground">{currentLang.flag} {currentLang.label}</span>} />
+            <div className="mt-2 overflow-x-auto">
+              <div className="flex gap-1.5 pb-2">
+                {SPEECH_LOCALES.map((l) => (
+                  <button
+                    key={l.tag}
+                    type="button"
+                    onClick={() => setSpeechTag(l.tag)}
+                    className={`shrink-0 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      l.tag === speechTag ? "border-primary bg-primary/10 text-primary" : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <span className="text-sm leading-none">{l.flag}</span>
+                    <span>{l.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Step 3 — recorder */}
+        {/* Step 3 — record / type */}
         <div className="mt-6">
-          <Step n="3" label={typeMode ? "Type what you'd say" : "Hit the button and speak"} right={
-            <button
-              type="button"
-              onClick={() => { if (listening) stop(); setTypeMode((v) => !v); }}
-              className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold hover:bg-accent"
-            >
-              <Keyboard className="size-3.5" />
-              {typeMode ? "Use mic" : "Type instead"}
-            </button>
-          } />
+          <Step n={mode === "type" ? "2" : "3"} label={mode === "type" ? "Type what you'd say" : "Hit the button and speak"} />
 
           <div className="mt-3 rounded-2xl border bg-card p-6">
-            {!typeMode ? (
+            {mode !== "type" ? (
               <div className="flex flex-col items-center text-center">
                 <button
                   type="button"
-                  disabled={!supported}
-                  onClick={listening ? stop : start}
+                  disabled={(mode === "fast" && !supportedFast) || (mode === "universal" && !supportedUniversal) || transcribing}
+                  onClick={toggleRecording}
                   className={`relative grid size-24 place-items-center rounded-full transition-all ${
                     listening
                       ? "bg-rose-500 text-white shadow-xl shadow-rose-500/40"
@@ -332,40 +456,62 @@ export function VoiceMode({
                   )}
                 </button>
                 <div className="mt-3 flex items-center gap-2 text-sm">
-                  {listening ? (
+                  {transcribing ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin text-primary" />
+                      <span className="font-semibold">AI is transcribing your audio…</span>
+                    </>
+                  ) : listening ? (
                     <>
                       <span className="size-2 rounded-full bg-rose-500 animate-pulse" />
-                      <span className="font-semibold">Listening in {currentLang.label}</span>
+                      <span className="font-semibold">
+                        {mode === "fast" ? `Listening in ${currentLang.label}` : `Recording…`}
+                      </span>
                       <span className="text-muted-foreground">· {elapsedSec}s</span>
                     </>
                   ) : (
-                    <span className="font-semibold text-muted-foreground">Tap to start recording</span>
+                    <span className="font-semibold text-muted-foreground">
+                      {mode === "fast" ? "Tap to start recording (live)" : "Tap to record, then we send to AI"}
+                    </span>
                   )}
                 </div>
 
-                {stuck && (
-                  <div className="mt-3 w-full rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-left text-xs text-amber-700 dark:text-amber-400">
-                    <p className="font-semibold">No speech detected after {elapsedSec}s.</p>
-                    <p className="mt-1">
-                      • Make sure the browser tab has microphone permission (the mic icon in your address bar should not show a slash).<br />
-                      • Yandex / Brave / Firefox may not transmit audio to Google&apos;s speech service — try Chrome, Edge, or use <strong>Type instead</strong> on the right.
+                {mode === "universal" && !listening && !transcribing && (
+                  <p className="mt-2 max-w-md text-xs text-muted-foreground">
+                    Universal mode records up to 60 seconds of audio, then sends it to Gemini for transcription.
+                    Works in <em>any</em> browser — including Yandex, Firefox, and Brave.
+                  </p>
+                )}
+
+                {stuckFast && (
+                  <div className="mt-3 w-full rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-left text-xs">
+                    <p className="font-semibold text-amber-700 dark:text-amber-400">No speech captured after {elapsedSec}s.</p>
+                    <p className="mt-1 text-amber-700 dark:text-amber-400">
+                      Your browser isn&apos;t transmitting audio to Google&apos;s speech service. Switch to <strong>Universal (AI)</strong> mode at the top — it&apos;ll work.
                     </p>
+                    <button
+                      type="button"
+                      onClick={() => { stopFast(); setMode("universal"); }}
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-amber-600 px-2.5 py-1 text-xs font-semibold text-white hover:opacity-90"
+                    >
+                      <Cloud className="size-3.5" /> Switch to Universal
+                    </button>
                   </div>
                 )}
               </div>
             ) : (
               <p className="text-center text-xs text-muted-foreground">
-                Voice off. Type whatever you&apos;d say into the box below.
+                Voice off. Write whatever you&apos;d say into the box below.
               </p>
             )}
 
-            {/* Transcript area — editable in type mode, read-only with caret hint while listening */}
+            {/* Transcript area */}
             <textarea
               value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
-              readOnly={!typeMode && listening}
+              readOnly={mode !== "type" && listening}
               placeholder={
-                typeMode
+                mode === "type"
                   ? "Write a few sentences about this section…"
                   : "Your spoken words will appear here…"
               }
@@ -391,7 +537,6 @@ export function VoiceMode({
                   type="button"
                   onClick={() => setTranscript("")}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold hover:bg-accent"
-                  title="Clear transcript"
                 >
                   <RotateCcw className="size-3.5" /> Clear
                 </button>
@@ -407,7 +552,6 @@ export function VoiceMode({
           </div>
         </div>
 
-        {/* Captured so far */}
         {parsed.length > 0 && (
           <div className="mt-6">
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
@@ -435,6 +579,44 @@ export function VoiceMode({
         )}
       </div>
     </div>
+  );
+}
+
+function ModeCard({
+  icon: Icon,
+  title,
+  hint,
+  active,
+  disabled,
+  recommended,
+  onClick,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  hint: string;
+  active: boolean;
+  disabled?: boolean;
+  recommended?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={`relative flex flex-col items-start gap-1 rounded-xl border-2 p-3 text-left transition-all hover:-translate-y-0.5 ${
+        active ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/40"
+      } ${disabled ? "opacity-50 hover:translate-y-0 cursor-not-allowed" : ""}`}
+    >
+      <Icon className={`size-5 ${active ? "text-primary" : "text-muted-foreground"}`} />
+      <p className="text-sm font-bold">{title}</p>
+      <p className="text-[11px] text-muted-foreground">{hint}</p>
+      {recommended && !active && (
+        <span className="absolute right-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+          Recommended
+        </span>
+      )}
+    </button>
   );
 }
 
