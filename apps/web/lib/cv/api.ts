@@ -153,3 +153,30 @@ export function cvPreviewURL(cvID: string): string {
   // fetch it with the Bearer header and feed the HTML into a srcDoc.
   return `${API_BASE}/api/cv/sessions/${cvID}/preview`;
 }
+
+// ─── Cover letter ────────────────────────────────────────────────────
+
+export type CVCoverLetterRequest = {
+  job_title?: string;
+  job_description: string;
+  tone?: "formal" | "enthusiastic" | "conversational";
+};
+
+export type CVCoverLetterResponse = {
+  text: string;
+  word_count: number;
+  tone: string;
+  locale: string;
+};
+
+export async function generateCoverLetter(
+  cvID: string,
+  payload: CVCoverLetterRequest,
+): Promise<CVCoverLetterResponse> {
+  const res = await api.post<CVCoverLetterResponse>(
+    `/api/cv/sessions/${cvID}/cover-letter`,
+    payload,
+  );
+  if (res.StatusCode >= 400) throw new Error(res.Description);
+  return res.Data;
+}

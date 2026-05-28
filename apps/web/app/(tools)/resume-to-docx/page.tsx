@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ToolPageShell } from "@/components/tools/tool-page-shell";
 import { getToolBySlug } from "@converto/data";
-import { CVRouterCard } from "@/components/cv/cv-router-card";
+import { ResumeToDocxClient } from "./resume-to-docx-client";
 
 export const metadata: Metadata = {
-  title: "Resume to Word DOCX — keep editing in Microsoft Word",
+  title: "Resume to Word DOCX — clean rebuild, fully editable",
   description:
-    "Export your resume as an editable .docx — keeps fonts, bullets, and structure perfect for Microsoft Word, Google Docs, and Pages.",
+    "Drop your PDF resume; AI rebuilds it into a clean ATS-friendly Word document you can keep editing in Word, Google Docs, or LibreOffice.",
   alternates: { canonical: "/resume-to-docx" },
 };
 
@@ -16,18 +16,7 @@ export default function Page() {
   if (!tool) notFound();
   return (
     <ToolPageShell tool={tool} index="06f" variant="AI Career">
-      <CVRouterCard
-        intent="?focus=export"
-        primaryCTA="Export to DOCX"
-        secondaryCTA="Build CV first"
-        benefits={[
-          "Fully editable .docx — opens in Word, Google Docs, LibreOffice, Pages.",
-          "Bullets, headings, and dividers preserved.",
-          "All 10 templates supported (including the corporate-style ones).",
-          "PDF and TXT exports available from the same screen.",
-        ]}
-        note="Need a CV first? Build one or upload an existing PDF, then export."
-      />
+      <ResumeToDocxClient />
     </ToolPageShell>
   );
 }
