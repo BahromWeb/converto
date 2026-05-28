@@ -13,12 +13,14 @@ export type TokenPair = {
 
 export function getAccessToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("access_token");
+  const v = localStorage.getItem("access_token");
+  return v && v !== "undefined" && v !== "null" ? v : null;
 }
 
 export function getRefreshToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("refresh_token");
+  const v = localStorage.getItem("refresh_token");
+  return v && v !== "undefined" && v !== "null" ? v : null;
 }
 
 export function setTokens(access: string, refresh: string) {
@@ -57,12 +59,20 @@ async function refreshAccessToken(): Promise<string | null> {
       return null;
     }
 
-    // /auth/refresh returns { access_token, refresh_token } directly (no wrapper)
-    const json: TokenPair = await res.json();
-    setTokens(json.access_token, json.refresh_token);
-    refreshQueue.forEach((cb) => cb(json.access_token));
+    // /auth/refresh returns the ApiResponse wrapper — unwrap to TokenPair.
+    const raw = await res.json();
+    const payload: TokenPair | undefined =
+      raw && typeof raw === "object" && "Data" in raw ? (raw as { Data: TokenPair }).Data : (raw as TokenPair);
+    if (!payload || !payload.access_token || !payload.refresh_token) {
+      clearTokens();
+      refreshQueue.forEach((cb) => cb(null));
+      refreshQueue = [];
+      return null;
+    }
+    setTokens(payload.access_token, payload.refresh_token);
+    refreshQueue.forEach((cb) => cb(payload.access_token));
     refreshQueue = [];
-    return json.access_token;
+    return payload.access_token;
   } catch {
     clearTokens();
     refreshQueue.forEach((cb) => cb(null));
