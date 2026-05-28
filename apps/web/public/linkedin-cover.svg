@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1128 191" role="img" aria-label="convertpdfgo cover">
+  <!-- Warm gradient background matching the site hero -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAF6EE"/>
+      <stop offset="55%" stop-color="#FFE7D1"/>
+      <stop offset="100%" stop-color="#F8B996"/>
+    </linearGradient>
+  </defs>
+  <rect width="1128" height="191" fill="url(#bg)"/>
+
+  <!-- Brand mark (mirrors the in-site logo) -->
+  <g transform="translate(64 53)">
+    <rect width="84" height="84" rx="18" fill="#E35323"/>
+    <rect x="26" y="26" width="32" height="32" rx="6" fill="#FAF6EE"/>
+    <circle cx="66" cy="18" r="8" fill="#0F0E0C"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <g transform="translate(180 80)" font-family="Inter, system-ui, sans-serif">
+    <text x="0" y="0" font-size="48" font-weight="800" fill="#0F0E0C" letter-spacing="-1">
+      convertpdfgo
+    </text>
+    <text x="0" y="38" font-size="20" font-weight="500" fill="#0F0E0C" opacity="0.6">
+      The smarter way to work with PDFs.
+    </text>
+  </g>
+
+  <!-- Right-side stats chips -->
+  <g transform="translate(728 70)" font-family="Inter, system-ui, sans-serif">
+    <g>
+      <rect x="0" y="0" width="110" height="56" rx="12" fill="#FFFFFF" opacity="0.85"/>
+      <text x="55" y="22" text-anchor="middle" font-size="13" font-weight="600" fill="#E35323" letter-spacing="1.5">SINCE</text>
+      <text x="55" y="44" text-anchor="middle" font-size="22" font-weight="800" fill="#0F0E0C">2022</text>
+    </g>
+    <g transform="translate(122 0)">
+      <rect width="110" height="56" rx="12" fill="#FFFFFF" opacity="0.85"/>
+      <text x="55" y="22" text-anchor="middle" font-size="13" font-weight="600" fill="#E35323" letter-spacing="1.5">TOOLS</text>
+      <text x="55" y="44" text-anchor="middle" font-size="22" font-weight="800" fill="#0F0E0C">37</text>
+    </g>
+    <g transform="translate(244 0)">
+      <rect width="110" height="56" rx="12" fill="#FFFFFF" opacity="0.85"/>
+      <text x="55" y="22" text-anchor="middle" font-size="13" font-weight="600" fill="#E35323" letter-spacing="1.5">LANGS</text>
+      <text x="55" y="44" text-anchor="middle" font-size="22" font-weight="800" fill="#0F0E0C">20</text>
+    </g>
+  </g>
+</svg>
