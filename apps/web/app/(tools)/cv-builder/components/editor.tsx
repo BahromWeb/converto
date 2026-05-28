@@ -48,6 +48,7 @@ export function CVEditor({
   const [activeSectionID, setActiveSectionID] = useState<string | null>(
     initialDetail.sections[0]?.id ?? null,
   );
+  const [previewTick, setPreviewTick] = useState(0);
   const [showTemplate, setShowTemplate] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showATS, setShowATS] = useState(false);
@@ -74,9 +75,11 @@ export function CVEditor({
       }));
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
-        updateCVSection(detail.id, sectionID, newContent).catch(() =>
-          setError("Couldn't save — your edits are still local"),
-        );
+        updateCVSection(detail.id, sectionID, newContent)
+          .then(() => setPreviewTick((t) => t + 1))
+          .catch(() =>
+            setError("Couldn't save — your edits are still local"),
+          );
       }, 800);
     },
     [detail.id],
@@ -176,7 +179,7 @@ export function CVEditor({
         locale={detail.locale}
         onDone={() => {
           setShowVoice(false);
-          onRefresh();
+          onRefresh(); setPreviewTick((t) => t + 1);
         }}
       />
     );
@@ -273,7 +276,7 @@ export function CVEditor({
             <EmptySectionState onAdd={handleAddSection} />
           )}
         </div>
-        <PreviewPane cvID={detail.id} templateID={detail.template_id} />
+        <PreviewPane cvID={detail.id} templateID={detail.template_id} tick={previewTick} />
       </div>
 
       {showTemplate && (

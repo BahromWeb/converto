@@ -15,9 +15,11 @@ import { cvPreviewURL } from "@/lib/cv/api";
 export function PreviewPane({
   cvID,
   templateID,
+  tick = 0,
 }: {
   cvID: string;
   templateID: string;
+  tick?: number;
 }) {
   const [html, setHtml] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export function PreviewPane({
       alive = false;
       clearTimeout(t);
     };
-  }, [cvID, templateID, refreshKey]);
+  }, [cvID, templateID, refreshKey, tick]);
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border bg-card">
