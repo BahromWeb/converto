@@ -35,6 +35,7 @@ const th: TranslationMap = {
     edit: "แก้ไข",
     secure: "ความปลอดภัย",
     ai: "ขับเคลื่อนด้วย AI",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "เรียบง่ายโดยการออกแบบ",

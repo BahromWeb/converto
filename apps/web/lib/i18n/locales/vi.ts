@@ -35,6 +35,7 @@ const vi: TranslationMap = {
     edit: "Chỉnh sửa",
     secure: "Bảo mật",
     ai: "Được hỗ trợ bởi AI",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Đơn giản theo thiết kế",

@@ -35,6 +35,7 @@ const de: TranslationMap = {
     edit: "Bearbeiten",
     secure: "Sichern",
     ai: "KI-gestützt",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Einfach by Design",

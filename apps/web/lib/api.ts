@@ -130,6 +130,14 @@ export const api = {
   delete: <T>(path: string, opts?: RequestInit) =>
     apiFetch<ApiResponse<T>>(path, { ...opts, method: "DELETE" }),
 
+  patch: <T>(path: string, body?: unknown, opts?: RequestInit) =>
+    apiFetch<ApiResponse<T>>(path, {
+      ...opts,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...(opts?.headers ?? {}) },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    }),
+
   // Unwrapped endpoints: response is the payload itself (auth token endpoints)
   raw: {
     post: <T>(path: string, body?: unknown, opts?: RequestInit) =>

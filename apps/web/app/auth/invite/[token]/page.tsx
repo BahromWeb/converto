@@ -87,7 +87,7 @@ export default function AcceptInvitePage() {
               <span className="block h-3 w-3 rounded-sm bg-primary-foreground" />
               <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-foreground" />
             </span>
-            <span className="text-lg font-bold tracking-tight text-foreground">converto</span>
+            <span className="text-lg font-bold tracking-tight text-foreground">convertpdfgo</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-foreground">Accept your invite</h1>
           <p className="mt-2 text-sm text-muted-foreground">

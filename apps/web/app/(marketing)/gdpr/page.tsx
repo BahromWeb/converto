@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "GDPR" };
+export const metadata: Metadata = { title: "GDPR", alternates: { canonical: "/gdpr" } };
 
 const rights = [
   { right: "Right of access", desc: "Request a copy of all personal data we hold about you." },
@@ -18,7 +18,7 @@ export default function GdprPage() {
         <p className="font-mono text-xs uppercase tracking-widest text-primary">Legal</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground">GDPR</h1>
         <p className="mt-4 text-muted-foreground">
-          Converto is fully GDPR-compliant. We process EU personal data lawfully, fairly, and transparently.
+          convertpdfgo is fully GDPR-compliant. We process EU personal data lawfully, fairly, and transparently.
         </p>
 
         <h2 className="mt-10 text-2xl font-bold text-foreground">Your rights</h2>
@@ -33,8 +33,8 @@ export default function GdprPage() {
 
         <p className="mt-10 text-sm text-muted-foreground">
           To exercise any of these rights, email{" "}
-          <a href="mailto:privacy@converto.io" className="font-semibold text-primary hover:underline">
-            privacy@converto.io
+          <a href="mailto:privacy@convertpdfgo.com" className="font-semibold text-primary hover:underline">
+            privacy@convertpdfgo.com
           </a>
           . We'll respond within 30 days as required by law. See our{" "}
           <Link href="/privacy" className="font-semibold text-primary hover:underline">

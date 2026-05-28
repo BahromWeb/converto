@@ -35,6 +35,7 @@ const hi: TranslationMap = {
     edit: "संपादित करें",
     secure: "सुरक्षित करें",
     ai: "AI-संचालित",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "सरल डिज़ाइन",

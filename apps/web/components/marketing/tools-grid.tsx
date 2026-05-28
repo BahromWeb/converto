@@ -39,7 +39,7 @@ const toolIcons: Record<string, React.ElementType> = {
   watermark: Layers,
 };
 
-const CATEGORY_ORDER: Category[] = ["organize", "convert", "edit", "secure", "ai"];
+const CATEGORY_ORDER: Category[] = ["organize", "convert", "edit", "secure", "ai", "career"];
 
 const categoryStyle: Record<Category, { iconBg: string; iconText: string }> = {
   organize: { iconBg: "bg-blue-50", iconText: "text-blue-600" },
@@ -47,6 +47,7 @@ const categoryStyle: Record<Category, { iconBg: string; iconText: string }> = {
   edit: { iconBg: "bg-violet-50", iconText: "text-violet-600" },
   secure: { iconBg: "bg-amber-50", iconText: "text-amber-600" },
   ai: { iconBg: "bg-primary/10", iconText: "text-primary" },
+  career: { iconBg: "bg-pink-50", iconText: "text-pink-600" },
 };
 
 export function ToolsGrid() {
@@ -58,6 +59,7 @@ export function ToolsGrid() {
     edit: t.categories.edit,
     secure: t.categories.secure,
     ai: t.categories.ai,
+    career: t.categories.career,
   };
 
   return (

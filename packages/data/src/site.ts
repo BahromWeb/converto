@@ -1,13 +1,18 @@
 import type { SiteConfig } from "@converto/types";
 
 export const siteConfig: SiteConfig = {
-  name: "Converto",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  description: "PDF tools that don't feel like 2008. Free, fast, zero watermarks.",
+  name: "convertpdfgo",
+  // Default to production so SEO tags (og:url, canonical, sitemap) ship the
+  // right host even when NEXT_PUBLIC_SITE_URL isn't passed as a build arg —
+  // Next.js inlines NEXT_PUBLIC_* at build time, not runtime, so the docker
+  // compose `environment:` block never reaches a baked client bundle.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://convertpdfgo.com",
+  description:
+    "Free online PDF tools — merge, split, compress, convert (PDF↔Word/Excel/PPT/JPG), OCR, watermark, protect, unlock. No watermarks, files auto-deleted in 1 hour.",
   ogImage: "/og.png",
   links: {
-    twitter: "https://twitter.com/converto",
-    github: "https://github.com/converto",
+    twitter: "https://twitter.com/convertpdfgo",
+    github: "https://github.com/convertpdfgo",
   },
 };
 

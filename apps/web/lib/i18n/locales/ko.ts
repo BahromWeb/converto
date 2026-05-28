@@ -35,6 +35,7 @@ const ko: TranslationMap = {
     edit: "편집",
     secure: "보안",
     ai: "AI 기반",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "심플한 디자인",

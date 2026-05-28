@@ -33,6 +33,7 @@ export interface TranslationMap {
     edit: string;
     secure: string;
     ai: string;
+    career: string;
   };
   howItWorks: {
     sectionLabel: string;

@@ -35,6 +35,7 @@ const ar: TranslationMap = {
     edit: "تحرير",
     secure: "حماية",
     ai: "بالذكاء الاصطناعي",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "بسيط بالتصميم",

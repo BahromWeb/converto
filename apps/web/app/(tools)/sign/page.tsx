@@ -9,6 +9,7 @@ import { Pen, Type, Upload } from "lucide-react";
 export const metadata: Metadata = {
   title: "Sign PDF",
   description: "Add your signature to any PDF. Draw, type, or upload.",
+  alternates: { canonical: "/sign" },
 };
 
 const signModes = [

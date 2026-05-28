@@ -21,6 +21,7 @@ import { cn } from "@converto/ui/lib/utils";
 export const metadata: Metadata = {
   title: "All Tools",
   description: "37 free PDF tools — merge, split, compress, convert, sign, and more.",
+  alternates: { canonical: "/tools" },
 };
 
 type Category = Tool["category"];
@@ -40,7 +41,7 @@ const toolIcons: Record<string, React.ElementType> = {
   watermark: Layers,
 };
 
-const CATEGORY_ORDER: Category[] = ["organize", "convert", "edit", "secure", "ai"];
+const CATEGORY_ORDER: Category[] = ["organize", "convert", "edit", "secure", "ai", "career"];
 
 const categoryMeta: Record<Category, { label: string; iconBg: string; iconText: string }> = {
   organize: { label: "Organize", iconBg: "bg-blue-50", iconText: "text-blue-600" },
@@ -48,6 +49,7 @@ const categoryMeta: Record<Category, { label: string; iconBg: string; iconText: 
   edit: { label: "Edit", iconBg: "bg-violet-50", iconText: "text-violet-600" },
   secure: { label: "Secure", iconBg: "bg-amber-50", iconText: "text-amber-600" },
   ai: { label: "AI", iconBg: "bg-orange-50", iconText: "text-orange-600" },
+  career: { label: "Career", iconBg: "bg-pink-50", iconText: "text-pink-600" },
 };
 
 export default function ToolsPage() {

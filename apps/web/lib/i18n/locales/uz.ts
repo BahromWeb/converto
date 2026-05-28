@@ -35,6 +35,7 @@ const uz: TranslationMap = {
     edit: "Tahrirlash",
     secure: "Himoyalash",
     ai: "AI-Kuchli",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Sodda dizayn",

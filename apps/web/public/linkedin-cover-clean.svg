@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1128 191" role="img" aria-label="convertpdfgo cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FAF6EE"/>
+      <stop offset="55%" stop-color="#FFE7D1"/>
+      <stop offset="100%" stop-color="#F8B996"/>
+    </linearGradient>
+  </defs>
+  <rect width="1128" height="191" fill="url(#bg)"/>
+
+  <!-- Subtle "convertpdfgo" outlined watermark on the right -->
+  <text x="1095" y="125" text-anchor="end" font-family="Inter, system-ui, sans-serif"
+        font-size="120" font-weight="900" fill="none"
+        stroke="#E35323" stroke-width="1.2" opacity="0.18"
+        letter-spacing="-2">
+    convertpdfgo
+  </text>
+
+  <!-- Brand mark + wordmark -->
+  <g transform="translate(64 53)">
+    <rect width="84" height="84" rx="18" fill="#E35323"/>
+    <rect x="26" y="26" width="32" height="32" rx="6" fill="#FAF6EE"/>
+    <circle cx="66" cy="18" r="8" fill="#0F0E0C"/>
+  </g>
+
+  <g transform="translate(180 78)" font-family="Inter, system-ui, sans-serif">
+    <text x="0" y="0" font-size="46" font-weight="800" fill="#0F0E0C" letter-spacing="-1">
+      convertpdfgo
+    </text>
+    <text x="0" y="36" font-size="20" font-weight="500" fill="#0F0E0C" opacity="0.65">
+      The smarter way to work with PDFs.
+    </text>
+  </g>
+</svg>

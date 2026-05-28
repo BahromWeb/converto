@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ShieldCheck, Lock, Server, Trash2 } from "lucide-react";
 
-export const metadata: Metadata = { title: "Security" };
+export const metadata: Metadata = { title: "Security", alternates: { canonical: "/security" } };
 
 const pillars = [
   {

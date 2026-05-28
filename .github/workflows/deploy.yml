@@ -1,0 +1,50 @@
+# Simple SSH-based deploy
+#
+# On every push to main, log into the Contabo box, fast-forward the
+# frontend repo to the new HEAD, then ask the backend's docker-compose
+# to rebuild + restart only the `web` service. Caddy keeps running
+# untouched so the prod TLS cert and routing never blink.
+#
+# Required GitHub secrets (Settings → Secrets and variables → Actions):
+#   SSH_HOST     = 194.163.184.94
+#   SSH_USER     = root
+#   SSH_PASSWORD = (server password)
+#
+# Why password (not a key)? Lower setup friction for now. Switch to a
+# deploy key once the team is bigger than one person.
+
+name: Deploy frontend to Contabo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script_stop: true
+          script: |
+            set -e
+            echo "==> Pulling frontend repo"
+            cd /root/converto
+            git fetch --quiet origin main
+            git reset --hard origin/main
+
+            echo "==> Rebuilding web container"
+            cd /root/convertpdfgo
+            docker compose --profile full up -d --build web
+
+            echo "==> Waiting for container health"
+            sleep 5
+            docker compose --profile full ps web
+
+            echo "==> Done"

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy" } };
 
 const sections = [
   {
     title: "What we collect",
-    body: "We collect only what's necessary to run Converto: uploaded files (processed in memory and deleted within 1 hour), usage analytics (anonymised), and contact information if you reach out to us.",
+    body: "We collect only what's necessary to run convertpdfgo: uploaded files (processed in memory and deleted within 1 hour), usage analytics (anonymised), and contact information if you reach out to us.",
   },
   {
     title: "How we use your data",
@@ -21,7 +21,7 @@ const sections = [
   },
   {
     title: "Contact",
-    body: "Questions about your privacy? Email us at privacy@converto.io and we'll respond within 48 hours.",
+    body: "Questions about your privacy? Email us at privacy@convertpdfgo.com and we'll respond within 48 hours.",
   },
 ];
 

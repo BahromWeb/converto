@@ -35,6 +35,7 @@ const ja: TranslationMap = {
     edit: "編集",
     secure: "セキュリティ",
     ai: "AI搭載",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "シンプルなデザイン",

@@ -35,6 +35,7 @@ const uk: TranslationMap = {
     edit: "Редагування",
     secure: "Захист",
     ai: "На основі ШІ",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Просто за дизайном",

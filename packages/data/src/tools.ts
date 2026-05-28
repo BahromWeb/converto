@@ -255,6 +255,57 @@ export const tools: Tool[] = [
     description: "Plain text out of a PDF that already has a text layer.",
     category: "edit",
   },
+  {
+    slug: "cv-builder",
+    name: "AI Resume Builder",
+    description: "Build, redesign, or talk to your CV — in 20 languages.",
+    category: "career",
+    badge: "new",
+  },
+  {
+    slug: "cv-from-pdf",
+    name: "PDF → Resume",
+    description: "Scan or upload an existing CV, redesign it with AI.",
+    category: "career",
+    badge: "new",
+  },
+  {
+    slug: "cv-voice",
+    name: "Voice → Resume",
+    description: "Talk through your career, AI structures it into a CV.",
+    category: "career",
+    badge: "new",
+  },
+  {
+    slug: "ats-check",
+    name: "ATS Checker",
+    description: "Score your CV against any job description.",
+    category: "career",
+  },
+  {
+    slug: "resume-translate",
+    name: "Resume Translator",
+    description: "One CV in 20 languages, native quality.",
+    category: "career",
+  },
+  {
+    slug: "cover-letter",
+    name: "Cover Letter",
+    description: "AI cover letter from your CV + job description.",
+    category: "career",
+  },
+  {
+    slug: "resume-to-docx",
+    name: "Resume → DOCX",
+    description: "Editable Word from your PDF resume.",
+    category: "career",
+  },
+  {
+    slug: "chat-with-cv",
+    name: "Chat with CV",
+    description: "Ask AI about your own resume — reuses the chat pipeline.",
+    category: "career",
+  },
 ];
 
 export function getToolBySlug(slug: string): Tool | undefined {

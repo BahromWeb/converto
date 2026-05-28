@@ -1,4 +1,5 @@
 import type { Tool } from "@converto/types";
+import { ToolJsonLd } from "@/components/seo/json-ld";
 
 export interface ToolPageShellProps {
   tool: Tool;
@@ -10,6 +11,8 @@ export interface ToolPageShellProps {
 export function ToolPageShell({ tool, index, variant, children }: ToolPageShellProps) {
   return (
     <article>
+      {/* schema.org SoftwareApplication + BreadcrumbList for every tool. */}
+      <ToolJsonLd slug={tool.slug} name={tool.name} description={tool.description} />
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-primary">
         <span>Tool {index}</span>
         {variant && (

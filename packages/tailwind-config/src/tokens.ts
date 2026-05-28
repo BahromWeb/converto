@@ -1,5 +1,5 @@
 /**
- * Converto brand tokens.
+ * convertpdfgo brand tokens.
  *
  * Surface these as CSS variables in the shared globals.css, then reference
  * them via Tailwind's HSL-channel pattern (e.g. `bg-background`).

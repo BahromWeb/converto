@@ -35,6 +35,7 @@ const pt: TranslationMap = {
     edit: "Editar",
     secure: "Proteger",
     ai: "Com IA",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Simples por design",

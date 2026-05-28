@@ -35,7 +35,7 @@ export function FaqSection() {
           <p className="mt-4 text-muted-foreground">
             {t.faq.subheading}{" "}
             <a
-              href="mailto:hello@converto.com"
+              href="mailto:hello@convertpdfgo.com"
               className="font-semibold text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:text-primary"
             >
               {t.faq.emailUs}

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Terms of Service" };
+export const metadata: Metadata = { title: "Terms of Service", alternates: { canonical: "/terms" } };
 
 const sections = [
   {
     title: "Acceptance",
-    body: "By using Converto you agree to these terms. If you don't agree, please don't use the service.",
+    body: "By using convertpdfgo you agree to these terms. If you don't agree, please don't use the service.",
   },
   {
     title: "Permitted use",
-    body: "Converto is for personal and commercial use. You may not use the service to process files you don't own or have the right to modify.",
+    body: "convertpdfgo is for personal and commercial use. You may not use the service to process files you don't own or have the right to modify.",
   },
   {
     title: "File responsibility",

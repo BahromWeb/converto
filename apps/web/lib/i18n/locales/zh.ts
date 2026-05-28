@@ -35,6 +35,7 @@ const zh: TranslationMap = {
     edit: "编辑",
     secure: "安全",
     ai: "AI 驱动",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "简单设计",

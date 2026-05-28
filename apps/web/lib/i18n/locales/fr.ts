@@ -35,6 +35,7 @@ const fr: TranslationMap = {
     edit: "Modifier",
     secure: "Sécuriser",
     ai: "Propulsé par IA",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Simple par conception",

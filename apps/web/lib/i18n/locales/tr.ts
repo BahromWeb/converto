@@ -35,6 +35,7 @@ const tr: TranslationMap = {
     edit: "Düzenle",
     secure: "Güvenli kıl",
     ai: "AI Destekli",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Tasarımda sadelik",

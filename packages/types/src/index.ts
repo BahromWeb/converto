@@ -6,7 +6,7 @@
 // Tools
 // ──────────────────────────────────────────────────────────────────────────────
 
-export type ToolCategory = "convert" | "edit" | "organize" | "secure" | "ai";
+export type ToolCategory = "convert" | "edit" | "organize" | "secure" | "ai" | "career";
 export type ToolBadge = "popular" | "new" | "ai" | "beta";
 
 export interface Tool {

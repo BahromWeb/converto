@@ -35,6 +35,7 @@ const ru: TranslationMap = {
     edit: "Редактирование",
     secure: "Защита",
     ai: "На базе ИИ",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Просто по дизайну",

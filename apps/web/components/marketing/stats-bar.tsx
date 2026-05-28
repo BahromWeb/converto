@@ -1,18 +1,16 @@
 "use client";
 
-import { TrendingUp, Wrench, Globe, ShieldOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Wrench, Globe, ShieldOff } from "lucide-react";
+import { tools } from "@converto/data";
 import { AnimateIn } from "@/components/ui/animate-in";
 import { useT } from "@/lib/i18n/context";
+import { locales } from "@/lib/i18n/locales";
+import { getPublicStats } from "@/lib/api";
 import { cn } from "@converto/ui/lib/utils";
 
 const statsMeta = [
-  {
-    icon: null,
-    live: true,
-    accentValue: true,
-    trendIcon: TrendingUp,
-    trendColor: "text-emerald-500",
-  },
+  { icon: null, live: true, accentValue: true },
   {
     icon: Wrench,
     iconBg: "bg-blue-50",
@@ -36,14 +34,56 @@ const statsMeta = [
   },
 ];
 
+function formatCount(n: number): { value: string; suffix: string } {
+  if (n >= 1_000_000) return { value: (n / 1_000_000).toFixed(1).replace(/\.0$/, ""), suffix: "M+" };
+  if (n >= 1_000) return { value: (n / 1_000).toFixed(1).replace(/\.0$/, ""), suffix: "K+" };
+  return { value: String(n), suffix: "" };
+}
+
+const TOOL_COUNT = tools.length;
+const LOCALE_COUNT = Object.keys(locales).length;
+
 export function StatsBar() {
   const t = useT();
+  const [processed, setProcessed] = useState<number | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    getPublicStats()
+      .then((s) => {
+        if (alive) setProcessed(s.total_files_processed);
+      })
+      .catch(() => {
+        if (alive) setProcessed(0);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const processedDisplay =
+    processed === null ? { value: "—", suffix: "" } : formatCount(processed);
 
   const stats = [
-    { value: "2.4M", suffix: "+", label: t.stats.filesDaily, sub: t.stats.filesWeek },
-    { value: "37",   suffix: "",  label: t.stats.toolsFree,  sub: t.stats.toolsQuarter },
-    { value: "32",   suffix: "",  label: t.stats.languages,  sub: t.stats.languagesSub },
-    { value: "0",    suffix: "",  label: t.stats.watermarks, sub: t.stats.watermarksSub },
+    {
+      value: processedDisplay.value,
+      suffix: processedDisplay.suffix,
+      label: t.stats.filesDaily,
+      sub: t.stats.filesWeek,
+    },
+    {
+      value: String(TOOL_COUNT),
+      suffix: "",
+      label: t.stats.toolsFree,
+      sub: t.stats.toolsQuarter,
+    },
+    {
+      value: String(LOCALE_COUNT),
+      suffix: "",
+      label: t.stats.languages,
+      sub: t.stats.languagesSub,
+    },
+    { value: "0", suffix: "", label: t.stats.watermarks, sub: t.stats.watermarksSub },
   ];
 
   return (
@@ -53,7 +93,6 @@ export function StatsBar() {
           {stats.map((stat, i) => {
             const meta = statsMeta[i]!;
             const Icon = "icon" in meta ? meta.icon : null;
-            const TrendIcon = "trendIcon" in meta ? meta.trendIcon : null;
 
             return (
               <AnimateIn
@@ -62,7 +101,6 @@ export function StatsBar() {
                 delay={i * 80}
                 className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
               >
-                {/* Top row: icon / live badge  +  trend pill */}
                 <div className="flex items-start justify-between">
                   {Icon ? (
                     <span
@@ -84,18 +122,8 @@ export function StatsBar() {
                       </span>
                     </span>
                   )}
-
-                  {TrendIcon && (
-                    <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5">
-                      <TrendIcon className={cn("size-3", "trendColor" in meta && meta.trendColor)} />
-                      <span className="font-mono text-[10px] font-semibold text-emerald-600">
-                        {t.stats.filesWeek.replace("↗ ", "")}
-                      </span>
-                    </span>
-                  )}
                 </div>
 
-                {/* Value */}
                 <div className="flex items-baseline gap-0.5">
                   <span
                     className={cn(
@@ -112,13 +140,11 @@ export function StatsBar() {
                   )}
                 </div>
 
-                {/* Label + sub */}
                 <div className="mt-auto">
                   <p className="font-semibold leading-tight text-foreground">{stat.label}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{stat.sub}</p>
                 </div>
 
-                {/* Subtle bottom accent on hover */}
                 <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
               </AnimateIn>
             );

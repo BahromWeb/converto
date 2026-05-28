@@ -35,6 +35,7 @@ const id: TranslationMap = {
     edit: "Edit",
     secure: "Amankan",
     ai: "Bertenaga AI",
+    career: "Career",
   },
   howItWorks: {
     sectionLabel: "Sederhana by design",

@@ -13,7 +13,7 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-const STORAGE_KEY = "converto-locale";
+const STORAGE_KEY = "convertpdfgo-locale";
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<string>(defaultLocale);
