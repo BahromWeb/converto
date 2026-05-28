@@ -233,7 +233,7 @@ export function Hero() {
           </span>
 
           <h1
-            className="mt-6 animate-fade-in-up text-5xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl"
+            className="mt-6 animate-fade-in-up text-3xl sm:text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl"
             style={{ animationDelay: "80ms" }}
           >
             {t.hero.headline1}
