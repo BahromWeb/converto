@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 interface Entry {
   version: string;
   date: string;
-  tag?: "major" | "minor" | "patch";
+  tag?: "major" | "minor" | "patch" | "milestone";
   changes: string[];
 }
 
