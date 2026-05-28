@@ -8,8 +8,10 @@ import {
   Palette,
   CheckSquare,
   Languages,
-  
   Plus,
+  LayoutList,
+  FilePen,
+  Eye,
 } from "lucide-react";
 import { SectionSidebar } from "./section-sidebar";
 import { SectionEditor } from "./section-editor";
@@ -49,6 +51,8 @@ export function CVEditor({
     initialDetail.sections[0]?.id ?? null,
   );
   const [previewTick, setPreviewTick] = useState(0);
+  // Mobile / tablet tab switcher — desktop (lg+) ignores this and shows 3 cols.
+  const [mobileView, setMobileView] = useState<"sections" | "edit" | "preview">("edit");
   const [showTemplate, setShowTemplate] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showATS, setShowATS] = useState(false);
@@ -204,7 +208,7 @@ export function CVEditor({
               setError("Couldn't save title"),
             )
           }
-          className="border-0 bg-transparent text-2xl font-bold outline-none focus:bg-accent/30 px-1 rounded"
+          className="w-full min-w-0 sm:w-auto border-0 bg-transparent text-xl sm:text-2xl font-bold outline-none focus:bg-accent/30 px-1 rounded"
         />
         <div className="flex flex-wrap items-center gap-2">
           <button
@@ -213,7 +217,7 @@ export function CVEditor({
             className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors hover:bg-accent"
           >
             <CheckSquare className="size-3.5" />
-            ATS check
+            <span className="hidden sm:inline">ATS check</span>
             {detail.ats_score != null && (
               <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary">
                 {detail.ats_score}
@@ -226,7 +230,7 @@ export function CVEditor({
             className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors hover:bg-accent"
           >
             <Palette className="size-3.5" />
-            Template
+            <span className="hidden sm:inline">Template</span>
           </button>
           <button
             type="button"
@@ -235,7 +239,7 @@ export function CVEditor({
             title="Add more by speaking"
           >
             <Languages className="size-3.5" />
-            Voice
+            <span className="hidden sm:inline">Voice</span>
           </button>
           <button
             type="button"
@@ -243,7 +247,7 @@ export function CVEditor({
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
           >
             <Download className="size-3.5" />
-            Export
+            <span className="hidden sm:inline">Export</span>
           </button>
         </div>
       </header>
@@ -258,17 +262,47 @@ export function CVEditor({
         </div>
       )}
 
-      <div className="grid h-[calc(100vh-220px)] min-h-[600px] grid-cols-[240px_1fr_1fr] gap-4">
-        <SectionSidebar
-          sections={detail.sections}
-          activeID={activeSectionID}
-          atsScore={detail.ats_score}
-          onPick={setActiveSectionID}
-          onAdd={handleAddSection}
-          onDelete={handleDeleteSection}
-          onReorder={handleReorder}
-        />
-        <div className="overflow-y-auto rounded-2xl border bg-card p-5">
+      {/* Mobile / tablet view tabs (hidden on lg+) */}
+      <div className="mb-3 grid grid-cols-3 gap-1 rounded-xl border bg-secondary/30 p-1 lg:hidden">
+        {[
+          { id: "sections" as const, label: "Sections", icon: LayoutList },
+          { id: "edit"     as const, label: "Edit",     icon: FilePen },
+          { id: "preview"  as const, label: "Preview",  icon: Eye },
+        ].map((v) => {
+          const active = mobileView === v.id;
+          const Icon = v.icon;
+          return (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => setMobileView(v.id)}
+              className={`flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-semibold transition-colors ${
+                active ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon className="size-3.5" />
+              {v.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-4 lg:h-[calc(100vh-260px)] lg:min-h-[600px] lg:grid-cols-[240px_1fr_1fr]">
+        {/* Sections panel — hidden on mobile unless tab=sections */}
+        <div className={`${mobileView === "sections" ? "block" : "hidden"} lg:block`}>
+          <SectionSidebar
+            sections={detail.sections}
+            activeID={activeSectionID}
+            atsScore={detail.ats_score}
+            onPick={(id) => { setActiveSectionID(id); setMobileView("edit"); }}
+            onAdd={handleAddSection}
+            onDelete={handleDeleteSection}
+            onReorder={handleReorder}
+          />
+        </div>
+
+        {/* Editor panel */}
+        <div className={`${mobileView === "edit" ? "block" : "hidden"} lg:block overflow-y-auto rounded-2xl border bg-card p-4 sm:p-5 lg:max-h-full`}>
           {activeSection ? (
             <SectionEditor
               cvID={detail.id}
@@ -279,7 +313,11 @@ export function CVEditor({
             <EmptySectionState onAdd={handleAddSection} />
           )}
         </div>
-        <PreviewPane cvID={detail.id} templateID={detail.template_id} tick={previewTick} />
+
+        {/* Preview panel */}
+        <div className={`${mobileView === "preview" ? "block" : "hidden"} lg:block min-h-[500px] lg:min-h-0`}>
+          <PreviewPane cvID={detail.id} templateID={detail.template_id} tick={previewTick} />
+        </div>
       </div>
 
       {showTemplate && (
