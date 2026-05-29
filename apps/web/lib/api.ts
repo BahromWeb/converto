@@ -199,8 +199,16 @@ export async function uploadFile(file: File): Promise<FileUploadResult> {
   });
   const json: ApiResponse<FileUploadResult> = await res.json();
   if (!res.ok) {
+    // Backend's Description is the human-readable reason ("This file
+    // isn't a valid pdf — it may be corrupted or a saved error page");
+    // Data carries structured details. Prefer Description for users.
+    const desc = (json as { Description?: string }).Description;
     throw new Error(
-      typeof json.Data === "string" ? json.Data : `Upload failed (${res.status})`,
+      desc && desc !== "Bad Request" && desc !== "Unauthorized"
+        ? desc
+        : typeof json.Data === "string"
+          ? (json.Data as string)
+          : `Upload failed (${res.status})`,
     );
   }
   return json.Data;
