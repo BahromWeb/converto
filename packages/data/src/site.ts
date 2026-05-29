@@ -16,9 +16,6 @@ export const siteConfig: SiteConfig = {
   },
 };
 
-export const adminUrl =
-  process.env.NEXT_PUBLIC_ADMIN_URL ?? "http://localhost:3001";
-
 export const mainNav = [
   { label: "Tools", href: "/#tools" },
   { label: "How it works", href: "/#how-it-works" },
