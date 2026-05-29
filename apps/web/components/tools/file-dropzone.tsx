@@ -102,15 +102,73 @@ export function FileDropzone({
   }, []);
 
 
-  function addFiles(incoming: FileList | File[]) {
+  async function addFiles(incoming: FileList | File[]) {
     const arr = Array.from(incoming);
     const oversized = arr.find((f) => f.size > maxSizeMB * 1024 * 1024);
     if (oversized) {
       setError(`${oversized.name} is over ${maxSizeMB} MB. Sign in for the higher tier.`);
       return;
     }
+    // Catch obviously-broken files at the dropzone (a 0-byte stub, a
+    // saved 404 page renamed to .pdf, an image picked into a docx slot)
+    // so the user gets immediate feedback instead of having to wait for
+    // the upload + worker round-trip.
+    for (const f of arr) {
+      const reason = await validateLocalFile(f);
+      if (reason) {
+        setError(`${f.name}: ${reason}`);
+        return;
+      }
+    }
     setError(null);
     onChange(multiple ? [...files, ...arr] : arr.slice(0, 1));
+  }
+
+  /**
+   * Reads the first few bytes of a freshly-picked file and checks the
+   * signature matches the extension. Resolves to a human-readable error
+   * reason, or null if the file looks OK. Mirrors the magic-byte sniffer
+   * the API runs server-side so the UX stays consistent on both sides.
+   */
+  async function validateLocalFile(file: File): Promise<string | null> {
+    if (file.size === 0) return "this file is empty (0 bytes)";
+    if (file.size < 64) return "this file is suspiciously small — it may be a saved error page, not a real document";
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+    let head: Uint8Array;
+    try {
+      head = new Uint8Array(await file.slice(0, 32).arrayBuffer());
+    } catch {
+      return null; // browsers that fail the slice get a free pass
+    }
+    const startsWith = (sig: number[]) =>
+      sig.every((b, i) => head[i] === b);
+    const asciiAt = (start: number, str: string) =>
+      str.split("").every((c, i) => head[start + i] === c.charCodeAt(0));
+    switch (ext) {
+      case "pdf":
+        return asciiAt(0, "%PDF-")
+          ? null
+          : "this isn't a real PDF — it may be a saved error page or a 0-byte stub. Try a different file.";
+      case "docx": case "xlsx": case "pptx":
+      case "odt":  case "ods":  case "odp":
+        return startsWith([0x50, 0x4b]) ? null : "this doesn't look like a real Office / OpenDocument file.";
+      case "doc": case "xls": case "ppt":
+        return startsWith([0xd0, 0xcf, 0x11, 0xe0])
+          ? null
+          : "this doesn't look like a real legacy Office file.";
+      case "jpg": case "jpeg":
+        return startsWith([0xff, 0xd8, 0xff]) ? null : "this doesn't look like a real JPEG.";
+      case "png":
+        return startsWith([0x89, 0x50, 0x4e, 0x47]) ? null : "this doesn't look like a real PNG.";
+      case "gif":
+        return startsWith([0x47, 0x49, 0x46]) ? null : "this doesn't look like a real GIF.";
+      case "webp":
+        return asciiAt(0, "RIFF") && asciiAt(8, "WEBP")
+          ? null
+          : "this doesn't look like a real WebP.";
+      default:
+        return null; // unknown extension — let the backend decide.
+    }
   }
 
   /**
