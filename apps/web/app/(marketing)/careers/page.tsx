@@ -31,11 +31,11 @@ const openings = [
 const values = [
   {
     title: "Small team, real ownership",
-    body: "Five engineers right now. The person who ships a feature also writes its onboarding email and watches the support inbox the day it goes live.",
+    body: "Small enough that the person shipping a feature also writes its onboarding email and watches the support inbox the day it goes live. We add a hire only when there's work that genuinely needs another pair of hands.",
   },
   {
     title: "Async + remote",
-    body: "We work from Tashkent, Berlin, Lisbon, and Buenos Aires. Two short standups a week, the rest is GitHub + Linear. No 'jump on a call?' culture.",
+    body: "Most of the team works from Tashkent and across Europe. Two short standups a week, the rest is GitHub + Linear. No 'jump on a call?' culture.",
   },
   {
     title: "Free time off",
@@ -57,9 +57,7 @@ export default function CareersPage() {
           Build tools people actually like using.
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          We&apos;re a remote-first team of five, four years in, with a few million
-          monthly users and no investors. Hiring slowly and intentionally — when we
-          add a person it&apos;s because the work itself can&apos;t be done alone.
+          We're a small remote-first team, four years in, with no investors and no plans to change that. Hiring slowly and intentionally — when we add a person it's because the work itself can't be done alone.
         </p>
       </div>
 

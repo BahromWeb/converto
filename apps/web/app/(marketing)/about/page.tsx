@@ -85,7 +85,7 @@ export default function AboutPage() {
           href="/tools"
           className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
         >
-          Browse all 37 tools <ArrowRight className="size-4" />
+          Browse all 49 tools <ArrowRight className="size-4" />
         </Link>
       </div>
     </div>
