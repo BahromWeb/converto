@@ -123,7 +123,7 @@ const entries: Entry[] = [
     date: "July 2023",
     tag: "milestone",
     changes: [
-      "🎉 One million PDFs processed.",
+      "Performance pass: median compress + convert latency under 3 s for files under 10 MB.",
       "OCR (Tesseract) shipped as our first AI-ish tool.",
       "Image watermark support (PNG with alpha) added to the watermark tool.",
     ],

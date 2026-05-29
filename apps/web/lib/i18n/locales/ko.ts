@@ -56,7 +56,7 @@ const ko: TranslationMap = {
     badge: "가입 없음 · 이메일 없음 · 영원히 무료",
     heading1: "PDF와의 씨름을 그만하세요.",
     heading2: "몇 초 만에 해결하세요.",
-    subtitle: "워터마크가 넘치는 대안을 버린 240만 명의 일일 사용자와 함께하세요.",
+    subtitle: "페이지를 열고, 파일을 드롭하고, 몇 초 안에 결과를 받으세요. 워터마크 없음, 광고 없음, 가입 없음.",
     tryFree: "지금 무료로 시도",
     browseTools: "모든 도구 보기",
     trust1: "워터마크 없음",

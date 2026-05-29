@@ -56,7 +56,7 @@ const pt: TranslationMap = {
     badge: "Sem cadastro · Sem email · Grátis para sempre",
     heading1: "Pare de lutar com PDFs.",
     heading2: "Resolva em segundos.",
-    subtitle: "Junte-se a 2,4 milhões de usuários diários que abandonaram as alternativas pesadas.",
+    subtitle: "Abra a página, solte um arquivo, receba em segundos. Sem marcas d'água, sem anúncios, sem cadastro.",
     tryFree: "Experimente agora, grátis",
     browseTools: "Ver todas as ferramentas",
     trust1: "Zero marcas d'água",

@@ -56,7 +56,7 @@ const de: TranslationMap = {
     badge: "Keine Registrierung · Keine E-Mail · Für immer kostenlos",
     heading1: "Hören Sie auf, mit PDFs zu kämpfen.",
     heading2: "In Sekunden erledigt.",
-    subtitle: "Schließen Sie sich 2,4 Millionen täglichen Nutzern an, die aufgeblähte Alternativen aufgegeben haben.",
+    subtitle: "Seite öffnen, Datei ablegen, in Sekunden zurückbekommen. Ohne Wasserzeichen, ohne Werbung, ohne Anmeldung.",
     tryFree: "Jetzt kostenlos ausprobieren",
     browseTools: "Alle Werkzeuge ansehen",
     trust1: "Null Wasserzeichen",

@@ -56,7 +56,7 @@ const tr: TranslationMap = {
     badge: "Kayıt yok · E-posta yok · Sonsuza kadar ücretsiz",
     heading1: "PDF'lerle boğuşmayı bırak.",
     heading2: "Saniyeler içinde halleder.",
-    subtitle: "Şişirilmiş, filigran dolu alternatifleri bırakan 2,4 milyon günlük kullanıcıya katıl.",
+    subtitle: "Sayfayı aç, dosyayı bırak, saniyeler içinde geri al. Filigran yok, reklam yok, kayıt yok.",
     tryFree: "Şimdi ücretsiz dene",
     browseTools: "Tüm araçlara gözat",
     trust1: "Sıfır filigran",

@@ -5,7 +5,7 @@ import { ArrowRight, MapPin, Clock, Mail } from "lucide-react";
 export const metadata: Metadata = {
   title: "Careers at convertpdfgo — Build PDF tools the right way",
   description:
-    "We're a small remote team building free PDF tools used by millions. No open roles right now, but we'd still like to hear from you.",
+    "We're a small remote team building free PDF tools used by people around the world. No open roles right now, but we'd still like to hear from you.",
   alternates: { canonical: "/careers" },
 };
 

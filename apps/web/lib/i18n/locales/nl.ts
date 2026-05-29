@@ -56,7 +56,7 @@ const nl: TranslationMap = {
     badge: "Geen aanmelding · Geen e-mail · Gratis voor altijd",
     heading1: "Stop met worstelen met PDF's.",
     heading2: "Klaar in seconden.",
-    subtitle: "Sluit je aan bij 2,4 miljoen dagelijkse gebruikers die de opgeblazen alternatieven hebben verlaten.",
+    subtitle: "Open de pagina, sleep een bestand, krijg het in seconden terug. Geen watermerken, geen advertenties, geen registratie.",
     tryFree: "Probeer het nu, gratis",
     browseTools: "Alle tools bekijken",
     trust1: "Nul watermerken",

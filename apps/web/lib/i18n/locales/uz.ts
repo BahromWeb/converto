@@ -56,7 +56,7 @@ const uz: TranslationMap = {
     badge: "Ro'yxatdan o'tish kerak emas · Email kerak emas · Doimo bepul",
     heading1: "PDF bilan kurashishni to'xtating.",
     heading2: "Soniyalar ichida tugatib oling.",
-    subtitle: "Shishirilgan muqobil variantlarni tashlab ketgan 2.4 million kunlik foydalanuvchiga qo'shiling.",
+    subtitle: "Sahifani oching, faylni tashlang, soniyalarda natijani oling. Suv belgisi yo'q, reklama yo'q, ro'yxatdan o'tish shart emas.",
     tryFree: "Hozir bepul sinab ko'ring",
     browseTools: "Barcha vositalarni ko'rish",
     trust1: "Suv belgilari yo'q",

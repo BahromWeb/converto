@@ -47,15 +47,6 @@ const posts = [
     tag: "Launch",
   },
   {
-    slug: "one-million-files",
-    title: "One million PDFs processed",
-    date: "July 18, 2023",
-    author: "Zarif",
-    summary:
-      "Crossed the milestone at 3am UTC. A short note on the infra changes that got us there: bigger Postgres, asynq workers split across two boxes, gotenberg with a longer timeout.",
-    tag: "Milestone",
-  },
-  {
     slug: "hello-world",
     title: "Hello world — convertpdfgo, day one",
     date: "October 17, 2022",

@@ -56,7 +56,7 @@ const vi: TranslationMap = {
     badge: "Không đăng ký · Không email · Miễn phí mãi mãi",
     heading1: "Ngừng vật lộn với PDF.",
     heading2: "Hoàn thành trong vài giây.",
-    subtitle: "Tham gia cùng 2,4 triệu người dùng hàng ngày đã bỏ lại những lựa chọn thay thế đầy hình mờ.",
+    subtitle: "Mở trang, thả tệp, nhận lại sau vài giây. Không hình mờ, không quảng cáo, không đăng ký.",
     tryFree: "Dùng thử ngay, miễn phí",
     browseTools: "Xem tất cả công cụ",
     trust1: "Không có hình mờ",

@@ -56,7 +56,7 @@ const pl: TranslationMap = {
     badge: "Bez rejestracji · Bez e-maila · Bezpłatne na zawsze",
     heading1: "Przestań walczyć z PDF-ami.",
     heading2: "Zrób to w kilka sekund.",
-    subtitle: "Dołącz do 2,4 miliona codziennych użytkowników, którzy porzucili pełne znaków wodnych alternatywy.",
+    subtitle: "Otwórz stronę, upuść plik, otrzymaj wynik w sekundach. Bez znaków wodnych, bez reklam, bez rejestracji.",
     tryFree: "Wypróbuj teraz, bezpłatnie",
     browseTools: "Przeglądaj wszystkie narzędzia",
     trust1: "Zero znaków wodnych",

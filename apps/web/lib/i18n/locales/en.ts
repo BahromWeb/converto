@@ -56,7 +56,7 @@ const en: TranslationMap = {
     badge: "No sign-up · No email · Free forever",
     heading1: "Stop wrestling with PDFs.",
     heading2: "Get it done in seconds.",
-    subtitle: "Join 2.4 million daily users who ditched the bloated, watermark-heavy alternatives.",
+    subtitle: "Open the page, drop a file, get it back in seconds. No watermarks, no ads, no signup.",
     tryFree: "Try it now, free",
     browseTools: "Browse all tools",
     trust1: "Zero watermarks",

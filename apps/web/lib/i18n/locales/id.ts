@@ -56,7 +56,7 @@ const id: TranslationMap = {
     badge: "Tanpa daftar · Tanpa email · Gratis selamanya",
     heading1: "Berhenti berjuang dengan PDF.",
     heading2: "Selesaikan dalam hitungan detik.",
-    subtitle: "Bergabung dengan 2,4 juta pengguna harian yang meninggalkan alternatif penuh tanda air.",
+    subtitle: "Buka halaman, jatuhkan file, terima kembali dalam hitungan detik. Tanpa watermark, tanpa iklan, tanpa pendaftaran.",
     tryFree: "Coba sekarang, gratis",
     browseTools: "Lihat semua alat",
     trust1: "Nol tanda air",
