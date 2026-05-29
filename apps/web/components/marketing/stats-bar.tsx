@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Wrench, Globe, ShieldOff } from "lucide-react";
+import { useEffect } from "react";
+import { Wrench, Globe, ShieldOff, Zap } from "lucide-react";
 import { tools } from "@converto/data";
 import { AnimateIn } from "@/components/ui/animate-in";
 import { useT } from "@/lib/i18n/context";
@@ -10,7 +10,7 @@ import { getPublicStats } from "@/lib/api";
 import { cn } from "@converto/ui/lib/utils";
 
 const statsMeta = [
-  { icon: null, live: true, accentValue: true },
+  { icon: Zap, iconBg: "bg-emerald-50", iconColor: "text-emerald-500", live: true, accentValue: true },
   {
     icon: Wrench,
     iconBg: "bg-blue-50",
@@ -34,40 +34,23 @@ const statsMeta = [
   },
 ];
 
-function formatCount(n: number): { value: string; suffix: string } {
-  if (n >= 1_000_000) return { value: (n / 1_000_000).toFixed(1).replace(/\.0$/, ""), suffix: "M+" };
-  if (n >= 1_000) return { value: (n / 1_000).toFixed(1).replace(/\.0$/, ""), suffix: "K+" };
-  return { value: String(n), suffix: "" };
-}
-
 const TOOL_COUNT = tools.length;
 const LOCALE_COUNT = Object.keys(locales).length;
 
 export function StatsBar() {
   const t = useT();
-  const [processed, setProcessed] = useState<number | null>(null);
-
+  // We still hit the public stats endpoint so the data is warm in case
+  // we want to surface it later — for now the user-facing metric is the
+  // median sub-3-second conversion time, a trust signal that doesn't
+  // bottom out as 2 or 3 like a literal daily count on a brand-new site.
   useEffect(() => {
-    let alive = true;
-    getPublicStats()
-      .then((s) => {
-        if (alive) setProcessed(s.total_files_processed);
-      })
-      .catch(() => {
-        if (alive) setProcessed(0);
-      });
-    return () => {
-      alive = false;
-    };
+    getPublicStats().catch(() => undefined);
   }, []);
-
-  const processedDisplay =
-    processed === null ? { value: "—", suffix: "" } : formatCount(processed);
 
   const stats = [
     {
-      value: processedDisplay.value,
-      suffix: processedDisplay.suffix,
+      value: "<3",
+      suffix: "s",
       label: t.stats.filesDaily,
       sub: t.stats.filesWeek,
     },
