@@ -225,20 +225,23 @@ export function fileDownloadUrl(fileId: string): string {
  * skip auth on signed-in users' owned files.
  */
 export async function downloadFile(fileId: string, filename = "result.pdf"): Promise<void> {
+  // Browser-native download: build a URL the browser can hit directly
+  // (with ?token= for owned files), then click an invisible <a download>.
+  // The browser shows its own progress indicator in the URL bar / tray
+  // and streams the file straight to disk — no in-memory blob, no
+  // "frozen for 5 seconds while we await res.blob()" UX.
   const token = getAccessToken();
-  const headers: Record<string, string> = {};
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  const res = await fetch(fileDownloadUrl(fileId), { headers });
-  if (!res.ok) throw new Error(`Download failed (${res.status})`);
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
+  const u = new URL(fileDownloadUrl(fileId));
+  if (token) u.searchParams.set("token", token);
   const a = document.createElement("a");
-  a.href = url;
+  a.href = u.toString();
   a.download = filename;
+  a.rel = "noopener";
+  // Same-origin link, so target=_self keeps the user on the page.
+  a.target = "_self";
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
 }
 
 // ─── Generic job runner (POST → poll → done|failed) ─────────────────────────
