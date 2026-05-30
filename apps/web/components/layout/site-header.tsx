@@ -120,9 +120,9 @@ export function SiteHeader() {
                 >
                   <Link href="/account">{t.nav.signIn}</Link>
                 </Button>
-                <Button size="sm" asChild>
+                <Button size="sm" asChild className="px-2.5 sm:px-3">
                   <Link href="/#hero">
-                    {t.nav.getStarted}
+                    <span className="hidden sm:inline">{t.nav.getStarted}</span>
                     <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>

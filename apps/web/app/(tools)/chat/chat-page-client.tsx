@@ -103,6 +103,7 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
   const [streamingText, setStreamingText] = useState("");
   const [streamError, setStreamError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileView, setMobileView] = useState<"sessions" | "chat" | "pdf">("chat");
   const [showPdf, setShowPdf] = useState(true);
 
   // Pending image attachment: kept in state until the user hits send.
@@ -334,13 +335,44 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
     return `${sidebar} minmax(0,1fr) minmax(0,1fr)`;
   }, [sidebarOpen, activeId, detail, showPdf]);
 
+  // On mobile/tablet (< lg), show one panel at a time controlled by tab
+  // switcher. On lg+ keep the original dynamic three-column grid.
+  const isReady = activeId && detail && detail.status === "ready";
   return (
+    <>
+    {/* Mobile-only tab switcher */}
+    <div className="mb-3 grid grid-cols-3 gap-1 rounded-xl border bg-secondary/30 p-1 lg:hidden">
+      {(
+        [
+          { id: "sessions" as const, label: "Sessions" },
+          { id: "chat" as const,     label: "Chat"     },
+          { id: "pdf" as const,      label: "PDF"      },
+        ]
+      ).map((v) => {
+        const active = mobileView === v.id;
+        const disabled = v.id === "pdf" && !isReady;
+        return (
+          <button
+            key={v.id}
+            type="button"
+            disabled={disabled}
+            onClick={() => setMobileView(v.id)}
+            className={`rounded-lg px-2 py-1.5 text-xs font-semibold transition-colors disabled:opacity-40 ${
+              active ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {v.label}
+          </button>
+        );
+      })}
+    </div>
     <div
-      className="grid h-[calc(100vh-180px)] min-h-[600px] gap-4 transition-[grid-template-columns] duration-200"
-      style={{ gridTemplateColumns: layoutCols }}
+      className="grid h-[calc(100vh-220px)] min-h-[600px] grid-cols-1 gap-4 transition-[grid-template-columns] duration-200 lg:h-[calc(100vh-180px)]"
+      style={typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches ? { gridTemplateColumns: layoutCols } : undefined}
     >
       {/* ── Sessions sidebar (collapsible) ── */}
       {sidebarOpen && (
+        <div className={`${mobileView === "sessions" ? "block" : "hidden"} lg:block`}>
         <SessionSidebar
           sessions={sessions}
           activeId={activeId}
@@ -348,11 +380,12 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
           onNew={() => setActiveId(null)}
           onDelete={handleDelete}
         />
+        </div>
       )}
 
       {/* ── PDF panel (right of sidebar, shows only when session ready) ── */}
       {activeId && detail && detail.status === "ready" && showPdf && (
-        <div className="hidden overflow-hidden rounded-2xl border bg-card md:block">
+        <div className={`${mobileView === "pdf" ? "block" : "hidden"} overflow-hidden rounded-2xl border bg-card lg:block`}>
           <PdfViewer
             ref={pdfRef}
             fileId={detail.file_id}
@@ -660,5 +693,6 @@ function ChatPageInner({ accept, uploadPrompt, uploadHint }: ChatPageClientProps
         )}
       </main>
     </div>
+    </>
   );
 }
