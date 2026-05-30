@@ -174,7 +174,7 @@ export default function ChangelogPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-primary">
           Changelog
         </p>
-        <h1 className="mt-4 text-5xl font-bold tracking-tight md:text-6xl">
+        <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           Everything we&apos;ve shipped.
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">

@@ -57,7 +57,7 @@ export default function ToolsPage() {
     <div className="container py-16">
       <div className="mx-auto mb-14 max-w-2xl text-center">
         <span className="text-sm font-semibold text-primary">All tools · always free</span>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
           Every PDF tool you need
         </h1>
         <p className="mt-4 text-muted-foreground">

@@ -70,7 +70,7 @@ export default function BlogPage() {
       {/* Hero */}
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-xs font-semibold uppercase tracking-widest text-primary">Blog</p>
-        <h1 className="mt-4 text-5xl font-bold tracking-tight md:text-6xl">
+        <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           Notes from the team.
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">

@@ -97,7 +97,7 @@ export function CompressCard() {
           → output quality
         </p>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="font-serif text-6xl text-primary">{reductionPct}</span>
+          <span className="font-serif text-4xl sm:text-5xl md:text-6xl text-primary">{reductionPct}</span>
           <span className="font-serif text-2xl text-primary">%</span>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">

@@ -153,7 +153,7 @@ export default function PressPage() {
         <div className="overflow-hidden rounded-2xl border bg-card">
           <dl className="divide-y">
             {facts.map((f) => (
-              <div key={f.label} className="grid grid-cols-[1fr_2fr] gap-4 p-4 sm:p-5">
+              <div key={f.label} className="grid grid-cols-1 gap-1.5 p-4 sm:grid-cols-[1fr_2fr] sm:gap-4 sm:p-5">
                 <dt className="text-sm font-semibold text-muted-foreground">{f.label}</dt>
                 <dd className="text-sm text-foreground">{f.value}</dd>
               </div>
