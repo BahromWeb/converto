@@ -22,13 +22,13 @@ export function ToolPageShell({ tool, index, variant, children }: ToolPageShellP
           </>
         )}
       </div>
-      <div className="mt-4 grid items-end gap-8 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mt-3 grid items-end gap-3 lg:gap-8 lg:grid-cols-[1.4fr_1fr]">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
           {tool.name}
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground">{tool.description}</p>
       </div>
-      <div className="mt-8 lg:mt-12">{children}</div>
+      <div className="mt-6 lg:mt-12">{children}</div>
     </article>
   );
 }

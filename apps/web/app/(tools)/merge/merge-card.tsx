@@ -53,7 +53,7 @@ export function MergeCard() {
       : "Output keeps drop order — drop in the order you want";
 
   return (
-    <Card className="p-8">
+    <Card className="p-5 sm:p-8">
       <input
         ref={inputRef}
         type="file"
@@ -63,7 +63,7 @@ export function MergeCard() {
         onChange={onFileChange}
       />
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:grid-cols-6">
         {files.map((f, i) => (
           <div
             key={`${f.name}-${i}`}
@@ -89,7 +89,7 @@ export function MergeCard() {
         ))}
         {/* placeholder mockup tiles when nothing's added yet */}
         {files.length === 0 &&
-          Array.from({ length: 5 }).map((_, i) => (
+          Array.from({ length: 3 }).map((_, i) => (
             <div
               key={`ph-${i}`}
               className="relative aspect-[3/4] rounded-lg border bg-background p-3 text-xs opacity-40"
@@ -114,7 +114,7 @@ export function MergeCard() {
         </button>
       </div>
 
-      <div className="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl bg-foreground p-5 text-background md:flex-row md:items-center">
+      <div className="mt-8 flex flex-col items-start justify-between gap-3 rounded-2xl bg-foreground p-4 sm:p-5 text-background md:flex-row md:items-center">
         <div className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs uppercase tracking-wider">
           <span>
             <span className="text-primary">{files.length}</span> files

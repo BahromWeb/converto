@@ -150,7 +150,7 @@ export default function Page() {
       <ToolPageShell tool={tool} index="14" variant="visual picker">
         <ExtractClient />
 
-        <div className="mt-12 grid gap-3 sm:grid-cols-3">
+        <div className="mt-6 sm:mt-12 grid gap-3 sm:grid-cols-3">
           {howToSteps.map((s, i) => {
             const Icon = s.icon;
             return (
@@ -175,7 +175,7 @@ export default function Page() {
           })}
         </div>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1fr]">
+        <div className="mt-8 sm:mt-12 grid gap-6 lg:gap-8 lg:grid-cols-[1fr_1fr]">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
               Extract Pages FAQ

@@ -118,7 +118,7 @@ export function SplitCard() {
   const showVisual = picker === "visual" && activeTab !== "everyN" && fileID;
 
   return (
-    <Card className="p-6 sm:p-8">
+    <Card className="p-5 sm:p-8">
       <input
         ref={inputRef}
         type="file"
