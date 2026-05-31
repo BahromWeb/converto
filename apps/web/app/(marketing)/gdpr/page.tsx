@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+
+// Marketing pages are mostly static — render at build time and revalidate hourly
+// so the next-build picks up locale + tools.length changes within an hour.
+export const revalidate = 3600
+
 export const metadata: Metadata = { title: "GDPR", alternates: { canonical: "/gdpr" } };
 
 const rights = [

@@ -18,6 +18,11 @@ import { tools } from "@converto/data";
 import type { Tool } from "@converto/types";
 import { cn } from "@converto/ui/lib/utils";
 
+
+// Marketing pages are mostly static — render at build time and revalidate hourly
+// so the next-build picks up locale + tools.length changes within an hour.
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: "All Tools",
   description: "37 free PDF tools — merge, split, compress, convert, sign, and more.",

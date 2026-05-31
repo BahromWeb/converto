@@ -67,11 +67,11 @@ export function JobStatusPanel({
   // done
   return (
     <div className="mt-6 rounded-xl border border-primary/30 bg-primary/5 p-4 text-sm">
-      <div className="flex items-center justify-between gap-3">
-        <span className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <span className="flex flex-1 min-w-0 items-center gap-2">
           <CheckCircle2 className="size-4 text-primary" />
           <span className="font-medium">Done.</span>
-          <span className="text-muted-foreground">File expires in 5 minutes — grab it now.</span>
+          <span className="truncate text-muted-foreground">File expires in 5 min</span>
         </span>
         {!hideDownload && onDownload && (
           <Button size="sm" onClick={onDownload}>

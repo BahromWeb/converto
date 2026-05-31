@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { ShieldCheck, Lock, Server, Trash2 } from "lucide-react";
 
+
+// Marketing pages are mostly static — render at build time and revalidate hourly
+// so the next-build picks up locale + tools.length changes within an hour.
+export const revalidate = 3600
+
 export const metadata: Metadata = { title: "Security", alternates: { canonical: "/security" } };
 
 const pillars = [

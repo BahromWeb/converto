@@ -4,6 +4,11 @@ import { Mail, Copy, Image as ImageIcon, Link2, Github } from "lucide-react";
 import { tools } from "@converto/data";
 import { locales } from "@/lib/i18n/locales";
 
+
+// Marketing pages are mostly static — render at build time and revalidate hourly
+// so the next-build picks up locale + tools.length changes within an hour.
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: "Press Kit — convertpdfgo brand assets and quick facts",
   description:

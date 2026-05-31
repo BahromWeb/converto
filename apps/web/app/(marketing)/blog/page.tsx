@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Calendar, User } from "lucide-react";
 
+
+// Marketing pages are mostly static — render at build time and revalidate hourly
+// so the next-build picks up locale + tools.length changes within an hour.
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: "Blog — convertpdfgo product updates and PDF guides",
   description:
