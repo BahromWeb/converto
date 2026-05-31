@@ -3,6 +3,7 @@ import { mergePdfPost } from "./how-to-merge-pdf-files-online-free-no-watermark"
 import { splitPdfPost } from "./how-to-split-pdf-files-online-free-no-watermark";
 import { removePagePdfPost } from "./how-to-remove-pages-from-pdf-online-free";
 import { extractPdfPost } from "./how-to-extract-pages-from-pdf-online-free";
+import { pdfToWordPost } from "./how-to-convert-pdf-to-word-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -13,6 +14,7 @@ export const posts: BlogPost[] = [
   splitPdfPost,
   removePagePdfPost,
   extractPdfPost,
+  pdfToWordPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
