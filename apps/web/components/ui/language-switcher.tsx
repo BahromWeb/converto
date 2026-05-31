@@ -171,7 +171,7 @@ export function LanguageSwitcher() {
       <button
         onClick={() => setOpen(true)}
         className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
-        aria-label={t.languageSwitcher.title}
+        aria-label={`${t.languageSwitcher.title} (${locale.toUpperCase()})`}
         title={t.languageSwitcher.title}
       >
         <Globe className="size-3.5" />

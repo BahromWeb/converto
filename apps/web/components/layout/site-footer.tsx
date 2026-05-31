@@ -36,7 +36,7 @@ export function SiteFooter() {
               {t.footer.tagline}
             </p>
 
-            <p className="mt-4 text-xs text-background/35">{t.footer.promise}</p>
+            <p className="mt-4 text-xs text-background/70">{t.footer.promise}</p>
 
             {/* Social + contact — three platforms we actually post on,
                 plus an Uzbekistan phone number for direct support. */}
@@ -87,7 +87,7 @@ export function SiteFooter() {
               +998 94 910 52 42
             </a>
 
-            <p className="mt-1 text-xs text-background/40">
+            <p className="mt-1 text-xs text-background/65">
               Mon–Fri · 9:00–18:00 UZT
             </p>
           </div>
@@ -95,9 +95,9 @@ export function SiteFooter() {
           {/* Nav columns */}
           {colKeys.map((col) => (
             <div key={col}>
-              <h4 className="mb-5 text-xs font-bold uppercase tracking-widest text-background/35">
+              <h3 className="mb-5 text-xs font-bold uppercase tracking-widest text-background/70">
                 {colLabels[col]}
-              </h4>
+              </h3>
               <ul className="space-y-3">
                 {footerNav[col].map((item) => (
                   <li key={item.href}>
@@ -115,7 +115,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-background/10 pt-8 text-xs text-background/40 md:flex-row md:items-center">
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-background/10 pt-8 text-xs text-background/65 md:flex-row md:items-center">
           <span className="flex items-center gap-2">
             <span className="size-1.5 animate-pulse rounded-full bg-primary" />
             {t.footer.allSystems}
@@ -123,24 +123,6 @@ export function SiteFooter() {
           <span>{t.footer.madeWith}</span>
         </div>
       </div>
-
-      {/* Marquee strip */}
-      <div className="relative overflow-hidden border-t border-background/10 py-5">
-        <div className="flex w-max animate-marquee gap-12 whitespace-nowrap font-bold text-6xl text-background/[0.05] md:text-8xl">
-          {Array.from({ length: 2 }).map((_, dup) => (
-            <div key={dup} className="flex gap-12">
-              <span>convertpdfgo</span>
-              <span className="text-primary/20">·</span>
-              <span>pdf tools</span>
-              <span className="text-primary/20">·</span>
-              <span>made for humans</span>
-              <span className="text-primary/20">·</span>
-              <span>free forever</span>
-              <span className="text-primary/20">·</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </footer>
+</footer>
   );
 }

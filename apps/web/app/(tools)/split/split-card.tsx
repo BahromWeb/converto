@@ -137,7 +137,6 @@ export function SplitCard() {
               onClick={() => setActiveTab(t.key)}
               className="rounded-full"
             >
-              <span className="mr-1 font-mono text-[10px] opacity-60">0{i + 1}</span>{" "}
               {t.label}
             </Button>
           ))}

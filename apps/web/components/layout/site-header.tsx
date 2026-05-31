@@ -122,7 +122,7 @@ export function SiteHeader() {
                 </Button>
                 <Button size="sm" asChild className="px-2.5 sm:px-3">
                   <Link href="/#hero">
-                    <span className="hidden sm:inline">{t.nav.getStarted}</span>
+                    <span className="sr-only sm:not-sr-only">{t.nav.getStarted}</span>
                     <ArrowRight className="size-3.5" />
                   </Link>
                 </Button>

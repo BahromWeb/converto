@@ -13,7 +13,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Split PDF Online — Extract Pages by Range, Free, No Watermark",
   description:
-    "Split a PDF into multiple files online. Extract specific pages, split by page range, or break it apart. Free, no sign-up, no watermark — works on mobile and desktop.",
+    "Split a PDF online — extract specific pages or split by page range. Free, no sign-up, no watermark. Works on mobile and desktop.",
   alternates: {
     languages: {
       "en": "https://convertpdfgo.com",
