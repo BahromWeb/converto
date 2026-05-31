@@ -1,5 +1,6 @@
 import type { BlogPost } from "./types";
 import { mergePdfPost } from "./how-to-merge-pdf-files-online-free-no-watermark";
+import { splitPdfPost } from "./how-to-split-pdf-files-online-free-no-watermark";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -7,6 +8,7 @@ export type { BlogPost } from "./types";
 // Newest first.
 export const posts: BlogPost[] = [
   mergePdfPost,
+  splitPdfPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {

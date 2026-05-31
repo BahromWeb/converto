@@ -1,147 +1,149 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Calendar, User } from "lucide-react";
+import { ArrowRight, Calendar, Clock, User, Sparkles } from "lucide-react";
+import { posts } from "./posts";
 
-
-// Marketing pages are mostly static — render at build time and revalidate hourly
-// so the next-build picks up locale + tools.length changes within an hour.
-export const revalidate = 3600
+// Marketing pages are mostly static — render at build time and revalidate hourly.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Blog — convertpdfgo product updates and PDF guides",
   description:
-    "Launch notes, deep dives on PDF tooling, and behind-the-scenes posts from the convertpdfgo team. Updated regularly since 2022.",
+    "Long-form guides and behind-the-scenes posts from the convertpdfgo team. Free PDF tools, the right way.",
   alternates: { canonical: "/blog" },
 };
 
-const posts = [
-  {
-    slug: "how-to-merge-pdf-files-online-free-no-watermark",
-    title: "How to Merge PDF Files Online — Free, Without Watermark, in 2026",
-    date: "June 1, 2026",
-    author: "convertpdfgo team",
-    summary:
-      "Step-by-step guide to combining multiple PDFs into one file online — free, no sign-up, no watermark. Tested on desktop and mobile, with tips on order, file size, and privacy.",
-    tag: "Guide",
-  },
-  {
-    slug: "pdf-chat-ai-launch",
-    title: "Chat with PDF, Word, Excel, and PowerPoint",
-    date: "May 28, 2026",
-    author: "Zarif",
-    summary:
-      "We launched AI chat for documents — ground answers in the file with page-level citations. Same RAG pipeline handles PDF, Word, Excel, and PowerPoint (Office docs get converted to PDF behind the scenes).",
-    tag: "Launch",
-  },
-  {
-    slug: "cloud-imports",
-    title: "Real Dropbox and Drive imports, finally",
-    date: "May 24, 2026",
-    author: "Engineering",
-    summary:
-      "The cloud buttons on the homepage used to redirect to an OAuth connect page. Now they actually pick a file. Same for every tool's dropzone — both Dropbox Chooser and Google Picker integrated.",
-    tag: "Launch",
-  },
-  {
-    slug: "twenty-languages",
-    title: "20 languages, including Uzbek and Arabic",
-    date: "December 12, 2025",
-    author: "Zarif",
-    summary:
-      "Tool labels, error messages, FAQ copy — all localised based on actual traffic patterns. Started with English, ended up adding Uzbek before German because that's where the early users were.",
-    tag: "Product",
-  },
-  {
-    slug: "cloud-connections",
-    title: "Save outputs straight to Dropbox / Drive / OneDrive",
-    date: "September 4, 2024",
-    author: "Engineering",
-    summary:
-      "OAuth-connected cloud storage targets. Convert a file, hit Save to Dropbox, done — no download / re-upload loop. Refresh tokens stored encrypted at rest.",
-    tag: "Launch",
-  },
-  {
-    slug: "hello-world",
-    title: "Hello world — convertpdfgo, day one",
-    date: "October 17, 2022",
-    author: "Zarif",
-    summary:
-      "Why we built another PDF site. Short version: existing free tools were full of watermarks, paid ones charged $10/month for a feature that's three lines of pdfcpu. So we shipped one.",
-    tag: "Story",
-  },
-];
-
-const tagColor: Record<string, string> = {
-  Launch: "bg-primary/10 text-primary",
-  Product: "bg-violet-500/10 text-violet-700 dark:text-violet-300",
-  Milestone: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  Story: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  Guide: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  Comparison: "bg-rose-500/10 text-rose-700 dark:text-rose-300",
-};
-
 export default function BlogPage() {
+  const featured = posts[0];
+  const rest = posts.slice(1);
+
   return (
     <div className="container py-16 lg:py-24">
       {/* Hero */}
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary">Blog</p>
+      <header className="mx-auto max-w-3xl text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+          Blog
+        </p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           Notes from the team.
         </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Launch announcements, engineering deep dives, and the occasional
-          milestone post. Mostly written by whoever shipped the thing.
+        <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          Long-form guides, engineering deep dives, and the occasional milestone
+          post. Mostly written by whoever shipped the thing.
         </p>
-      </div>
+      </header>
 
-      {/* Posts */}
-      <div className="mx-auto mt-16 max-w-3xl space-y-4">
-        {posts.map((p) => (
-          <article
-            key={p.slug}
-            className="group flex flex-col gap-3 rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+      {/* Featured (animated entrance from corner) */}
+      {featured && (
+        <section className="mx-auto mt-16 max-w-5xl">
+          <p className="mb-4 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            <Sparkles className="size-3.5 text-primary" />
+            Featured guide
+          </p>
+          <Link
+            href={`/blog/${featured.slug}`}
+            className="animate-fade-in-up group relative block overflow-hidden rounded-3xl border bg-gradient-to-br from-primary/10 via-card to-card p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl sm:p-12"
           >
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              <span
-                className={`rounded-full px-2 py-0.5 font-semibold ${tagColor[p.tag] ?? "bg-muted"}`}
-              >
-                {p.tag}
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="size-3" />
-                {p.date}
-              </span>
-              <span className="flex items-center gap-1">
-                <User className="size-3" />
-                {p.author}
+            {/* Decorative blob in the top-right corner — gives the card visual mass */}
+            <div
+              className="absolute -right-16 -top-16 size-64 rounded-full bg-primary/20 blur-3xl transition-all duration-700 group-hover:scale-110 group-hover:bg-primary/30"
+              aria-hidden
+            />
+            <div className="relative">
+              <div className="flex flex-wrap items-center gap-3 text-xs">
+                <span className="rounded-full bg-blue-500/10 px-2.5 py-1 font-semibold text-blue-700 dark:text-blue-300">
+                  {featured.tag}
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="size-3.5" />
+                  {new Date(featured.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <Clock className="size-3.5" />
+                  {featured.readingMinutes} min read
+                </span>
+                <span className="inline-flex items-center gap-1 text-muted-foreground">
+                  <User className="size-3.5" />
+                  {featured.author}
+                </span>
+              </div>
+              <h2 className="mt-6 text-2xl font-bold leading-tight tracking-tight transition-colors group-hover:text-primary sm:text-3xl md:text-4xl">
+                {featured.title}
+              </h2>
+              <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {featured.description}
+              </p>
+              <span className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform group-hover:scale-105">
+                Read the guide
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </span>
             </div>
-            <h2 className="text-xl font-bold tracking-tight transition-colors group-hover:text-primary">
-              {p.title}
-            </h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-              Read more <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </article>
-        ))}
-      </div>
+          </Link>
+        </section>
+      )}
 
-      {/* Footer CTA */}
-      <div className="mx-auto mt-16 max-w-3xl rounded-2xl border bg-gradient-to-br from-primary/5 to-transparent p-8 text-center">
-        <h2 className="text-xl font-bold">Want updates in your inbox?</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          We send one short email per launch — no marketing, no tracking pixels.
-          Drop your address with us via the contact form.
-        </p>
-        <Link
-          href="/contact"
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
-        >
-          Get in touch <ArrowRight className="size-4" />
-        </Link>
-      </div>
+      {/* Additional posts will appear here as they're written */}
+      {rest.length > 0 && (
+        <section className="mx-auto mt-20 max-w-5xl">
+          <p className="mb-6 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            More from the blog
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {rest.map((p, i) => (
+              <Link
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                className="animate-fade-in-up group flex flex-col gap-3 rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                style={{ animationDelay: `${(i + 1) * 80}ms` }}
+              >
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span className="rounded-full bg-muted px-2 py-0.5 font-semibold">
+                    {p.tag}
+                  </span>
+                  <time dateTime={p.date}>
+                    {new Date(p.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </div>
+                <h3 className="text-lg font-bold leading-tight transition-colors group-hover:text-primary">
+                  {p.title}
+                </h3>
+                <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                  {p.description}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                  Read more
+                  <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Empty state guidance — there's only one post so far */}
+      {rest.length === 0 && (
+        <section className="mx-auto mt-16 max-w-3xl text-center">
+          <p className="text-sm text-muted-foreground">
+            More guides are on the way. In the meantime, try one of our{" "}
+            <Link href="/tools" className="font-semibold text-primary hover:underline">
+              49 free PDF tools
+            </Link>{" "}
+            or read{" "}
+            <Link href="/about" className="font-semibold text-primary hover:underline">
+              the project story
+            </Link>
+            .
+          </p>
+        </section>
+      )}
     </div>
   );
 }
