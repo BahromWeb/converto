@@ -16,6 +16,15 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "how-to-merge-pdf-files-online-free-no-watermark",
+    title: "How to Merge PDF Files Online — Free, Without Watermark, in 2026",
+    date: "June 1, 2026",
+    author: "convertpdfgo team",
+    summary:
+      "Step-by-step guide to combining multiple PDFs into one file online — free, no sign-up, no watermark. Tested on desktop and mobile, with tips on order, file size, and privacy.",
+    tag: "Guide",
+  },
+  {
     slug: "pdf-chat-ai-launch",
     title: "Chat with PDF, Word, Excel, and PowerPoint",
     date: "May 28, 2026",
@@ -67,6 +76,8 @@ const tagColor: Record<string, string> = {
   Product: "bg-violet-500/10 text-violet-700 dark:text-violet-300",
   Milestone: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
   Story: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  Guide: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+  Comparison: "bg-rose-500/10 text-rose-700 dark:text-rose-300",
 };
 
 export default function BlogPage() {

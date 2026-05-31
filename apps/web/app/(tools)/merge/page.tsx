@@ -6,16 +6,37 @@ import { ToolPageShell } from "@/components/tools/tool-page-shell";
 import { getToolBySlug } from "@converto/data";
 import { MergeCard } from "./merge-card";
 
+
+// Static cache for one hour — every tool page is fully derivable from
+// the registry at build time. Revalidates hourly so registry updates land.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Merge PDF Without Watermark — Free Online PDF Merger",
   description:
     "Combine PDF files online in the exact order you want. No watermark, no sign-up, no file size limit. Drag, drop, merge — works on mobile and desktop.",
-  alternates: { canonical: "/merge" },
-  openGraph: {
+    alternates: {
+    languages: {
+      "en": "https://convertpdfgo.com",
+      "ru": "https://convertpdfgo.com",
+      "uz": "https://convertpdfgo.com",
+      "es": "https://convertpdfgo.com",
+      "ar": "https://convertpdfgo.com",
+      "x-default": "https://convertpdfgo.com",
+    }, canonical: "/merge" },
+    openGraph: {
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "convertpdfgo — free PDF tools",
+        type: "image/png",
+      },
+    ],
     title: "Merge PDF Without Watermark — Free Online PDF Merger",
     description:
       "Combine PDF files in seconds. No watermark, no signup, no limit.",
-    type: "website",
     url: "https://convertpdfgo.com/merge",
   },
 };
@@ -92,6 +113,34 @@ export default function MergePage() {
         }}
       />
 
+            <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            headline: "How to Merge PDF Files Online — Free and Watermark-Free",
+            description:
+              "Step-by-step guide to merging PDF files online with convertpdfgo — no software, no sign-up, no watermark.",
+            datePublished: "2026-01-15",
+            dateModified: new Date().toISOString().slice(0, 10),
+            author: { "@type": "Organization", name: "convertpdfgo", url: "https://convertpdfgo.com" },
+            publisher: {
+              "@type": "Organization",
+              name: "convertpdfgo",
+              logo: { "@type": "ImageObject", url: "https://convertpdfgo.com/icon-512.png" },
+            },
+            mainEntityOfPage: { "@type": "WebPage", "@id": "https://convertpdfgo.com/merge" },
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: ["h1", ".speakable-faq"],
+            },
+            inLanguage: "en",
+            about: { "@type": "Thing", name: "PDF document merging" },
+            keywords: "merge pdf, combine pdf, pdf merger, merge pdf without watermark, pdf merge online free",
+          }),
+        }}
+      />
       <ToolPageShell tool={tool} index="01" variant="drag-to-reorder">
         <MergeCard />
 
@@ -118,7 +167,7 @@ export default function MergePage() {
         <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1fr]">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-              Common questions
+              Merge PDF FAQ
             </h2>
             <dl className="mt-4 space-y-3">
               {faqs.map((f) => (
@@ -138,7 +187,7 @@ export default function MergePage() {
 
           <div>
             <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-              Related tools
+              Related PDF tools
             </h2>
             <div className="mt-4 space-y-2">
               {relatedTools.map((t) => (

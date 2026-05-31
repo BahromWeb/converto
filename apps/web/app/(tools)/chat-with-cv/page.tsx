@@ -4,11 +4,24 @@ import { ToolPageShell } from "@/components/tools/tool-page-shell";
 import { getToolBySlug } from "@converto/data";
 import { ChatPageClient } from "../chat/chat-page-client";
 
+
+// Static cache for one hour — every tool page is fully derivable from
+// the registry at build time. Revalidates hourly so registry updates land.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Chat with your CV — interview prep & resume Q&A",
   description:
     "Ask AI anything about your CV: practice interview answers, find gaps for a specific role, or rewrite weak bullets — all grounded in your real resume.",
-  alternates: { canonical: "/chat-with-cv" },
+    alternates: {
+    languages: {
+      "en": "https://convertpdfgo.com",
+      "ru": "https://convertpdfgo.com",
+      "uz": "https://convertpdfgo.com",
+      "es": "https://convertpdfgo.com",
+      "ar": "https://convertpdfgo.com",
+      "x-default": "https://convertpdfgo.com",
+    }, canonical: "/chat-with-cv" },
 };
 
 export default function Page() {

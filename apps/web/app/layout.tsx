@@ -64,7 +64,6 @@ export const metadata: Metadata = {
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  keywords: defaultKeywords,
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
@@ -105,12 +104,13 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
+    // Twitter card metadata is also read by LinkedIn, Slack, Discord, etc.
+    // when generating link previews — worth keeping even though we don't have
+    // a Twitter account. site/creator handles dropped (no Twitter presence).
     card: "summary_large_image",
     title: defaultTitle,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    site: "@convertpdfgo",
-    creator: "@convertpdfgo",
   },
   icons: {
     icon: [

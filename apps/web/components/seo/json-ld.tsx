@@ -25,12 +25,11 @@ export function HomeJsonLd() {
     url: base,
     logo: `${base}/logo.png`,
     sameAs: [
-      siteConfig.links.twitter,
+      siteConfig.links.linkedin,
+      siteConfig.links.telegram,
+      siteConfig.links.youtube,
       siteConfig.links.github,
-      "https://github.com/infosec554/golang-pdf-skd",
-      "https://www.linkedin.com/company/convertpdfgo",
-      "https://t.me/convertpdfgo",
-      "https://www.youtube.com/@convertpdfgo",
+      siteConfig.links.githubSDK,
     ],
   };
 

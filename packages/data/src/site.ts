@@ -11,8 +11,11 @@ export const siteConfig: SiteConfig = {
     "Free online PDF tools — merge, split, compress, convert (PDF↔Word/Excel/PPT/JPG), OCR, watermark, protect, unlock. No watermarks, files auto-deleted in 1 hour.",
   ogImage: "/og.png",
   links: {
-    twitter: "https://twitter.com/convertpdfgo",
-    github: "https://github.com/convertpdfgo",
+    linkedin: "https://www.linkedin.com/company/convertpdfgo",
+    telegram: "https://t.me/convertpdfgo",
+    youtube:  "https://www.youtube.com/@convertpdfgo",
+    github:   "https://github.com/convertpdfgo",
+    githubSDK:"https://github.com/infosec554/golang-pdf-skd",
   },
 };
 

@@ -34,8 +34,12 @@ export interface SiteConfig {
   description: string;
   ogImage: string;
   links: {
-    twitter?: string;
+    linkedin?: string;
+    telegram?: string;
+    youtube?: string;
     github?: string;
+    githubSDK?: string;
+    twitter?: string;
   };
 }
 
