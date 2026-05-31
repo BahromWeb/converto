@@ -35,6 +35,7 @@ export const footerNav = {
   ],
   resources: [
     { label: "Documentation", href: "/docs" },
+    { label: "Go SDK", href: "https://github.com/infosec554/golang-pdf-skd", external: true },
     { label: "Changelog", href: "/changelog" },
     { label: "Status", href: "/status" },
     { label: "Blog", href: "/blog" },
