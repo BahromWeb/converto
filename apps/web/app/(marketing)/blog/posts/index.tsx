@@ -8,6 +8,7 @@ import { wordToPdfPost } from "./how-to-convert-word-to-pdf-online-free";
 import { jpgToPdfPost } from "./how-to-convert-jpg-to-pdf-online-free";
 import { pdfToJpgPost } from "./how-to-convert-pdf-to-jpg-online-free";
 import { excelToPdfPost } from "./how-to-convert-excel-to-pdf-online-free";
+import { pptToPdfPost } from "./how-to-convert-powerpoint-to-pdf-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -23,6 +24,7 @@ export const posts: BlogPost[] = [
   jpgToPdfPost,
   pdfToJpgPost,
   excelToPdfPost,
+  pptToPdfPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
