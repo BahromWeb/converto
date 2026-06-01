@@ -6,14 +6,52 @@ import {
   GitMerge,
   Scissors,
   Minimize2,
-  MessageSquare,
-  FileText,
-  Image,
+  FileX,
+  FileOutput,
+  RotateCw,
+  Crop,
+  ListOrdered,
+  Type,
+  LayoutGrid,
+  SearchCheck,
+  Tags,
+  FileSearch,
+  FileType,
+  BookText,
+  Sheet,
+  FileSpreadsheet,
+  Presentation,
+  Projector,
+  Images,
+  ImageDown,
+  FileCode,
+  Code,
+  Globe,
+  Globe2,
+  AlignLeft,
+  Aperture,
   Pen,
+  Droplets,
+  QrCode,
   Lock,
   Unlock,
-  Eye,
-  Layers,
+  Sparkles,
+  MessageSquareText,
+  BarChart3,
+  MessagesSquare,
+  ContactRound,
+  ScanText,
+  Languages,
+  ClipboardCopy,
+  Network,
+  Briefcase,
+  UserCheck,
+  Mic,
+  BadgeCheck,
+  Mail,
+  FileBadge,
+  ScanLine,
+  FileText,
 } from "lucide-react";
 import { Button } from "@converto/ui/components/button";
 import { cn } from "@converto/ui/lib/utils";
@@ -25,18 +63,38 @@ import { useT } from "@/lib/i18n/context";
 type Category = Tool["category"];
 
 const toolIcons: Record<string, React.ElementType> = {
-  merge: GitMerge,
-  split: Scissors,
-  compress: Minimize2,
-  chat: MessageSquare,
-  "pdf-to-word": FileText,
-  "word-to-pdf": FileText,
-  "jpg-to-pdf": Image,
-  sign: Pen,
-  protect: Lock,
-  unlock: Unlock,
-  ocr: Eye,
-  watermark: Layers,
+  // ORGANIZE
+  merge: GitMerge, split: Scissors, compress: Minimize2,
+  removepage: FileX, extract: FileOutput, rotate: RotateCw, crop: Crop,
+  "add-page-numbers": ListOrdered, "header-footer": Type, nup: LayoutGrid,
+  inspect: SearchCheck, metadata: Tags, "detect-blank": FileSearch,
+
+  // CONVERT
+  "pdf-to-word": FileType, "word-to-pdf": BookText,
+  "pdf-to-excel": Sheet, "excel-to-pdf": FileSpreadsheet,
+  "ppt-to-pdf": Presentation, "pdf-to-ppt": Projector,
+  "jpg-to-pdf": Images, "pdf-to-jpg": ImageDown,
+  "pdf-to-html": FileCode, "html-to-pdf": Code, "url-to-pdf": Globe,
+  "extract-text": AlignLeft, "image-to-text": Aperture,
+
+  // EDIT
+  sign: Pen, watermark: Droplets, "qr-code": QrCode,
+
+  // SECURE
+  protect: Lock, unlock: Unlock,
+
+  // AI / CHAT
+  chat: Sparkles, "chat-word": MessageSquareText, "chat-excel": BarChart3,
+  "chat-powerpoint": MessagesSquare, "chat-with-cv": ContactRound,
+
+  // OCR
+  ocr: ScanText, "ocr-detect-lang": Languages,
+  "ocr-extract-text": ClipboardCopy, "ocr-structured": Network,
+
+  // CAREER
+  "cv-builder": Briefcase, "cv-from-pdf": UserCheck, "cv-voice": Mic,
+  "ats-check": BadgeCheck, "cover-letter": Mail, "resume-to-docx": FileBadge,
+  "resume-translate": Globe2, "scan-to-pdf": ScanLine,
 };
 
 const CATEGORY_ORDER: Category[] = ["organize", "convert", "edit", "secure", "ai", "career"];
