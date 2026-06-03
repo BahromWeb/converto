@@ -276,7 +276,10 @@ export function SignCard() {
     try {
       // Defensive: re-upload PDF if its server-side copy might have expired
       // (auto-delete TTL is 1h, so on long sessions the old pdfID 500/404s).
-      const sigBlob = await (await fetch(sigDataUrl)).blob();
+      // Decode the data: URL manually instead of fetch(dataUrl).blob() —
+      // some CSP configs (ours has connect-src 'self' …, no 'data:') block
+      // fetch on data URLs entirely and surface that as "Failed to fetch".
+      const sigBlob = dataUrlToBlob(sigDataUrl);
       if (!sigBlob || sigBlob.size === 0) {
         throw new Error("signature image is empty — try drawing again");
       }
@@ -632,4 +635,16 @@ function pointerXY(e: React.MouseEvent | React.TouchEvent, c: HTMLCanvasElement)
     return { x: (t.clientX - r.left) * sx, y: (t.clientY - r.top) * sy };
   }
   return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
+}
+
+function dataUrlToBlob(dataUrl: string): Blob {
+  const i = dataUrl.indexOf(",");
+  if (i < 0) return new Blob();
+  const meta = dataUrl.slice(0, i);
+  const b64 = dataUrl.slice(i + 1);
+  const mime = /data:([^;]+)/.exec(meta)?.[1] ?? "application/octet-stream";
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+  return new Blob([arr], { type: mime });
 }
