@@ -115,7 +115,7 @@ export function SignCard() {
         const res = await fetch(`${API_BASE}/api/pdf/thumbnails`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ file_id: r.id, max_pages: 50, max_width: 320 }),
+          body: JSON.stringify({ file_id: r.id, max_pages: 50, max_width: 1200 }),
         });
         const txt = await res.text();
         if (!alive) return;
