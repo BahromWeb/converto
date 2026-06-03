@@ -115,7 +115,7 @@ export function ProtectCard() {
                   type="button"
                   onClick={() => setShow((v) => !v)}
                   aria-label={show ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex size-11 items-center justify-center text-muted-foreground hover:text-foreground"
                 >
                   {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
@@ -147,7 +147,7 @@ export function ProtectCard() {
                   type="button"
                   onClick={() => setShow((v) => !v)}
                   aria-label={show ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex size-11 items-center justify-center text-muted-foreground hover:text-foreground"
                 >
                   {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>

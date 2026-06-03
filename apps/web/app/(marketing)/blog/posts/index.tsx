@@ -15,6 +15,8 @@ import { htmlToPdfPost } from "./how-to-convert-html-to-pdf-online-free";
 import { pdfToHtmlPost } from "./how-to-convert-pdf-to-html-online-free";
 import { urlToPdfPost } from "./how-to-convert-url-to-pdf-online-free";
 import { signPdfPost } from "./how-to-sign-a-pdf-online-free";
+import { protectPdfPost } from "./how-to-password-protect-a-pdf-online-free";
+import { unlockPdfPost } from "./how-to-unlock-a-pdf-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -37,6 +39,8 @@ export const posts: BlogPost[] = [
   pdfToHtmlPost,
   urlToPdfPost,
   signPdfPost,
+  protectPdfPost,
+  unlockPdfPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
