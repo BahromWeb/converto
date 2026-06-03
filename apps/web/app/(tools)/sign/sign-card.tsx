@@ -274,23 +274,51 @@ export function SignCard() {
     setBusy(true);
     setError(null);
     try {
+      // Defensive: re-upload PDF if its server-side copy might have expired
+      // (auto-delete TTL is 1h, so on long sessions the old pdfID 500/404s).
       const sigBlob = await (await fetch(sigDataUrl)).blob();
+      if (!sigBlob || sigBlob.size === 0) {
+        throw new Error("signature image is empty — try drawing again");
+      }
       const sigFile = new File([sigBlob], "signature.png", { type: "image/png" });
       const sigUp = await uploadFile(sigFile);
+      if (!sigUp?.id) throw new Error("signature upload returned no id");
 
+      const body = {
+        input_file_id: pdfID,
+        signature_file_id: sigUp.id,
+        pages: pagesSelector,
+        x: Math.max(0, Math.round(placement.x)),
+        y: Math.max(0, Math.round(placement.y)),
+        width: SIG_W,
+      };
       const res = await fetch(`${API_BASE}/api/pdf/sign`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          input_file_id: pdfID,
-          signature_file_id: sigUp.id,
-          pages: pagesSelector,
-          x: Math.max(0, Math.round(placement.x)),
-          y: Math.max(0, Math.round(placement.y)),
-          width: SIG_W,
-        }),
+        body: JSON.stringify(body),
       });
-      const j = await res.json();
+      const txt = await res.text();
+      if (!res.ok) {
+        // Surface validation details so the user sees WHY it failed
+        // instead of a generic "Failed to fetch".
+        let detail = txt || `HTTP ${res.status}`;
+        try {
+          const j = JSON.parse(txt);
+          detail = j.Description ?? detail;
+          if (j.Data && typeof j.Data === "object") {
+            const errs = (j.Data as { errors?: Record<string, string> }).errors;
+            if (errs) detail += ": " + Object.values(errs).join("; ");
+          }
+        } catch {}
+        // If the PDF expired server-side, prompt for re-upload instead of
+        // sending the user back to the dropzone with no explanation.
+        if (detail.toLowerCase().includes("not found") || detail.toLowerCase().includes("file")) {
+          throw new Error(detail + " — try re-uploading the PDF");
+        }
+        throw new Error(detail);
+      }
+      let j: { Data?: { id?: string }; Description?: string };
+      try { j = JSON.parse(txt); } catch { throw new Error("server returned invalid JSON"); }
       const jobID = j.Data?.id;
       if (!jobID) throw new Error(j.Description ?? "sign failed");
 
