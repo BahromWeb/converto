@@ -19,6 +19,16 @@ import { protectPdfPost } from "./how-to-password-protect-a-pdf-online-free";
 import { unlockPdfPost } from "./how-to-unlock-a-pdf-online-free";
 import { compressPdfPost } from "./how-to-compress-a-pdf-online-free";
 import { watermarkPdfPost } from "./how-to-watermark-a-pdf-online-free";
+import { rotatePdfPost } from "./how-to-rotate-pdf-pages-online-free";
+import { cropPdfPost } from "./how-to-crop-a-pdf-online-free";
+import { addPageNumbersPost } from "./how-to-add-page-numbers-to-pdf-online-free";
+import { headerFooterPdfPost } from "./how-to-add-header-footer-to-pdf-online-free";
+import { qrCodePdfPost } from "./how-to-add-qr-code-to-pdf-online-free";
+import { nupPdfPost } from "./how-to-make-nup-pdf-layout-online-free";
+import { inspectPdfPost } from "./how-to-inspect-pdf-metadata-online-free";
+import { detectBlankPdfPost } from "./how-to-detect-blank-pages-in-pdf-online-free";
+import { metadataPdfPost } from "./how-to-edit-pdf-metadata-online-free";
+import { extractTextPost } from "./how-to-extract-text-from-pdf-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -45,6 +55,16 @@ export const posts: BlogPost[] = [
   unlockPdfPost,
   compressPdfPost,
   watermarkPdfPost,
+  rotatePdfPost,
+  cropPdfPost,
+  addPageNumbersPost,
+  headerFooterPdfPost,
+  qrCodePdfPost,
+  nupPdfPost,
+  inspectPdfPost,
+  detectBlankPdfPost,
+  metadataPdfPost,
+  extractTextPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
