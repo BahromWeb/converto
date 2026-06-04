@@ -41,6 +41,7 @@ import { chatExcelPost } from "./how-to-chat-with-excel-spreadsheet-online-free"
 import { chatPowerPointPost } from "./how-to-chat-with-powerpoint-online-free";
 import { chatCvPost } from "./how-to-chat-with-cv-online-free";
 import { pptxBuilderPost } from "./how-to-build-pptx-with-ai-online-free";
+import { xlsxBuilderPost } from "./how-to-build-xlsx-with-ai-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -89,6 +90,7 @@ export const posts: BlogPost[] = [
   chatPowerPointPost,
   chatCvPost,
   pptxBuilderPost,
+  xlsxBuilderPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
