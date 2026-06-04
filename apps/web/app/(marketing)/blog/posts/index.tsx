@@ -29,6 +29,13 @@ import { inspectPdfPost } from "./how-to-inspect-pdf-metadata-online-free";
 import { detectBlankPdfPost } from "./how-to-detect-blank-pages-in-pdf-online-free";
 import { metadataPdfPost } from "./how-to-edit-pdf-metadata-online-free";
 import { extractTextPost } from "./how-to-extract-text-from-pdf-online-free";
+import { chatPdfPost } from "./how-to-chat-with-pdf-online-free";
+import { ocrPdfPost } from "./how-to-ocr-pdf-online-free";
+import { scanToPdfPost } from "./how-to-scan-paper-to-pdf-online-free";
+import { ocrExtractTextPost } from "./how-to-ocr-extract-text-from-pdf-online-free";
+import { imageToTextPost } from "./how-to-extract-text-from-image-online-free";
+import { ocrDetectLangPost } from "./how-to-detect-pdf-language-online-free";
+import { ocrStructuredPost } from "./how-to-do-structured-ocr-on-pdf-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -65,6 +72,13 @@ export const posts: BlogPost[] = [
   detectBlankPdfPost,
   metadataPdfPost,
   extractTextPost,
+  chatPdfPost,
+  ocrPdfPost,
+  scanToPdfPost,
+  ocrExtractTextPost,
+  imageToTextPost,
+  ocrDetectLangPost,
+  ocrStructuredPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
