@@ -308,6 +308,20 @@ export const tools: Tool[] = [
     comingSoon: true,
   },
   {
+    slug: "pptx-builder",
+    name: "AI PowerPoint Builder",
+    description: "Type a topic — AI designs and writes a real .pptx. 5 languages, 4 tones.",
+    category: "ai",
+    badge: "new",
+  },
+  {
+    slug: "xlsx-builder",
+    name: "AI Excel Builder",
+    description: "Type what you need — AI lays out the sheet with formulas and charts.",
+    category: "ai",
+    badge: "new",
+  },
+  {
     slug: "chat-with-cv",
     name: "Chat with CV",
     description: "Ask AI about your own resume — reuses the chat pipeline.",
