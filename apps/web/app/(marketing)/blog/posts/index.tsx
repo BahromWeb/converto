@@ -36,6 +36,10 @@ import { ocrExtractTextPost } from "./how-to-ocr-extract-text-from-pdf-online-fr
 import { imageToTextPost } from "./how-to-extract-text-from-image-online-free";
 import { ocrDetectLangPost } from "./how-to-detect-pdf-language-online-free";
 import { ocrStructuredPost } from "./how-to-do-structured-ocr-on-pdf-online-free";
+import { chatWordPost } from "./how-to-chat-with-word-document-online-free";
+import { chatExcelPost } from "./how-to-chat-with-excel-spreadsheet-online-free";
+import { chatPowerPointPost } from "./how-to-chat-with-powerpoint-online-free";
+import { chatCvPost } from "./how-to-chat-with-cv-online-free";
 
 // Re-export the BlogPost type for downstream importers.
 export type { BlogPost } from "./types";
@@ -79,6 +83,10 @@ export const posts: BlogPost[] = [
   imageToTextPost,
   ocrDetectLangPost,
   ocrStructuredPost,
+  chatWordPost,
+  chatExcelPost,
+  chatPowerPointPost,
+  chatCvPost,
 ];
 
 export function postBySlug(slug: string): BlogPost | undefined {
