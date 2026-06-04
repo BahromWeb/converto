@@ -121,7 +121,7 @@ export function CompressCard() {
               className="flex h-auto flex-col gap-0.5 rounded-xl py-3"
             >
               <span className="text-sm font-semibold">{p.name}</span>
-              <span className="text-[11px] opacity-70">{p.desc}</span>
+              <span className="text-xs text-muted-foreground">{p.desc}</span>
             </Button>
           ))}
         </div>

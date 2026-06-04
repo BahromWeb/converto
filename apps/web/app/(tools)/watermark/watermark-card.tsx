@@ -90,7 +90,7 @@ export function WatermarkCard() {
             </div>
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
               <p
-                className="select-none text-5xl font-black uppercase tracking-widest text-foreground/10"
+                className="select-none text-5xl font-black uppercase tracking-widest text-foreground/10" aria-hidden="true"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                   opacity: Math.max(opacity * 2, 0.08),
