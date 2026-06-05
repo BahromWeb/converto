@@ -102,6 +102,7 @@ export function CVEditor({
         });
         setDetail((d) => ({ ...d, sections: [...d.sections, sec] }));
         setActiveSectionID(sec.id);
+        setPreviewTick((t) => t + 1);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Failed to add section");
       }
@@ -121,6 +122,7 @@ export function CVEditor({
         if (activeSectionID === sectionID) {
           setActiveSectionID(detail.sections[0]?.id ?? null);
         }
+        setPreviewTick((t) => t + 1);
       } catch {
         setError("Couldn't delete section");
       }
@@ -134,6 +136,7 @@ export function CVEditor({
       await reorderCVSections(detail.id, newOrder.map((s) => s.id)).catch(() =>
         setError("Couldn't reorder"),
       );
+      setPreviewTick((t) => t + 1);
     },
     [detail.id],
   );
