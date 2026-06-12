@@ -26,6 +26,13 @@ export const locales: Locale[] = [
   { code: "nl", nativeName: "Nederlands", flag: "🇳🇱", dir: "ltr" },
   { code: "th", nativeName: "ไทย", flag: "🇹🇭", dir: "ltr" },
   { code: "uk", nativeName: "Українська", flag: "🇺🇦", dir: "ltr" },
+  { code: "zh-tw", nativeName: "中文（繁體）", flag: "🇹🇼", dir: "ltr" },
+  { code: "bg", nativeName: "Български", flag: "🇧🇬", dir: "ltr" },
+  { code: "ca", nativeName: "Català", flag: "🇦🇩", dir: "ltr" },
+  { code: "el", nativeName: "Ελληνικά", flag: "🇬🇷", dir: "ltr" },
+  { code: "ms", nativeName: "Bahasa Melayu", flag: "🇲🇾", dir: "ltr" },
+  { code: "sv", nativeName: "Svenska", flag: "🇸🇪", dir: "ltr" },
+  { code: "sw", nativeName: "Kiswahili", flag: "🇹🇿", dir: "ltr" },
 ];
 
 export const defaultLocale = "en";
@@ -37,7 +44,7 @@ export const defaultLocale = "en";
  * under a `/{code}` path prefix. Roll a language out by adding it here once
  * its `tool-seo/{code}.ts` content exists.
  */
-export const activeLocales = ["en", "uz", "ru", "es", "zh", "ar", "hi", "pt", "de", "fr", "ja", "ko", "tr", "it", "id", "pl", "vi", "nl", "th", "uk"] as const;
+export const activeLocales = ["en", "uz", "ru", "es", "zh", "ar", "hi", "pt", "de", "fr", "ja", "ko", "tr", "it", "id", "pl", "vi", "nl", "th", "uk", "zh-tw", "bg", "ca", "el", "ms", "sv", "sw"] as const;
 
 export function isActiveLocale(code: string): boolean {
   return (activeLocales as readonly string[]).includes(code);

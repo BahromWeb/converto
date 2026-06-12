@@ -18,6 +18,13 @@ import { vi } from "./vi";
 import { nl } from "./nl";
 import { th } from "./th";
 import { uk } from "./uk";
+import { zhTw } from "./zh-tw";
+import { bg } from "./bg";
+import { ca } from "./ca";
+import { el } from "./el";
+import { ms } from "./ms";
+import { sv } from "./sv";
+import { sw } from "./sw";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -43,6 +50,13 @@ const toolSeoByLocale: Record<string, ToolSeoMap> = {
   nl,
   th,
   uk,
+  "zh-tw": zhTw,
+  bg,
+  ca,
+  el,
+  ms,
+  sv,
+  sw,
 };
 
 /**
