@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   ListChecks,
   LogOut,
+  Mail,
   Search,
   Settings,
   ShieldCheck,
@@ -35,6 +36,7 @@ export const iconMap: Record<string, LucideIcon> = {
   Command,
   Bell,
   LogOut,
+  Mail,
 };
 
 export function getIcon(name: string | undefined): LucideIcon | null {

@@ -24,6 +24,7 @@ export const adminNav: NavSection[] = [
     title: "People",
     items: [
       { label: "Users", href: "/users", icon: "Users" },
+      { label: "Contacts", href: "/contacts", icon: "Mail" },
     ],
   },
   {
