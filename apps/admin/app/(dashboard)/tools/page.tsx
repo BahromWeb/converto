@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { Plus } from "lucide-react";
-import { Button } from "@converto/ui/components/button";
-import { Topbar } from "@/components/layout/topbar";
-import { ToolManagementCard } from "@/components/tools/tool-management-card";
-import { mockToolUsage, tools } from "@converto/data";
+import { Card } from "@converto/ui/components/card";
+import { tools } from "@converto/data";
 import type { ToolCategory } from "@converto/types";
+import { Topbar } from "@/components/layout/topbar";
 
 export const metadata: Metadata = { title: "Tools" };
 
-const categoryOrder: ToolCategory[] = ["organize", "convert", "edit", "secure", "ai"];
-
-const categoryMeta: Record<ToolCategory, { label: string; count?: number }> = {
+const categoryMeta: Record<ToolCategory, { label: string }> = {
   organize: { label: "Organize" },
   convert: { label: "Convert" },
   edit: { label: "Edit" },
@@ -19,49 +15,69 @@ const categoryMeta: Record<ToolCategory, { label: string; count?: number }> = {
   career: { label: "Career" },
 };
 
+// Real product catalog from the shared @converto/data registry — the same
+// source the public site and sitemap read. No usage numbers are shown
+// because the backend does not track per-tool counters.
 export default function ToolsPage() {
+  const total = tools.length;
+  const live = tools.filter((t) => !t.comingSoon).length;
+  const soon = total - live;
+
+  const byCategory = (Object.keys(categoryMeta) as ToolCategory[])
+    .map((cat) => ({ cat, items: tools.filter((t) => t.category === cat) }))
+    .filter((g) => g.items.length > 0);
+
   return (
     <>
-      <Topbar
-        title="Tools"
-        description={`${tools.length} tools — enable, disable, or feature.`}
-        crumbs={["Operations", "Tools"]}
-        actions={
-          <Button size="sm">
-            <Plus className="size-4" />
-            New tool
-          </Button>
-        }
-      />
+      <Topbar title="Tools" description={`${live} live · ${soon} coming soon`} crumbs={["Platform", "Tools"]} />
 
-      <div className="space-y-10 p-8">
-        {categoryOrder.map((category) => {
-          const inCategory = tools.filter((t) => t.category === category);
-          if (inCategory.length === 0) return null;
-          const meta = categoryMeta[category];
+      <div className="space-y-6 p-8">
+        <section className="grid grid-cols-3 gap-4">
+          {[
+            { label: "Total tools", value: total },
+            { label: "Live", value: live },
+            { label: "Coming soon", value: soon },
+          ].map((s) => (
+            <Card key={s.label} className="p-5">
+              <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">{s.value}</p>
+            </Card>
+          ))}
+        </section>
 
-          return (
-            <section key={category}>
-              {/* Category header */}
-              <div className="mb-5 flex items-center gap-3 border-b border-border pb-3">
-                <h2 className="text-lg font-bold text-foreground">{meta.label}</h2>
-                <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
-                  {inCategory.length} tool{inCategory.length !== 1 ? "s" : ""}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {inCategory.map((tool) => (
-                  <ToolManagementCard
-                    key={tool.slug}
-                    tool={tool}
-                    usage={mockToolUsage[tool.slug] ?? 0}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+        {byCategory.map(({ cat, items }) => (
+          <div key={cat}>
+            <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              {categoryMeta[cat].label} · {items.length}
+            </h3>
+            <Card className="divide-y divide-border">
+              {items.map((t) => (
+                <div key={t.slug} className="flex items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">{t.name}</p>
+                    <p className="truncate text-xs text-muted-foreground">/{t.slug}</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {t.badge ? (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                        {t.badge}
+                      </span>
+                    ) : null}
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                        t.comingSoon
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-emerald-50 text-emerald-700"
+                      }`}
+                    >
+                      {t.comingSoon ? "Soon" : "Live"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </Card>
+          </div>
+        ))}
       </div>
     </>
   );
