@@ -17,7 +17,7 @@ export function Sidebar() {
         <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary">
           <span className="block h-3 w-3 rounded-sm bg-white" />
         </span>
-        <span className="text-lg font-bold tracking-tight text-foreground">converto</span>
+        <span className="text-lg font-bold tracking-tight text-foreground">convertpdfgo</span>
         <span className="ml-auto rounded-md bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           admin
         </span>

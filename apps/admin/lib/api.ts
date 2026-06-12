@@ -76,3 +76,28 @@ export async function apiGet<T = unknown>(path: string): Promise<T> {
   if (!res.ok) throw new Error(body?.Description || `request failed (${res.status})`);
   return (body?.Data as T) ?? (body as unknown as T);
 }
+
+/** Authenticated mutation (POST/PUT/DELETE) with an optional JSON body. */
+export async function apiSend<T = unknown>(
+  path: string,
+  method: "POST" | "PUT" | "PATCH" | "DELETE",
+  body?: unknown,
+): Promise<T> {
+  const token = getToken();
+  const res = await fetch(path, {
+    method,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (res.status === 401) {
+    clearSession();
+    if (typeof window !== "undefined") window.location.href = "/login";
+    throw new Error("unauthorized");
+  }
+  const data = (await res.json().catch(() => null)) as Envelope<T> | null;
+  if (!res.ok) throw new Error(data?.Description || `request failed (${res.status})`);
+  return (data?.Data as T) ?? (data as unknown as T);
+}

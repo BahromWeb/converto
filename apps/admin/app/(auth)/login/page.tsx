@@ -24,7 +24,7 @@ export default function LoginPage() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary">
             <span className="block h-3.5 w-3.5 rounded-sm bg-white" />
           </span>
-          <span className="text-xl font-bold tracking-tight text-white">converto</span>
+          <span className="text-xl font-bold tracking-tight text-white">convertpdfgo</span>
           <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/70">
             admin
           </span>
@@ -75,7 +75,7 @@ export default function LoginPage() {
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary">
               <span className="block h-3 w-3 rounded-sm bg-white" />
             </span>
-            <span className="font-bold tracking-tight">converto admin</span>
+            <span className="font-bold tracking-tight">convertpdfgo admin</span>
           </Link>
 
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Welcome back</h1>

@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { LogOut, ShieldCheck, Mail, BadgeCheck, CalendarDays, Loader2 } from "lucide-react";
+import { useEffect, useState, type FormEvent } from "react";
+import { LogOut, ShieldCheck, Mail, BadgeCheck, CalendarDays, Loader2, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
 import { Card } from "@converto/ui/components/card";
 import { Button } from "@converto/ui/components/button";
+import { Input } from "@converto/ui/components/input";
+import { Label } from "@converto/ui/components/label";
 import { Topbar } from "@/components/layout/topbar";
-import { apiGet, clearSession } from "@/lib/api";
+import { apiGet, apiSend, clearSession } from "@/lib/api";
 
 interface Me {
   id: string;
@@ -20,6 +22,14 @@ export default function SettingsPage() {
   const [me, setMe] = useState<Me | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Change-password form
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwOk, setPwOk] = useState(false);
+  const [pwError, setPwError] = useState("");
+
   useEffect(() => {
     apiGet<Me>("/me")
       .then(setMe)
@@ -30,6 +40,32 @@ export default function SettingsPage() {
   function logout() {
     clearSession();
     window.location.href = "/login";
+  }
+
+  async function changePassword(e: FormEvent) {
+    e.preventDefault();
+    setPwError("");
+    setPwOk(false);
+    if (next.length < 8) {
+      setPwError("New password must be at least 8 characters.");
+      return;
+    }
+    if (next !== confirm) {
+      setPwError("New password and confirmation do not match.");
+      return;
+    }
+    setPwBusy(true);
+    try {
+      await apiSend("/me/password", "PUT", { current_password: current, new_password: next });
+      setPwOk(true);
+      setCurrent("");
+      setNext("");
+      setConfirm("");
+    } catch (err) {
+      setPwError(err instanceof Error ? err.message : "Could not change password");
+    } finally {
+      setPwBusy(false);
+    }
   }
 
   const rows = [
@@ -72,6 +108,72 @@ export default function SettingsPage() {
               })}
             </ul>
           )}
+        </Card>
+
+        <Card className="overflow-hidden">
+          <div className="flex items-center gap-2 border-b border-border px-6 py-4">
+            <KeyRound className="size-4 text-muted-foreground" />
+            <div>
+              <h3 className="text-base font-bold text-foreground">Change password</h3>
+              <p className="text-xs text-muted-foreground">Update the password you use to sign in.</p>
+            </div>
+          </div>
+          <form onSubmit={changePassword} className="space-y-4 p-6">
+            <div className="space-y-1.5">
+              <Label htmlFor="current" className="text-sm font-semibold">Current password</Label>
+              <Input
+                id="current"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={current}
+                onChange={(e) => setCurrent(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="next" className="text-sm font-semibold">New password</Label>
+                <Input
+                  id="next"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={next}
+                  onChange={(e) => setNext(e.target.value)}
+                  placeholder="At least 8 characters"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="confirm" className="text-sm font-semibold">Confirm new password</Label>
+                <Input
+                  id="confirm"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Repeat new password"
+                />
+              </div>
+            </div>
+
+            {pwError && (
+              <div className="flex items-center gap-2 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600">
+                <AlertCircle className="size-4 shrink-0" /> {pwError}
+              </div>
+            )}
+            {pwOk && (
+              <div className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2 text-sm text-emerald-600">
+                <CheckCircle2 className="size-4 shrink-0" /> Password updated successfully.
+              </div>
+            )}
+
+            <Button type="submit" disabled={pwBusy}>
+              {pwBusy ? <Loader2 className="size-4 animate-spin" /> : <KeyRound className="size-4" />}
+              Update password
+            </Button>
+          </form>
         </Card>
 
         <Card className="flex items-center justify-between p-6">

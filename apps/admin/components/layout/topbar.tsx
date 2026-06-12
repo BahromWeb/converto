@@ -1,6 +1,6 @@
-import { Bell, Search } from "lucide-react";
-import { Button } from "@converto/ui/components/button";
+import { Search } from "lucide-react";
 import { UserMenu } from "./user-menu";
+import { NotificationBell } from "./notification-bell";
 
 export interface TopbarProps {
   title: string;
@@ -51,15 +51,7 @@ export function Topbar({ title, description, actions, crumbs }: TopbarProps) {
         {/* Actions */}
         <div className="flex items-center gap-2">
           {actions}
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Notifications"
-            className="relative size-9 rounded-lg"
-          >
-            <Bell className="size-4" />
-            <span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-primary" />
-          </Button>
+          <NotificationBell />
           <UserMenu />
         </div>
       </div>

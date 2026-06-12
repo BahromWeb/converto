@@ -43,7 +43,7 @@ export function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@converto.com"
+          placeholder="you@convertpdfgo.com"
           className="h-11"
         />
       </div>

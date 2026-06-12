@@ -108,9 +108,18 @@ export default function DashboardPage() {
                       </p>
                       <p className="truncate text-xs text-muted-foreground">{u.email}</p>
                     </div>
-                    <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                      {u.role}
-                    </span>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                        {u.role}
+                      </span>
+                      <span className="text-[11px] tabular-nums text-muted-foreground">
+                        {new Date(u.created_at).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
                   </li>
                 ))}
               </ul>

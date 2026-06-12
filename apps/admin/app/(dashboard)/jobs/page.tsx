@@ -13,6 +13,7 @@ interface QueueInfo {
   failed?: number;
   completed?: number;
   archived?: number;
+  error?: string;
 }
 
 const STATES: { key: keyof QueueInfo; label: string; icon: typeof Clock; color: string; bg: string }[] = [
@@ -24,32 +25,69 @@ const STATES: { key: keyof QueueInfo; label: string; icon: typeof Clock; color: 
   { key: "archived", label: "Archived", icon: Archive, color: "text-muted-foreground", bg: "bg-secondary" },
 ];
 
+// Asynq priority queues → human labels.
+const QUEUE_LABELS: Record<string, string> = {
+  critical: "Critical (high priority)",
+  default: "Default",
+  low: "Low priority",
+};
+
 export default function JobsPage() {
   const [queues, setQueues] = useState<Record<string, QueueInfo>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    apiGet<{ queues?: Record<string, QueueInfo> }>("/admin/stats/overview")
-      .then((d) => setQueues(d?.queues ?? {}))
-      .catch((e) => setError(e instanceof Error ? e.message : "failed to load"))
-      .finally(() => setLoading(false));
+    let alive = true;
+    const load = () =>
+      apiGet<{ queues?: Record<string, QueueInfo> }>("/admin/stats/overview")
+        .then((d) => {
+          if (alive) setQueues(d?.queues ?? {});
+        })
+        .catch((e) => {
+          if (alive) setError(e instanceof Error ? e.message : "failed to load");
+        })
+        .finally(() => {
+          if (alive) setLoading(false);
+        });
+    load();
+    const t = setInterval(load, 15_000); // live refresh
+    return () => {
+      alive = false;
+      clearInterval(t);
+    };
   }, []);
 
-  const sum = (k: keyof QueueInfo) => Object.values(queues).reduce((n, q) => n + (q[k] ?? 0), 0);
+  const sum = (k: keyof QueueInfo) =>
+    Object.values(queues).reduce((n, q) => n + (typeof q[k] === "number" ? (q[k] as number) : 0), 0);
+  const inFlight = sum("active") + sum("pending") + sum("retry");
+  const allZero = STATES.every((s) => sum(s.key) === 0);
+  const queueError = Object.values(queues).find((q) => q.error)?.error;
 
   return (
     <>
-      <Topbar
-        title="Jobs"
-        description="Live Asynq queue pipeline."
-        crumbs={["Operations", "Jobs"]}
-      />
+      <Topbar title="Jobs" description="Live Asynq queue pipeline · auto-refresh 15s" crumbs={["Operations", "Jobs"]} />
 
       <div className="space-y-6 p-8">
         {error && (
           <Card className="flex items-center gap-2 border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
             <AlertCircle className="size-4" /> {error}
+          </Card>
+        )}
+        {queueError && !error && (
+          <Card className="flex items-center gap-2 border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
+            <AlertCircle className="size-4" /> Queue inspector: {queueError}
+          </Card>
+        )}
+
+        {/* Idle banner — clearer than a wall of zeros */}
+        {!loading && allZero && !queueError && (
+          <Card className="flex items-center gap-3 border-emerald-200 bg-emerald-50 p-5 text-emerald-800">
+            <CheckCircle2 className="size-6 shrink-0" />
+            <div>
+              <p className="text-sm font-bold">Queue is idle</p>
+              <p className="text-xs">No jobs are pending, active, or failed right now. Everything is processed.</p>
+            </div>
           </Card>
         )}
 
@@ -73,16 +111,21 @@ export default function JobsPage() {
 
         {/* Per-queue breakdown */}
         <Card className="overflow-hidden">
-          <div className="border-b border-border px-6 py-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Queues</p>
-            <h3 className="mt-0.5 text-base font-bold text-foreground">By priority</h3>
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Queues</p>
+              <h3 className="mt-0.5 text-base font-bold text-foreground">By priority</h3>
+            </div>
+            <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-muted-foreground">
+              {loading ? "—" : `${inFlight} in flight`}
+            </span>
           </div>
           {loading ? (
             <div className="flex items-center justify-center gap-2 p-12 text-sm text-muted-foreground">
               <Loader2 className="size-4 animate-spin" /> Loading…
             </div>
           ) : Object.keys(queues).length === 0 ? (
-            <div className="p-12 text-center text-sm text-muted-foreground">No queue data.</div>
+            <div className="p-12 text-center text-sm text-muted-foreground">No queue data available.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -97,7 +140,7 @@ export default function JobsPage() {
                 <tbody className="divide-y divide-border">
                   {Object.entries(queues).map(([name, q]) => (
                     <tr key={name}>
-                      <td className="px-6 py-3 font-medium capitalize text-foreground">{name}</td>
+                      <td className="px-6 py-3 font-medium text-foreground">{QUEUE_LABELS[name] ?? name}</td>
                       {STATES.map((s) => (
                         <td key={s.key} className="px-4 py-3 text-right font-mono tabular-nums text-muted-foreground">
                           {(q[s.key] ?? 0).toLocaleString()}

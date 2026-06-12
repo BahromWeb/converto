@@ -23,10 +23,10 @@ const fontMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Converto Admin",
-    template: "%s · Converto Admin",
+    default: "convertpdfgo Admin",
+    template: "%s · convertpdfgo Admin",
   },
-  description: "Operations console for the Converto platform.",
+  description: "Operations console for the convertpdfgo platform.",
   robots: { index: false, follow: false },
 };
 

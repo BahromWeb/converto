@@ -1,4 +1,7 @@
-import { MoreHorizontal } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Trash2, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@converto/ui/components/avatar";
 import { Badge } from "@converto/ui/components/badge";
 import { Button } from "@converto/ui/components/button";
@@ -11,7 +14,6 @@ import {
   TableRow,
 } from "@converto/ui/components/table";
 import type { User } from "@converto/types";
-import { formatRelativeTime } from "@converto/utils";
 import { cn } from "@converto/ui/lib/utils";
 
 const planStyles: Record<User["plan"], string> = {
@@ -37,22 +39,43 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export interface UsersTableProps {
-  users: User[];
-  now: number;
+/** Absolute join date, e.g. "13 Jun 2026". */
+function formatJoined(iso: string) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export function UsersTable({ users, now }: UsersTableProps) {
+export interface UsersTableProps {
+  users: User[];
+  /** Deletes a user by id; resolves when the row can be removed. */
+  onDelete: (id: string) => Promise<void>;
+}
+
+export function UsersTable({ users, onDelete }: UsersTableProps) {
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function handleDelete(user: User) {
+    if (!window.confirm(`Delete ${user.name} (${user.email})? This cannot be undone.`)) return;
+    setBusy(user.id);
+    try {
+      await onDelete(user.id);
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "Delete failed");
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[44%]">Person</TableHead>
+          <TableHead className="w-[42%]">Person</TableHead>
           <TableHead>Plan</TableHead>
-          <TableHead>Country</TableHead>
-          <TableHead>Last seen</TableHead>
+          <TableHead>Joined</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead className="w-12" />
+          <TableHead className="w-12 text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -72,14 +95,11 @@ export function UsersTable({ users, now }: UsersTableProps) {
             </TableCell>
             <TableCell>
               <Badge variant="outline" className={cn("capitalize", planStyles[user.plan])}>
-                {user.plan}
+                {user.plan === "team" ? "admin" : user.plan}
               </Badge>
             </TableCell>
-            <TableCell>
-              <span className="font-mono text-xs uppercase tracking-wider">{user.country}</span>
-            </TableCell>
-            <TableCell className="text-sm text-muted-foreground">
-              {formatRelativeTime(user.lastSeenAt, now)}
+            <TableCell className="text-sm text-muted-foreground tabular-nums">
+              {formatJoined(user.createdAt)}
             </TableCell>
             <TableCell>
               <span className="inline-flex items-center gap-2 text-sm capitalize">
@@ -87,9 +107,20 @@ export function UsersTable({ users, now }: UsersTableProps) {
                 {user.status}
               </span>
             </TableCell>
-            <TableCell>
-              <Button variant="ghost" size="icon" aria-label={`Actions for ${user.name}`}>
-                <MoreHorizontal className="size-4" />
+            <TableCell className="text-right">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Delete ${user.name}`}
+                disabled={busy === user.id}
+                onClick={() => handleDelete(user)}
+                className="text-muted-foreground hover:text-rose-600"
+              >
+                {busy === user.id ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Trash2 className="size-4" />
+                )}
               </Button>
             </TableCell>
           </TableRow>

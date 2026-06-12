@@ -8,7 +8,7 @@ import { Topbar } from "@/components/layout/topbar";
 import { UsersTable } from "@/components/users/users-table";
 import { DonutChart } from "@/components/charts/donut-chart";
 import type { User } from "@converto/types";
-import { apiGet } from "@/lib/api";
+import { apiGet, apiSend } from "@/lib/api";
 
 interface BackendUser {
   id: string;
@@ -51,6 +51,11 @@ export default function UsersPage() {
       .catch((e) => setError(e instanceof Error ? e.message : "failed to load users"))
       .finally(() => setLoading(false));
   }, []);
+
+  async function handleDelete(id: string) {
+    await apiSend(`/admin/users/${id}`, "DELETE");
+    setRaw((prev) => prev.filter((u) => u.id !== id));
+  }
 
   const now = Date.now();
   const total = raw.length;
@@ -157,7 +162,7 @@ export default function UsersPage() {
           ) : filtered.length === 0 ? (
             <div className="p-12 text-center text-sm text-muted-foreground">No users found.</div>
           ) : (
-            <UsersTable users={filtered} now={now} />
+            <UsersTable users={filtered} onDelete={handleDelete} />
           )}
         </Card>
       </div>
