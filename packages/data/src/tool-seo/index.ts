@@ -6,6 +6,7 @@ import { zh } from "./zh";
 import { ar } from "./ar";
 import { hi } from "./hi";
 import { pt } from "./pt";
+import { de } from "./de";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -19,6 +20,7 @@ const toolSeoByLocale: Record<string, ToolSeoMap> = {
   ar,
   hi,
   pt,
+  de,
 };
 
 /**
