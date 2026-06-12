@@ -1,5 +1,6 @@
 import type { ToolSeoContent, ToolSeoMap } from "./types";
 import { uz } from "./uz";
+import { ru } from "./ru";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -7,6 +8,7 @@ export type { ToolSeoContent, ToolSeoMap } from "./types";
  *  pages keep their inline English metadata and registry name/description. */
 const toolSeoByLocale: Record<string, ToolSeoMap> = {
   uz,
+  ru,
 };
 
 /**
