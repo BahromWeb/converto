@@ -2,6 +2,7 @@ import type { ToolSeoContent, ToolSeoMap } from "./types";
 import { uz } from "./uz";
 import { ru } from "./ru";
 import { es } from "./es";
+import { zh } from "./zh";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -11,6 +12,7 @@ const toolSeoByLocale: Record<string, ToolSeoMap> = {
   uz,
   ru,
   es,
+  zh,
 };
 
 /**
