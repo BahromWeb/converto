@@ -16,6 +16,7 @@ const categoryMeta: Record<ToolCategory, { label: string; count?: number }> = {
   edit: { label: "Edit" },
   secure: { label: "Secure" },
   ai: { label: "AI" },
+  career: { label: "Career" },
 };
 
 export default function ToolsPage() {

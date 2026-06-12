@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Zap, Users, BarChart3 } from "lucide-react";
-import { Button } from "@converto/ui/components/button";
-import { Input } from "@converto/ui/components/input";
-import { Label } from "@converto/ui/components/label";
+import { ShieldCheck, Zap, Users, BarChart3 } from "lucide-react";
+import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -85,46 +83,7 @@ export default function LoginPage() {
             Sign in with your admin credentials to continue.
           </p>
 
-          <form className="mt-8 space-y-5" action="/" method="post">
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-semibold">
-                Email address
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@converto.com"
-                className="h-11"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-semibold">
-                  Password
-                </Label>
-                <Link
-                  href="/forgot"
-                  className="text-xs font-medium text-primary hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                className="h-11"
-              />
-            </div>
-
-            <Button type="submit" size="lg" className="w-full">
-              Continue
-              <ArrowRight className="size-4" />
-            </Button>
-          </form>
+          <LoginForm />
 
           <div className="mt-8 flex items-center gap-2.5 rounded-xl bg-secondary p-4 text-xs text-muted-foreground">
             <ShieldCheck className="size-4 shrink-0 text-primary" />
