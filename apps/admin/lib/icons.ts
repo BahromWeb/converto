@@ -1,4 +1,5 @@
 import {
+  Activity,
   BarChart3,
   Bell,
   Command,
@@ -37,6 +38,7 @@ export const iconMap: Record<string, LucideIcon> = {
   Bell,
   LogOut,
   Mail,
+  Activity,
 };
 
 export function getIcon(name: string | undefined): LucideIcon | null {

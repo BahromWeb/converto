@@ -11,6 +11,7 @@ export const adminNav: NavSection[] = [
     items: [
       { label: "Dashboard", href: "/", icon: "LayoutDashboard" },
       { label: "Analytics", href: "/analytics", icon: "BarChart3" },
+      { label: "Traffic", href: "/traffic", icon: "Activity" },
     ],
   },
   {
