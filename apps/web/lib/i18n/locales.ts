@@ -37,7 +37,7 @@ export const defaultLocale = "en";
  * under a `/{code}` path prefix. Roll a language out by adding it here once
  * its `tool-seo/{code}.ts` content exists.
  */
-export const activeLocales = ["en", "uz", "ru", "es", "zh", "ar", "hi", "pt", "de", "fr", "ja", "ko"] as const;
+export const activeLocales = ["en", "uz", "ru", "es", "zh", "ar", "hi", "pt", "de", "fr", "ja", "ko", "tr"] as const;
 
 export function isActiveLocale(code: string): boolean {
   return (activeLocales as readonly string[]).includes(code);
