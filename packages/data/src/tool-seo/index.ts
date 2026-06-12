@@ -17,6 +17,7 @@ import { pl } from "./pl";
 import { vi } from "./vi";
 import { nl } from "./nl";
 import { th } from "./th";
+import { uk } from "./uk";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -41,6 +42,7 @@ const toolSeoByLocale: Record<string, ToolSeoMap> = {
   vi,
   nl,
   th,
+  uk,
 };
 
 /**
