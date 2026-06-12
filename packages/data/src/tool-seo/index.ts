@@ -13,6 +13,7 @@ import { ko } from "./ko";
 import { tr } from "./tr";
 import { it } from "./it";
 import { id } from "./id";
+import { pl } from "./pl";
 
 export type { ToolSeoContent, ToolSeoMap } from "./types";
 
@@ -33,6 +34,7 @@ const toolSeoByLocale: Record<string, ToolSeoMap> = {
   tr,
   it,
   id,
+  pl,
 };
 
 /**
