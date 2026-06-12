@@ -34,7 +34,7 @@ const statsMeta = [
   },
 ];
 
-const TOOL_COUNT = tools.length;
+const TOOL_COUNT = tools.filter((t) => !t.comingSoon).length;
 const LOCALE_COUNT = Object.keys(locales).length;
 
 export function StatsBar() {
