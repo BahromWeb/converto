@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig, tools } from "@converto/data";
+import { activeLocales, localizePath } from "@/lib/i18n/locales";
 
 // Marketing/static slugs that ship as their own route under (marketing).
 // Hand-listed because the (marketing) directory mixes real pages with
@@ -26,28 +27,38 @@ const marketingSlugs = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const base = siteConfig.url.replace(/\/$/, "");
+  const abs = (path: string) => `${base}${path}`;
 
-  const homepage: MetadataRoute.Sitemap[number] = {
-    url: `${base}/`,
-    lastModified: now,
-    changeFrequency: "daily",
-    priority: 1,
+  // Every public path is emitted once per active locale, with reciprocal
+  // hreflang `alternates` so Google connects the language variants.
+  const altLanguages = (path: string) =>
+    Object.fromEntries(activeLocales.map((code) => [code, abs(localizePath(path, code))]));
+
+  const entries: MetadataRoute.Sitemap = [];
+  const emit = (
+    path: string,
+    changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
+    priority: number,
+  ) => {
+    const languages = altLanguages(path);
+    for (const code of activeLocales) {
+      entries.push({
+        url: abs(localizePath(path, code)),
+        lastModified: now,
+        changeFrequency,
+        priority,
+        alternates: { languages },
+      });
+    }
   };
 
-  const toolEntries: MetadataRoute.Sitemap = tools.map((t) => ({
-    url: `${base}/${t.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    // Tools are the breadwinners — keep them above marketing copy.
-    priority: 0.9,
-  }));
+  emit("/", "daily", 1);
+  // Only live tools — coming-soon pages aren't usable yet, keep them out of
+  // the index. Tools are the breadwinners → above marketing copy.
+  tools
+    .filter((t) => !t.comingSoon)
+    .forEach((t) => emit(`/${t.slug}`, "weekly", 0.9));
+  marketingSlugs.forEach((slug) => emit(`/${slug}`, "monthly", 0.5));
 
-  const marketingEntries: MetadataRoute.Sitemap = marketingSlugs.map((slug) => ({
-    url: `${base}/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }));
-
-  return [homepage, ...toolEntries, ...marketingEntries];
+  return entries;
 }

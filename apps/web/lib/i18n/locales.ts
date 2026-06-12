@@ -29,3 +29,52 @@ export const locales: Locale[] = [
 ];
 
 export const defaultLocale = "en";
+
+/**
+ * Locales that have fully localized, SEO-ready content and therefore get
+ * their own public URLs, sitemap entries, and hreflang alternates.
+ * `en` lives at the root (no prefix); every other active locale is served
+ * under a `/{code}` path prefix. Roll a language out by adding it here once
+ * its `tool-seo/{code}.ts` content exists.
+ */
+export const activeLocales = ["en", "uz"] as const;
+
+export function isActiveLocale(code: string): boolean {
+  return (activeLocales as readonly string[]).includes(code);
+}
+
+/** Look up a locale's metadata (native name, flag, text direction). */
+export function getLocale(code: string): Locale {
+  return locales.find((l) => l.code === code) ?? locales[0]!;
+}
+
+const localeCodeSet = new Set(locales.map((l) => l.code));
+
+/** Strip a leading `/{locale}` prefix, returning the locale-agnostic path. */
+export function stripLocalePrefix(pathname: string): string {
+  const seg = pathname.split("/")[1] ?? "";
+  if (localeCodeSet.has(seg)) {
+    const rest = pathname.slice(seg.length + 1);
+    return rest === "" ? "/" : rest;
+  }
+  return pathname || "/";
+}
+
+/**
+ * Build the public path for a locale: en → `/foo`, others → `/{code}/foo`.
+ * Preserves a leading hash/query (`/#how` → `/uz#how`).
+ */
+const UNLOCALIZED_PREFIXES = ["/account", "/auth", "/api"];
+
+export function localizePath(path: string, code: string): string {
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  if (code === defaultLocale) return clean;
+  // The authed / non-SEO surface lives outside the [locale] tree.
+  if (UNLOCALIZED_PREFIXES.some((p) => clean === p || clean.startsWith(`${p}/`))) {
+    return clean;
+  }
+  if (clean === "/") return `/${code}`;
+  // "/#anchor" or "/?q=" → keep "/uz" joined directly to the # or ?
+  if (clean.startsWith("/#") || clean.startsWith("/?")) return `/${code}${clean.slice(1)}`;
+  return `/${code}${clean}`;
+}

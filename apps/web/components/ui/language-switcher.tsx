@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useRouter, usePathname } from "next/navigation";
 import { Globe, Check, X, Search } from "lucide-react";
-import { locales } from "@/lib/i18n/locales";
+import { locales, activeLocales, localizePath, stripLocalePrefix } from "@/lib/i18n/locales";
 import { useI18n } from "@/lib/i18n/context";
+
+const STORAGE_KEY = "convertpdfgo-locale";
+const activeSet = new Set<string>(activeLocales);
 
 function LanguageModal({
   open,
@@ -156,13 +160,26 @@ export function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { locale, setLocale, t } = useI18n();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const currentLocale = locales.find((l) => l.code === locale);
 
   useEffect(() => { setMounted(true); }, []);
 
+  // Language is URL state: navigate to the same page under the new locale.
+  // Inactive (not-yet-launched) locales fall back to English so we never
+  // route to a 404.
   function handleSelect(code: string) {
-    setLocale(code);
+    const target = activeSet.has(code) ? code : "en";
+    setLocale(target); // optimistic flag/label update
+    try {
+      localStorage.setItem(STORAGE_KEY, target);
+    } catch {
+      /* ignore */
+    }
+    const base = stripLocalePrefix(pathname || "/");
+    router.push(localizePath(base, target));
     setOpen(false);
   }
 

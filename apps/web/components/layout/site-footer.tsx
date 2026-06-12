@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink } from "@/components/ui/locale-link";
 import { footerNav, siteConfig } from "@converto/data";
 import { useT } from "@/lib/i18n/context";
 
@@ -22,7 +22,7 @@ export function SiteFooter() {
         <div className="grid gap-12 md:grid-cols-5">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5">
+            <LocaleLink href="/" className="flex items-center gap-2.5">
               <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-primary">
                 <span className="block h-3 w-3 rounded-sm bg-primary-foreground" />
                 <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-background" />
@@ -30,7 +30,7 @@ export function SiteFooter() {
               <span className="text-lg font-bold tracking-tight">
                 {siteConfig.name.toLowerCase()}
               </span>
-            </Link>
+            </LocaleLink>
 
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-background/60">
               {t.footer.tagline}
@@ -101,12 +101,12 @@ export function SiteFooter() {
               <ul className="space-y-3">
                 {footerNav[col].map((item) => (
                   <li key={item.href}>
-                    <Link
+                    <LocaleLink
                       href={item.href}
                       className="text-sm text-background/70 transition-colors hover:text-background"
                     >
                       {item.label}
-                    </Link>
+                    </LocaleLink>
                   </li>
                 ))}
               </ul>

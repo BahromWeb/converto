@@ -15,25 +15,41 @@ const I18nContext = createContext<I18nContextValue | null>(null);
 
 const STORAGE_KEY = "convertpdfgo-locale";
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<string>(defaultLocale);
+export function LanguageProvider({
+  children,
+  initialLocale = defaultLocale,
+}: {
+  children: React.ReactNode;
+  /** Locale resolved from the URL on the server, so SSR text matches the
+   *  first client render (no hydration mismatch). The URL is now the source
+   *  of truth for language; localStorage is only a return-visit hint that
+   *  middleware reads at the bare "/" entry point. */
+  initialLocale?: string;
+}) {
+  const [locale, setLocaleState] = useState<string>(initialLocale);
 
+  // Re-sync whenever the route's locale changes (client navigation between
+  // /merge and /uz/merge re-renders this provider with a new initialLocale).
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved && translations[saved]) {
-      applyLocale(saved);
+    setLocaleState(initialLocale);
+    const localeData = locales.find((l) => l.code === initialLocale);
+    if (localeData) {
+      document.documentElement.lang = initialLocale;
+      document.documentElement.dir = localeData.dir;
     }
-  }, []);
+    try {
+      localStorage.setItem(STORAGE_KEY, initialLocale);
+    } catch {
+      /* private mode — ignore */
+    }
+  }, [initialLocale]);
 
+  // Kept for the language switcher's optimistic UI; the actual language
+  // change is a URL navigation handled by the switcher itself.
   function applyLocale(code: string) {
     const localeData = locales.find((l) => l.code === code);
     if (!localeData || !translations[code]) return;
-
     setLocaleState(code);
-    localStorage.setItem(STORAGE_KEY, code);
-
-    document.documentElement.lang = code;
-    document.documentElement.dir = localeData.dir;
   }
 
   const localeData = locales.find((l) => l.code === locale) ?? locales[0]!;

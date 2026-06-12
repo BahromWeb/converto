@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocaleLink } from "@/components/ui/locale-link";
 import { ArrowRight, LogOut, User } from "lucide-react";
 import { Button } from "@converto/ui/components/button";
 import { siteConfig } from "@converto/data";
@@ -49,14 +49,14 @@ function UserMenu() {
               <p className="text-xs text-muted-foreground">{user.email}</p>
             </div>
             <div className="my-1 h-px bg-border" />
-            <Link
+            <LocaleLink
               href="/account"
               onClick={() => setOpen(false)}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
             >
               <User className="size-3.5" />
               {t.auth.profile}
-            </Link>
+            </LocaleLink>
             <button
               onClick={() => { setOpen(false); logout(); }}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-muted"
@@ -79,7 +79,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-card/95 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
+        <LocaleLink href="/" className="flex items-center gap-2.5">
           <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
             <span className="block h-3 w-3 rounded-sm bg-primary-foreground" />
             <span className="absolute -right-0.5 -top-0.5 size-1.5 rounded-full bg-foreground" />
@@ -87,18 +87,18 @@ export function SiteHeader() {
           <span className="text-lg font-bold tracking-tight text-foreground">
             {siteConfig.name.toLowerCase()}
           </span>
-        </Link>
+        </LocaleLink>
 
         {/* Center nav */}
         <nav className="hidden items-center gap-7 text-sm md:flex">
           {navItems.map((item) => (
-            <Link
+            <LocaleLink
               key={item.href}
               href={item.href}
               className="font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {t.nav[item.key]}
-            </Link>
+            </LocaleLink>
           ))}
         </nav>
 
@@ -118,13 +118,13 @@ export function SiteHeader() {
                   className="hidden text-muted-foreground hover:text-foreground sm:inline-flex"
                   asChild
                 >
-                  <Link href="/account">{t.nav.signIn}</Link>
+                  <LocaleLink href="/account">{t.nav.signIn}</LocaleLink>
                 </Button>
                 <Button size="sm" asChild className="px-2.5 sm:px-3">
-                  <Link href="/#hero">
+                  <LocaleLink href="/#hero">
                     <span className="sr-only sm:not-sr-only">{t.nav.getStarted}</span>
                     <ArrowRight className="size-3.5" />
-                  </Link>
+                  </LocaleLink>
                 </Button>
               </>
             )
