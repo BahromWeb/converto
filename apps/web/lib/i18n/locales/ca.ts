@@ -20,7 +20,7 @@ const ca: TranslationMap = {
     security: "TLS 1.3 · xifratge AES-256 · Els fitxers s'eliminen en 1 hora",
   },
   stats: {
-    filesDaily: "Velocitat mitjana de conversió",
+    filesDaily: "Categories d'eines",
     filesWeek: "mediana, menys de 10 MB",
     toolsFree: "Eines, sempre gratis",
     toolsQuarter: "i en augment",

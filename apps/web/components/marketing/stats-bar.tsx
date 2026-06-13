@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Wrench, Globe, ShieldOff, Zap } from "lucide-react";
+import { Wrench, Globe, ShieldOff, LayoutGrid } from "lucide-react";
 import { tools } from "@converto/data";
 import { AnimateIn } from "@/components/ui/animate-in";
 import { useT } from "@/lib/i18n/context";
@@ -10,7 +10,7 @@ import { getPublicStats } from "@/lib/api";
 import { cn } from "@converto/ui/lib/utils";
 
 const statsMeta = [
-  { icon: Zap, iconBg: "bg-emerald-50", iconColor: "text-emerald-500", live: true, accentValue: true },
+  { icon: LayoutGrid, iconBg: "bg-emerald-50", iconColor: "text-emerald-500", live: true, accentValue: true },
   {
     icon: Wrench,
     iconBg: "bg-blue-50",
@@ -36,23 +36,30 @@ const statsMeta = [
 
 const TOOL_COUNT = tools.filter((t) => !t.comingSoon).length;
 const LOCALE_COUNT = Object.keys(locales).length;
+// Real breadth signal: how many distinct tool categories we span. Counted
+// from the registry so it can never drift from what the tools grid shows.
+const CATEGORY_COUNT = new Set(tools.map((t) => t.category)).size;
 
 export function StatsBar() {
   const t = useT();
-  // We still hit the public stats endpoint so the data is warm in case
-  // we want to surface it later — for now the user-facing metric is the
-  // median sub-3-second conversion time, a trust signal that doesn't
-  // bottom out as 2 or 3 like a literal daily count on a brand-new site.
+  // We still hit the public stats endpoint so the data is warm in case we
+  // want to surface live counts later. The first card now shows our breadth
+  // (category count) instead of an unmeasured speed claim — it reinforces
+  // that this is more than a converter, matching the categorised tools grid.
   useEffect(() => {
     getPublicStats().catch(() => undefined);
   }, []);
 
+  // Localised, real sub-line built from the existing category labels — no
+  // per-language copy to maintain, always in sync with the registry.
+  const categorySub = [t.categories.convert, t.categories.edit, t.categories.ai].join(" · ");
+
   const stats = [
     {
-      value: "<3",
-      suffix: "s",
+      value: String(CATEGORY_COUNT),
+      suffix: "",
       label: t.stats.filesDaily,
-      sub: t.stats.filesWeek,
+      sub: `${categorySub} …`,
     },
     {
       value: String(TOOL_COUNT),

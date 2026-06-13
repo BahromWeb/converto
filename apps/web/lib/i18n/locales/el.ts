@@ -20,7 +20,7 @@ const el: TranslationMap = {
     security: "TLS 1.3 · Κρυπτογράφηση AES-256 · Τα αρχεία διαγράφονται σε 1 ώρα",
   },
   stats: {
-    filesDaily: "Μέση ταχύτητα μετατροπής",
+    filesDaily: "Κατηγορίες εργαλείων",
     filesWeek: "διάμεσος, κάτω από 10 MB",
     toolsFree: "Εργαλεία, πάντα δωρεάν",
     toolsQuarter: "και αυξάνονται",

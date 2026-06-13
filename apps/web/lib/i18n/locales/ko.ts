@@ -20,7 +20,7 @@ const ko: TranslationMap = {
     security: "TLS 1.3 · AES-256 암호화 · 파일 1시간 내 자동 삭제",
   },
   stats: {
-    filesDaily: "평균 변환 속도",
+    filesDaily: "도구 카테고리",
     filesWeek: "중앙값, 10 MB 이하",
     toolsFree: "도구, 항상 무료",
     toolsQuarter: "계속 늘어남",

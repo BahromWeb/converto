@@ -20,7 +20,7 @@ const th: TranslationMap = {
     security: "TLS 1.3 · เข้ารหัส AES-256 · ไฟล์ถูกลบอัตโนมัติใน 1 ชั่วโมง",
   },
   stats: {
-    filesDaily: "ความเร็วเฉลี่ย",
+    filesDaily: "หมวดหมู่เครื่องมือ",
     filesWeek: "มัธยฐาน, ต่ำกว่า 10 MB",
     toolsFree: "เครื่องมือ ฟรีตลอด",
     toolsQuarter: "และยังเพิ่มขึ้น",

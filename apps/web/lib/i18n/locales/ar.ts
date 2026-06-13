@@ -20,7 +20,7 @@ const ar: TranslationMap = {
     security: "TLS 1.3 · تشفير AES-256 · يُحذف الملفات خلال ساعة",
   },
   stats: {
-    filesDaily: "متوسط سرعة التحويل",
+    filesDaily: "فئات الأدوات",
     filesWeek: "الوسيط، أقل من ١٠ ميغا",
     toolsFree: "أدوات مجانية دائماً",
     toolsQuarter: "والقائمة تنمو",

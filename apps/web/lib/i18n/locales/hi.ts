@@ -20,7 +20,7 @@ const hi: TranslationMap = {
     security: "TLS 1.3 · AES-256 एन्क्रिप्टेड · फाइलें 1 घंटे में ऑटो-डिलीट",
   },
   stats: {
-    filesDaily: "औसत रूपांतरण गति",
+    filesDaily: "टूल श्रेणियाँ",
     filesWeek: "मध्य, 10 MB तक",
     toolsFree: "टूल्स, हमेशा मुफ्त",
     toolsQuarter: "और बढ़ रहे",

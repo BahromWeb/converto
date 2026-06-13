@@ -20,7 +20,7 @@ const ru: TranslationMap = {
     security: "TLS 1.3 · Шифрование AES-256 · Файлы удаляются через 1 час",
   },
   stats: {
-    filesDaily: "Скорость конвертации",
+    filesDaily: "Категории инструментов",
     filesWeek: "медиана, до 10 МБ",
     toolsFree: "Инструментов — все бесплатно",
     toolsQuarter: "и список растёт",

@@ -20,7 +20,7 @@ const it: TranslationMap = {
     security: "TLS 1.3 · Crittografia AES-256 · File eliminati in 1 ora",
   },
   stats: {
-    filesDaily: "Velocità media",
+    filesDaily: "Categorie di strumenti",
     filesWeek: "mediana, sotto 10 MB",
     toolsFree: "Strumenti gratuiti",
     toolsQuarter: "in crescita",

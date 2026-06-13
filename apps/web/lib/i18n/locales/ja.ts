@@ -20,7 +20,7 @@ const ja: TranslationMap = {
     security: "TLS 1.3 · AES-256暗号化 · ファイルは1時間後に自動削除",
   },
   stats: {
-    filesDaily: "平均変換速度",
+    filesDaily: "ツールのカテゴリー",
     filesWeek: "中央値、10 MB 未満",
     toolsFree: "ツール、いつも無料",
     toolsQuarter: "さらに増加中",

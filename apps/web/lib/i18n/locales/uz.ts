@@ -20,7 +20,7 @@ const uz: TranslationMap = {
     security: "TLS 1.3 · AES-256 shifrlash · Fayllar 1 soat ichida o'chiriladi",
   },
   stats: {
-    filesDaily: "O'rtacha konvertatsiya",
+    filesDaily: "Vosita turkumlari",
     filesWeek: "10 MB gacha, mediana",
     toolsFree: "Tool, doim bepul",
     toolsQuarter: "va ko'paymoqda",

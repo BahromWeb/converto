@@ -20,7 +20,7 @@ const vi: TranslationMap = {
     security: "TLS 1.3 · Mã hóa AES-256 · Tệp tự động xóa sau 1 giờ",
   },
   stats: {
-    filesDaily: "Tốc độ trung bình",
+    filesDaily: "Danh mục công cụ",
     filesWeek: "trung vị, dưới 10 MB",
     toolsFree: "Công cụ, luôn miễn phí",
     toolsQuarter: "và đang tăng",

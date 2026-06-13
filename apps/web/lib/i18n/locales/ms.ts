@@ -20,7 +20,7 @@ const ms: TranslationMap = {
     security: "TLS 1.3 · penyulitan AES-256 · Fail dipadam dalam 1 jam",
   },
   stats: {
-    filesDaily: "Purata kelajuan penukaran",
+    filesDaily: "Kategori alat",
     filesWeek: "median, bawah 10 MB",
     toolsFree: "Alat, sentiasa percuma",
     toolsQuarter: "dan terus bertambah",

@@ -20,7 +20,7 @@ const de: TranslationMap = {
     security: "TLS 1.3 · AES-256 verschlüsselt · Dateien in 1 Stunde gelöscht",
   },
   stats: {
-    filesDaily: "Ø Konvertierungs­dauer",
+    filesDaily: "Tool-Kategorien",
     filesWeek: "Median, unter 10 MB",
     toolsFree: "Tools, immer kostenlos",
     toolsQuarter: "Tendenz steigend",

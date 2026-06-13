@@ -20,7 +20,7 @@ const sw: TranslationMap = {
     security: "TLS 1.3 · usimbaji AES-256 · Faili hufutwa ndani ya saa 1",
   },
   stats: {
-    filesDaily: "Wastani wa kasi ya ubadilishaji",
+    filesDaily: "Aina za zana",
     filesWeek: "wastani wa kati, chini ya MB 10",
     toolsFree: "Zana, bure kila wakati",
     toolsQuarter: "na zinaongezeka",

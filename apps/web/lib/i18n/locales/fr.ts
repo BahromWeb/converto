@@ -20,7 +20,7 @@ const fr: TranslationMap = {
     security: "TLS 1.3 · Chiffrement AES-256 · Fichiers supprimés en 1 heure",
   },
   stats: {
-    filesDaily: "Vitesse de conversion",
+    filesDaily: "Catégories d'outils",
     filesWeek: "médiane, sous 10 Mo",
     toolsFree: "Outils, toujours gratuits",
     toolsQuarter: "et ça continue",

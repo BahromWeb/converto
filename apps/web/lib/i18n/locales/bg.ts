@@ -20,7 +20,7 @@ const bg: TranslationMap = {
     security: "TLS 1.3 · AES-256 криптиране · Файловете се изтриват за 1 час",
   },
   stats: {
-    filesDaily: "Средна скорост на конвертиране",
+    filesDaily: "Категории инструменти",
     filesWeek: "медиана, под 10 MB",
     toolsFree: "Инструменти, винаги безплатни",
     toolsQuarter: "и още се добавят",

@@ -20,7 +20,7 @@ const sv: TranslationMap = {
     security: "TLS 1.3 · AES-256-kryptering · Filer raderas inom 1 timme",
   },
   stats: {
-    filesDaily: "Genomsnittlig konverteringshastighet",
+    filesDaily: "Verktygskategorier",
     filesWeek: "median, under 10 MB",
     toolsFree: "Verktyg, alltid gratis",
     toolsQuarter: "och fler tillkommer",

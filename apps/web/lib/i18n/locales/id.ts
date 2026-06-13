@@ -20,7 +20,7 @@ const id: TranslationMap = {
     security: "TLS 1.3 · Enkripsi AES-256 · File dihapus dalam 1 jam",
   },
   stats: {
-    filesDaily: "Kecepatan rata-rata",
+    filesDaily: "Kategori alat",
     filesWeek: "median, di bawah 10 MB",
     toolsFree: "Alat, selalu gratis",
     toolsQuarter: "dan terus tumbuh",

@@ -20,7 +20,7 @@ const nl: TranslationMap = {
     security: "TLS 1.3 · AES-256-versleuteling · Bestanden na 1 uur verwijderd",
   },
   stats: {
-    filesDaily: "Gemiddelde snelheid",
+    filesDaily: "Toolcategorieën",
     filesWeek: "mediaan, onder 10 MB",
     toolsFree: "Tools, altijd gratis",
     toolsQuarter: "en groeit",

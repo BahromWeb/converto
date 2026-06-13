@@ -20,7 +20,7 @@ const zhTw: TranslationMap = {
     security: "TLS 1.3 · AES-256 加密 · 檔案於 1 小時內刪除",
   },
   stats: {
-    filesDaily: "平均轉換速度",
+    filesDaily: "工具類別",
     filesWeek: "中位數，10 MB 以下",
     toolsFree: "工具，永遠免費",
     toolsQuarter: "且持續增加",

@@ -20,7 +20,7 @@ const tr: TranslationMap = {
     security: "TLS 1.3 · AES-256 şifreleme · Dosyalar 1 saatte otomatik silindi",
   },
   stats: {
-    filesDaily: "Ortalama dönüşüm hızı",
+    filesDaily: "Araç kategorileri",
     filesWeek: "medyan, 10 MB altı",
     toolsFree: "Araç, hep ücretsiz",
     toolsQuarter: "ve artıyor",

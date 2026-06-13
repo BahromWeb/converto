@@ -20,7 +20,7 @@ const uk: TranslationMap = {
     security: "TLS 1.3 · Шифрування AES-256 · Файли видаляються через 1 годину",
   },
   stats: {
-    filesDaily: "Середня швидкість",
+    filesDaily: "Категорії інструментів",
     filesWeek: "медіана, до 10 МБ",
     toolsFree: "Інструменти, завжди безкоштовні",
     toolsQuarter: "і ще буде",
