@@ -61,7 +61,7 @@ const vi: TranslationMap = {
     browseTools: "Xem tất cả công cụ",
     trust1: "Không có hình mờ",
     trust2: "Tệp bị xóa sau 1 giờ",
-    trust3: "20 ngôn ngữ được hỗ trợ",
+    trust3: "27 ngôn ngữ được hỗ trợ",
     trust4: "Mã hóa TLS 1.3",
   },
   faq: {
@@ -81,7 +81,7 @@ const vi: TranslationMap = {
     q5: "Tôi có cần tạo tài khoản không?",
     a5: "Không — các công cụ chính hoạt động mà không cần đăng nhập. Tài khoản chỉ mở khóa tệp tải lên lớn hơn (50 MB), thư viện kết quả gần đây và các tính năng AI như Chat-with-PDF và Resume Builder.",
     q6: "convertpdfgo hỗ trợ những ngôn ngữ nào?",
-    a6: "20 ngôn ngữ: Tiếng Anh, Uzbek, Nga, Tây Ban Nha, Trung, Ả Rập, Hindi, Bồ Đào Nha, Đức, Pháp, Nhật, Hàn, Thổ Nhĩ Kỳ, Ý, Indonesia, Ba Lan, Việt, Hà Lan, Thái, Ukraina. Đổi bất cứ lúc nào từ bộ chọn ngôn ngữ ở góc trên bên phải.",
+    a6: "27 ngôn ngữ. Đổi bất cứ lúc nào từ bộ chọn ngôn ngữ ở góc trên bên phải.",
     q7: "Có ứng dụng máy tính để bàn không?",
     a7: "Không, và chúng tôi không có kế hoạch. Ứng dụng web xử lý mọi kích thước và định dạng được hỗ trợ — chúng tôi muốn giữ công cụ web nhanh hơn là duy trì bản dựng riêng. Đánh dấu convertpdfgo.com.",
     q8: "Tôi có thể dùng convertpdfgo cho công việc thương mại không?",
@@ -98,11 +98,11 @@ const vi: TranslationMap = {
     madeWith: "Được tạo ra có chủ đích · v0.1",
   },
   languageSwitcher: {
-    title: "20 NGÔN NGỮ",
+    title: "27 NGÔN NGỮ",
     subtitle: "TẤT CẢ MIỄN PHÍ",
     searchPlaceholder: "Tìm kiếm ngôn ngữ...",
     noResults: "Không tìm thấy ngôn ngữ",
-    footer: "20 ngôn ngữ · tất cả được dịch bởi người bản ngữ",
+    footer: "27 ngôn ngữ · tất cả được dịch bởi người bản ngữ",
   },
   toolsGrid: {
     badge: "42 công cụ, tất cả miễn phí",

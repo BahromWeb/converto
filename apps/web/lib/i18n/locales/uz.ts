@@ -61,7 +61,7 @@ const uz: TranslationMap = {
     browseTools: "Barcha vositalarni ko'rish",
     trust1: "Suv belgilari yo'q",
     trust2: "Fayllar 1 soat ichida o'chiriladi",
-    trust3: "20 ta til qo'llab-quvvatlanadi",
+    trust3: "27 ta til qo'llab-quvvatlanadi",
     trust4: "TLS 1.3 shifrlangan",
   },
   faq: {
@@ -81,7 +81,7 @@ const uz: TranslationMap = {
     q5: "Ro'yxatdan o'tish kerakmi?",
     a5: "Yo'q — asosiy toollar kirmasdan ishlaydi. Hisob ochilsa: kattaroq fayllar (50 MB), yaqinda foydalanilgan fayllar kutubxonasi va AI imkoniyatlari (Chat with PDF, Resume Builder) ochiladi.",
     q6: "Convertpdfgo qaysi tillarni qo'llab-quvvatlaydi?",
-    a6: "20 ta til: ingliz, o'zbek, rus, ispan, xitoy, arab, hind, portugal, nemis, frantsuz, yapon, koreys, turk, italyan, indonez, polyak, vyetnam, gollandiya, tay, ukrain. Yuqori o'ng burchakdan istalgan vaqt o'zgartiring.",
+    a6: "27 ta til. Yuqori o'ng burchakdan istalgan vaqt o'zgartiring.",
     q7: "Desktop ilovasi bormi?",
     a7: "Yo'q va rejada ham yo'q. Veb versiya barcha hajm va formatni qabul qiladi — alohida desktop build saqlash o'rniga veb toollarni tezroq qilishni afzal ko'ramiz. convertpdfgo.com'ni bookmark qiling.",
     q8: "convertpdfgo'dan tijorat maqsadida foydalana olamanmi?",
@@ -98,11 +98,11 @@ const uz: TranslationMap = {
     madeWith: "Niyat bilan yaratilgan · v0.1",
   },
   languageSwitcher: {
-    title: "20 TIL",
+    title: "27 TIL",
     subtitle: "BARCHASI BEPUL",
     searchPlaceholder: "Til qidirish...",
     noResults: "Tillar topilmadi",
-    footer: "20 ta til · barchasi ona tili egalari tomonidan tarjima qilingan",
+    footer: "27 ta til · barchasi ona tili egalari tomonidan tarjima qilingan",
   },
   toolsGrid: {
     badge: "42 ta vosita, barchasi bepul",

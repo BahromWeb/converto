@@ -61,7 +61,7 @@ const de: TranslationMap = {
     browseTools: "Alle Werkzeuge ansehen",
     trust1: "Null Wasserzeichen",
     trust2: "Dateien in 1 Stunde gelöscht",
-    trust3: "20 Sprachen unterstützt",
+    trust3: "27 Sprachen unterstützt",
     trust4: "TLS 1.3 verschlüsselt",
   },
   faq: {
@@ -81,7 +81,7 @@ const de: TranslationMap = {
     q5: "Muss ich ein Konto erstellen?",
     a5: "Nein — die Kerntools funktionieren ohne Anmeldung. Ein Konto schaltet nur größere Uploads (50 MB), eine Bibliothek aktueller Ergebnisse und KI-Funktionen wie Chat-with-PDF und den Resume Builder frei.",
     q6: "Welche Sprachen unterstützt convertpdfgo?",
-    a6: "20 Sprachen: Englisch, Usbekisch, Russisch, Spanisch, Chinesisch, Arabisch, Hindi, Portugiesisch, Deutsch, Französisch, Japanisch, Koreanisch, Türkisch, Italienisch, Indonesisch, Polnisch, Vietnamesisch, Niederländisch, Thai, Ukrainisch. Wechseln Sie jederzeit über die Sprachauswahl oben rechts.",
+    a6: "27 Sprachen. Wechseln Sie jederzeit über die Sprachauswahl oben rechts.",
     q7: "Gibt es eine Desktop-App?",
     a7: "Nein, und wir planen auch keine. Die Web-App verarbeitet jede Größe und jedes Format, das wir derzeit unterstützen — wir halten lieber die Web-Tools schnell, als einen separaten Build zu pflegen. Speichern Sie convertpdfgo.com als Favorit.",
     q8: "Kann ich convertpdfgo für kommerzielle Arbeit verwenden?",
@@ -98,11 +98,11 @@ const de: TranslationMap = {
     madeWith: "Mit Absicht gemacht · v0.1",
   },
   languageSwitcher: {
-    title: "20 SPRACHEN",
+    title: "27 SPRACHEN",
     subtitle: "ALLE KOSTENLOS",
     searchPlaceholder: "Sprache suchen...",
     noResults: "Keine Sprachen gefunden",
-    footer: "20 Sprachen · alle von Muttersprachlern übersetzt",
+    footer: "27 Sprachen · alle von Muttersprachlern übersetzt",
   },
   toolsGrid: {
     badge: "42 Werkzeuge, alle kostenlos",

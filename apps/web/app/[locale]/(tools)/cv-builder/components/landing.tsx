@@ -128,7 +128,7 @@ export function CVLanding({
           <div>
             <h2 className="text-lg font-bold">Talk it through</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Speak each section, AI structures it. 20 languages.
+              Speak each section, AI structures it. 27 languages.
             </p>
           </div>
           <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-primary">

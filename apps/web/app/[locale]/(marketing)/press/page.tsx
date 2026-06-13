@@ -61,7 +61,7 @@ const usageDonts = [
 
 const oneLiners = [
   "convertpdfgo is a free toolbox of 49 PDF tools — merge, split, compress, convert, OCR, plus AI features like Chat-with-PDF and Resume Builder. No paid tier, no watermarks, files auto-delete in an hour.",
-  "Built in Tashkent in 2022 to fix what was broken about online PDF tools: watermarks, paywalls, ads. Now available in 20 languages and used by people who need a PDF turned into something else fast.",
+  "Built in Tashkent in 2022 to fix what was broken about online PDF tools: watermarks, paywalls, ads. Now available in 27 languages and used by people who need a PDF turned into something else fast.",
 ];
 
 export default function PressPage() {

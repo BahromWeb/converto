@@ -18,7 +18,7 @@ const milestones = [
   { year: "2022", title: "Project started", body: "First version shipped with three tools: merge, split, compress. No login, no ads. The premise: web tools people use every day should stay free." },
   { year: "2023", title: "OCR and office conversions", body: "Tesseract-based OCR went live. Added Word, Excel and PowerPoint conversion both ways (via Gotenberg + LibreOffice) — the most-requested feature after the initial launch." },
   { year: "2024", title: "Cloud connections", body: "Dropbox, Google Drive and OneDrive integrations went live so you can pick a file straight from your cloud and get the result back to the same place — no separate download." },
-  { year: "2025", title: "20 languages", body: "Localised the entire site to 20 languages based on where visitors were actually coming from — including Uzbek, Russian, Arabic, Chinese, and Hindi. Tool labels, error messages, and the upload flow all translated natively." },
+  { year: "2025", title: "27 languages", body: "Localised the entire site to 27 languages based on where visitors were actually coming from — including Uzbek, Russian, Arabic, Chinese, and Hindi. Tool labels, error messages, and the upload flow all translated natively." },
   { year: "2026", title: "AI Chat with PDF + Resume Builder", body: "Launched Chat with PDF (grounded answers with page citations) using Gemini 2.5, then added the AI Resume Builder, ATS scoring, and a cover-letter generator. Word, Excel, and PowerPoint chat work too — converted to PDF behind the scenes." },
 ];
 
@@ -26,7 +26,7 @@ const values = [
   { icon: Heart, title: "Free where it can be", body: "Every tool is free for individuals — merge, split, compress, convert, OCR, even the AI features. No paid tier, no nag screens, no time-limited trials." },
   { icon: ShieldCheck, title: "Your files are yours", body: "Files auto-delete an hour after processing. We don't train models on them, sell them, or look at them. The infrastructure is on our own servers, not a third-party storage bucket." },
   { icon: Zap, title: "Fast first, pretty second", body: "Heavy work runs on our own servers — not on someone else's edge that gives up at 30 seconds. Files come back in seconds for almost everything, and the progress bars don't lie." },
-  { icon: Globe, title: "Built for the long tail", body: "Most online PDF sites optimise for English speakers in the US. We started by adding Uzbek because that's where the early users were. The whole site works in 20 languages now." },
+  { icon: Globe, title: "Built for the long tail", body: "Most online PDF sites optimise for English speakers in the US. We started by adding Uzbek because that's where the early users were. The whole site works in 27 languages now." },
 ];
 
 export default function AboutPage() {

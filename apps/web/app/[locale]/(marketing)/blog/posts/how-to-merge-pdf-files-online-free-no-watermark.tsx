@@ -583,7 +583,7 @@ function ComparisonTable() {
     { feat: "Mobile friendly", us: true, sm: true, ilove: true },
     { feat: "Files auto-delete within 1 hour", us: true, sm: true, ilove: true },
     { feat: "Open source SDK", us: true, sm: false, ilove: false },
-    { feat: "20-language UI", us: true, sm: false, ilove: true },
+    { feat: "27-language UI", us: true, sm: false, ilove: true },
   ];
   return (
     <div className="mt-6 overflow-x-auto rounded-2xl border">

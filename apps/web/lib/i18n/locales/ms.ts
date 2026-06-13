@@ -61,7 +61,7 @@ const ms: TranslationMap = {
     browseTools: "Lihat semua alat",
     trust1: "Sifar tera air",
     trust2: "Fail dipadam dalam 1 jam",
-    trust3: "20 bahasa disokong",
+    trust3: "27 bahasa disokong",
     trust4: "Penyulitan TLS 1.3",
   },
   faq: {
@@ -81,7 +81,7 @@ const ms: TranslationMap = {
     q5: "Perlukah saya membuat akaun?",
     a5: "Tidak — alat teras berfungsi tanpa log masuk. Akaun hanya membuka muat naik lebih besar (50 MB), pustaka hasil terkini, dan ciri AI seperti sembang dengan PDF dan pembina resume.",
     q6: "Bahasa apa yang disokong convertpdfgo?",
-    a6: "20 bahasa: Inggeris, Uzbek, Rusia, Sepanyol, Cina, Arab, Hindi, Portugis, Jerman, Perancis, Jepun, Korea, Turki, Itali, Indonesia, Poland, Vietnam, Belanda, Thai, Ukraine. Tukar bila-bila masa daripada pemilih bahasa.",
+    a6: "27 bahasa. Tukar bila-bila masa daripada pemilih bahasa.",
     q7: "Adakah aplikasi desktop?",
     a7: "Tidak, dan kami tidak merancangnya. Aplikasi web mengendalikan setiap saiz dan format yang kami sokong — kami lebih suka mengekalkan alat web yang pantas. Tanda buku convertpdfgo.com.",
     q8: "Bolehkah saya guna convertpdfgo untuk kerja komersial?",
@@ -98,11 +98,11 @@ const ms: TranslationMap = {
     madeWith: "Dibuat dengan tujuan · v0.1",
   },
   languageSwitcher: {
-    title: "20 BAHASA",
+    title: "27 BAHASA",
     subtitle: "SEMUA PERCUMA",
     searchPlaceholder: "Cari bahasa...",
     noResults: "Tiada bahasa ditemui",
-    footer: "20 bahasa · semua diterjemah oleh penutur asli",
+    footer: "27 bahasa · semua diterjemah oleh penutur asli",
   },
   toolsGrid: {
     badge: "42 alat, semua percuma",

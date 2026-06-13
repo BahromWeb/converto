@@ -61,7 +61,7 @@ const tr: TranslationMap = {
     browseTools: "Tüm araçlara gözat",
     trust1: "Sıfır filigran",
     trust2: "Dosyalar 1 saatte silindi",
-    trust3: "20 dil destekleniyor",
+    trust3: "27 dil destekleniyor",
     trust4: "TLS 1.3 şifreli",
   },
   faq: {
@@ -81,7 +81,7 @@ const tr: TranslationMap = {
     q5: "Hesap oluşturmam gerekiyor mu?",
     a5: "Hayır — temel araçlar giriş yapmadan çalışır. Hesap yalnızca daha büyük yüklemeler (50 MB), son sonuçlar kütüphanesi ve Chat-with-PDF, Resume Builder gibi yapay zekâ özelliklerini açar.",
     q6: "convertpdfgo hangi dilleri destekliyor?",
-    a6: "20 dil: İngilizce, Özbekçe, Rusça, İspanyolca, Çince, Arapça, Hintçe, Portekizce, Almanca, Fransızca, Japonca, Korece, Türkçe, İtalyanca, Endonezce, Lehçe, Vietnamca, Felemenkçe, Tayca, Ukraynaca. Sağ üstteki dil seçicisinden istediğin zaman değiştir.",
+    a6: "27 dil. Sağ üstteki dil seçicisinden istediğin zaman değiştir.",
     q7: "Masaüstü uygulaması var mı?",
     a7: "Hayır, ve planımız da yok. Web uygulaması desteklediğimiz her boyut ve formatı işliyor — ayrı bir derleme yerine web'i hızlı tutmayı tercih ediyoruz. convertpdfgo.com'u yer imine ekleyin.",
     q8: "convertpdfgo'yu ticari amaçlar için kullanabilir miyim?",
@@ -102,7 +102,7 @@ const tr: TranslationMap = {
     subtitle: "HEPSİ ÜCRETSİZ",
     searchPlaceholder: "Dil ara...",
     noResults: "Dil bulunamadı",
-    footer: "20 dil · tamamı ana dili konuşanlar tarafından çevrilmiş",
+    footer: "27 dil · tamamı ana dili konuşanlar tarafından çevrilmiş",
   },
   toolsGrid: {
     badge: "42 araç, hepsi ücretsiz",

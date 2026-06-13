@@ -11,7 +11,7 @@ import { ResumeTranslateClient } from "./resume-translate-client";
 export const revalidate = 3600;
 
 const baseMetadata: Metadata = {
-  title: "Translate Resume — 20 languages, ATS-clean",
+  title: "Translate Resume — 27 languages, ATS-clean",
   description:
     "Translate your CV to English, Russian, German, French, Spanish, Chinese, Arabic and more — AI keeps proper nouns intact and re-renders to PDF.",
     alternates: {

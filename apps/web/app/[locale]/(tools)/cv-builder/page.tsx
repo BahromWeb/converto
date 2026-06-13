@@ -14,7 +14,7 @@ export const revalidate = 3600;
 const baseMetadata: Metadata = {
   title: "AI Resume Builder",
   description:
-    "Build, redesign, or talk your CV into existence. 20 languages, ATS-friendly templates, free forever for the basics.",
+    "Build, redesign, or talk your CV into existence. 27 languages, ATS-friendly templates, free forever for the basics.",
     alternates: {
     languages: {
       "en": "https://convertpdfgo.com",

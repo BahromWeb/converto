@@ -81,7 +81,7 @@ const sv: TranslationMap = {
     q5: "Måste jag skapa ett konto?",
     a5: "Nej — kärnverktygen fungerar utan inloggning. Ett konto låser bara upp större uppladdningar (50 MB), ett bibliotek med senaste resultat och AI-funktioner som chatt med PDF och CV-byggaren.",
     q6: "Vilka språk stöder convertpdfgo?",
-    a6: "20 språk: engelska, uzbekiska, ryska, spanska, kinesiska, arabiska, hindi, portugisiska, tyska, franska, japanska, koreanska, turkiska, italienska, indonesiska, polska, vietnamesiska, nederländska, thailändska, ukrainska. Byt när som helst i språkväljaren.",
+    a6: "27 språk. Byt när som helst i språkväljaren.",
     q7: "Finns det en skrivbordsapp?",
     a7: "Nej, och vi planerar ingen. Webbappen hanterar varje storlek och format vi stöder — vi håller hellre webbverktygen snabba. Bokmärk convertpdfgo.com.",
     q8: "Kan jag använda convertpdfgo för kommersiellt arbete?",

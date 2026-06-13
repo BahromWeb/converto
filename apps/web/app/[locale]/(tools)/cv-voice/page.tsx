@@ -48,7 +48,7 @@ export default async function Page(
           "Speak each section: experience, skills, education, projects.",
           "AI converts your speech into ATS-clean bullet points.",
           "Switch between voice and keyboard at any time.",
-          "Works in 20 languages — speak in your native language.",
+          "Works in 27 languages — speak in your native language.",
         ]}
         note="Microphone access uses your browser's built-in speech engine — Chrome / Edge / Safari."
       />

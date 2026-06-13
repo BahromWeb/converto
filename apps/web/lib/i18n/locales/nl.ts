@@ -81,7 +81,7 @@ const nl: TranslationMap = {
     q5: "Moet ik een account aanmaken?",
     a5: "Nee — de kerntools werken zonder in te loggen. Een account ontgrendelt alleen grotere uploads (50 MB), een bibliotheek met recente resultaten en AI-functies zoals Chat-with-PDF en de Resume Builder.",
     q6: "Welke talen ondersteunt convertpdfgo?",
-    a6: "20 talen: Engels, Oezbeeks, Russisch, Spaans, Chinees, Arabisch, Hindi, Portugees, Duits, Frans, Japans, Koreaans, Turks, Italiaans, Indonesisch, Pools, Vietnamees, Nederlands, Thai, Oekraïens. Wissel via de taalkiezer rechtsboven.",
+    a6: "27 talen. Wissel via de taalkiezer rechtsboven.",
     q7: "Is er een desktop-app?",
     a7: "Nee, en we plannen er ook geen. De web-app verwerkt elk formaat en elke grootte die we ondersteunen — we houden de web-tools liever snel dan een aparte build te onderhouden. Bewaar convertpdfgo.com als favoriet.",
     q8: "Kan ik convertpdfgo gebruiken voor commercieel werk?",

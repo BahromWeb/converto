@@ -60,7 +60,7 @@ const entries: Entry[] = [
     changes: [
       "Sign PDF: draw, type, and upload signature modes.",
       "Protect & Unlock PDF with AES-256.",
-      "Language switcher — 12 languages at launch, 20 a few months later.",
+      "Language switcher — 12 languages at launch, 27 today.",
     ],
   },
   {

@@ -81,7 +81,7 @@ const ca: TranslationMap = {
     q5: "Cal crear un compte?",
     a5: "No — les eines principals funcionen sense iniciar sessió. Un compte només desbloqueja pujades més grans (50 MB), una biblioteca de resultats recents i funcions d'IA com el xat amb PDF i el creador de currículums.",
     q6: "Quins idiomes admet convertpdfgo?",
-    a6: "20 idiomes: anglès, uzbek, rus, espanyol, xinès, àrab, hindi, portuguès, alemany, francès, japonès, coreà, turc, italià, indonesi, polonès, vietnamita, neerlandès, tailandès, ucraïnès. Canvia'l quan vulguis des del selector d'idioma.",
+    a6: "27 idiomes. Canvia'l quan vulguis des del selector d'idioma.",
     a7: "No, i no en tenim previst cap. L'aplicació web gestiona totes les mides i formats que admetem — preferim mantenir les eines web ràpides. Desa convertpdfgo.com a les adreces d'interès.",
     q7: "Hi ha una aplicació d'escriptori?",
     q8: "Puc fer servir convertpdfgo per a feina comercial?",

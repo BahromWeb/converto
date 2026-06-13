@@ -61,7 +61,7 @@ const zhTw: TranslationMap = {
     browseTools: "瀏覽所有工具",
     trust1: "零浮水印",
     trust2: "檔案 1 小時內刪除",
-    trust3: "支援 20 種語言",
+    trust3: "支援 27 種語言",
     trust4: "TLS 1.3 加密",
   },
   faq: {
@@ -81,7 +81,7 @@ const zhTw: TranslationMap = {
     q5: "需要建立帳號嗎？",
     a5: "不需要——核心工具無需登入即可使用。帳號只是解鎖更大的上傳（50 MB）、近期結果的資料庫，以及與 PDF 對話、履歷產生器等 AI 功能。",
     q6: "convertpdfgo 支援哪些語言？",
-    a6: "20 種語言：英語、烏茲別克語、俄語、西班牙語、中文、阿拉伯語、印地語、葡萄牙語、德語、法語、日語、韓語、土耳其語、義大利語、印尼語、波蘭語、越南語、荷蘭語、泰語、烏克蘭語。隨時可從頂部的語言選擇器切換。",
+    a6: "27 種語言。隨時可從頂部的語言選擇器切換。",
     q7: "有桌面應用程式嗎？",
     a7: "沒有，也沒有打算推出。網頁應用程式能處理我們目前支援的所有大小與格式——我們寧願讓網頁工具保持快速。請將 convertpdfgo.com 加入書籤。",
     q8: "我可以將 convertpdfgo 用於商業用途嗎？",
@@ -98,11 +98,11 @@ const zhTw: TranslationMap = {
     madeWith: "用心打造 · v0.1",
   },
   languageSwitcher: {
-    title: "20 種語言",
+    title: "27 種語言",
     subtitle: "全部免費",
     searchPlaceholder: "搜尋語言...",
     noResults: "找不到語言",
-    footer: "20 種語言 · 皆由母語者翻譯",
+    footer: "27 種語言 · 皆由母語者翻譯",
   },
   toolsGrid: {
     badge: "42 種工具，全部免費",

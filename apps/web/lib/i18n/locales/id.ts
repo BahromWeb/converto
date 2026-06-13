@@ -61,7 +61,7 @@ const id: TranslationMap = {
     browseTools: "Lihat semua alat",
     trust1: "Nol tanda air",
     trust2: "File dihapus dalam 1 jam",
-    trust3: "20 bahasa didukung",
+    trust3: "27 bahasa didukung",
     trust4: "Enkripsi TLS 1.3",
   },
   faq: {
@@ -81,7 +81,7 @@ const id: TranslationMap = {
     q5: "Apakah saya perlu membuat akun?",
     a5: "Tidak — alat utama berfungsi tanpa masuk. Akun hanya membuka unggahan lebih besar (50 MB), pustaka hasil terbaru, dan fitur AI seperti Chat-with-PDF dan Resume Builder.",
     q6: "Bahasa apa saja yang didukung convertpdfgo?",
-    a6: "20 bahasa: Inggris, Uzbek, Rusia, Spanyol, Mandarin, Arab, Hindi, Portugis, Jerman, Prancis, Jepang, Korea, Turki, Italia, Indonesia, Polandia, Vietnam, Belanda, Thailand, Ukraina. Ganti kapan saja dari pemilih bahasa di kanan atas.",
+    a6: "27 bahasa. Ganti kapan saja dari pemilih bahasa di kanan atas.",
     q7: "Apakah ada aplikasi desktop?",
     a7: "Tidak, dan tidak ada rencana. Aplikasi web menangani setiap ukuran dan format yang kami dukung — kami lebih suka menjaga alat web tetap cepat daripada memelihara build terpisah. Bookmark convertpdfgo.com.",
     q8: "Bisakah saya menggunakan convertpdfgo untuk pekerjaan komersial?",
@@ -98,11 +98,11 @@ const id: TranslationMap = {
     madeWith: "Dibuat dengan niat · v0.1",
   },
   languageSwitcher: {
-    title: "20 BAHASA",
+    title: "27 BAHASA",
     subtitle: "SEMUA GRATIS",
     searchPlaceholder: "Cari bahasa...",
     noResults: "Tidak ada bahasa ditemukan",
-    footer: "20 bahasa · semua diterjemahkan oleh penutur asli",
+    footer: "27 bahasa · semua diterjemahkan oleh penutur asli",
   },
   toolsGrid: {
     badge: "42 alat, semua gratis",

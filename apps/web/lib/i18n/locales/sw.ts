@@ -61,7 +61,7 @@ const sw: TranslationMap = {
     browseTools: "Vinjari zana zote",
     trust1: "Sifuri alama za maji",
     trust2: "Faili hufutwa ndani ya saa 1",
-    trust3: "Lugha 20 zinatumika",
+    trust3: "Lugha 27 zinatumika",
     trust4: "Usimbaji TLS 1.3",
   },
   faq: {
@@ -81,7 +81,7 @@ const sw: TranslationMap = {
     q5: "Je, ninahitaji kufungua akaunti?",
     a5: "Hapana — zana kuu zinafanya kazi bila kuingia. Akaunti hufungua tu upakiaji mkubwa (MB 50), maktaba ya matokeo ya hivi karibuni, na vipengele vya AI kama gumzo na PDF na mjenzi wa wasifu.",
     q6: "convertpdfgo inatumia lugha zipi?",
-    a6: "Lugha 20: Kiingereza, Kiuzbeki, Kirusi, Kihispania, Kichina, Kiarabu, Kihindi, Kireno, Kijerumani, Kifaransa, Kijapani, Kikorea, Kituruki, Kiitaliano, Kiindonesia, Kipolandi, Kivietinamu, Kiholanzi, Kithai, Kiukreni. Badilisha wakati wowote kutoka kwa kichagua lugha.",
+    a6: "Lugha 27. Badilisha wakati wowote kutoka kwa kichagua lugha.",
     q7: "Je, kuna programu ya kompyuta?",
     a7: "Hapana, na hatupangi. Programu ya wavuti inashughulikia kila ukubwa na muundo tunaounga mkono — tunapendelea kuweka zana za wavuti zikiwa za haraka. Weka alama convertpdfgo.com.",
     q8: "Je, ninaweza kutumia convertpdfgo kwa kazi za kibiashara?",
@@ -98,11 +98,11 @@ const sw: TranslationMap = {
     madeWith: "Imetengenezwa kwa nia · v0.1",
   },
   languageSwitcher: {
-    title: "LUGHA 20",
+    title: "LUGHA 27",
     subtitle: "ZOTE BURE",
     searchPlaceholder: "Tafuta lugha...",
     noResults: "Hakuna lugha zilizopatikana",
-    footer: "Lugha 20 · zote zimetafsiriwa na wazungumzaji asilia",
+    footer: "Lugha 27 · zote zimetafsiriwa na wazungumzaji asilia",
   },
   toolsGrid: {
     badge: "Zana 42, zote bure",
