@@ -52,7 +52,10 @@ export function StatsBar() {
 
   // Localised, real sub-line built from the existing category labels — no
   // per-language copy to maintain, always in sync with the registry.
-  const categorySub = [t.categories.convert, t.categories.edit, t.categories.ai].join(" · ");
+  // First token of the AI label ("AI-Powered" → "AI", "KI-gestützt" → "KI")
+  // so the micro-caption stays tight next to the shorter category names.
+  const aiShort = t.categories.ai.replace(/[\s\-–—].*$/, "");
+  const categorySub = [t.categories.convert, t.categories.edit, aiShort].join(" · ");
 
   const stats = [
     {
@@ -77,7 +80,7 @@ export function StatsBar() {
   ];
 
   return (
-    <section className="py-10">
+    <section className="border-y border-border/60 bg-secondary/30 py-12">
       <div className="container">
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((stat, i) => {

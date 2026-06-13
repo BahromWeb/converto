@@ -13,6 +13,11 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
+  Sparkles,
+  ShieldCheck,
+  ScanText,
+  Lock,
+  Trash2,
 } from "lucide-react";
 import { useT } from "@/lib/i18n/context";
 import {
@@ -29,6 +34,19 @@ const quickTools = [
 ];
 
 const fileTypes = ["PDF", "DOCX", "JPG", "PNG", "XLSX", "PPTX"];
+
+// Decorative tool chips that drift around the upload card on large screens.
+// Purely visual (aria-hidden) — they hint at the breadth of tools without
+// crowding the primary drop zone. Positions are tuned to sit in the empty
+// margins beside the centred card.
+const floatingTools = [
+  { label: "Merge", icon: GitMerge, pos: "left-[3%] top-[14%]", color: "text-blue-600", bg: "bg-blue-50", delay: "0s" },
+  { label: "Compress", icon: Minimize2, pos: "left-[7%] top-[58%]", color: "text-emerald-600", bg: "bg-emerald-50", delay: "1.1s" },
+  { label: "OCR", icon: ScanText, pos: "left-[1%] top-[86%]", color: "text-violet-600", bg: "bg-violet-50", delay: "2.3s" },
+  { label: "AI Chat", icon: Sparkles, pos: "right-[3%] top-[12%]", color: "text-primary", bg: "bg-primary/10", delay: "0.5s" },
+  { label: "Sign", icon: ShieldCheck, pos: "right-[6%] top-[52%]", color: "text-amber-600", bg: "bg-amber-50", delay: "1.7s" },
+  { label: "Split", icon: Scissors, pos: "right-[2%] top-[84%]", color: "text-rose-600", bg: "bg-rose-50", delay: "2.9s" },
+];
 
 /**
  * Map a dropped/picked file's extension to the most useful tool page for
@@ -216,9 +234,28 @@ export function Hero() {
 
   return (
     <section id="hero" className="relative overflow-hidden">
-      {/* Gradient backdrop */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[560px]" aria-hidden>
+      {/* Gradient backdrop + soft colour blobs for depth */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[680px]" aria-hidden>
         <div className="absolute inset-0 bg-gradient-to-br from-orange-100/80 via-rose-50/50 to-background" />
+        <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute right-0 top-10 h-64 w-64 rounded-full bg-rose-300/20 blur-3xl" />
+        <div className="absolute left-1/2 top-40 h-56 w-[28rem] -translate-x-1/2 rounded-full bg-amber-200/20 blur-3xl" />
+      </div>
+
+      {/* Floating tool chips — decorative, large screens only */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden>
+        {floatingTools.map(({ label, icon: Icon, pos, color, bg, delay }) => (
+          <div
+            key={label}
+            className={`animate-float absolute ${pos} flex items-center gap-2 rounded-2xl border border-border/60 bg-card/80 px-3.5 py-2 shadow-lg shadow-black/[0.04] backdrop-blur-sm`}
+            style={{ animationDelay: delay }}
+          >
+            <span className={`grid size-7 place-items-center rounded-lg ${bg} ${color}`}>
+              <Icon className="size-4" />
+            </span>
+            <span className="text-sm font-semibold text-foreground/80">{label}</span>
+          </div>
+        ))}
       </div>
 
       <div className="container relative pt-16 pb-24 lg:pt-24">
@@ -393,9 +430,37 @@ export function Hero() {
             </div>
           )}
 
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            <span className="font-bold text-primary">●</span> {t.hero.security}
-          </p>
+          {(() => {
+            // Surface the security promise as an icon row — the single
+            // strongest "this isn't a scam" signal. Built from the localized
+            // string (split on "·") so every language stays correct; falls
+            // back to the plain line if a locale phrases it differently.
+            const parts = t.hero.security.split("·").map((s) => s.trim()).filter(Boolean);
+            const icons = [Lock, ShieldCheck, Trash2];
+            if (parts.length >= 2) {
+              return (
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+                  {parts.slice(0, 3).map((part, i) => {
+                    const Ic = icons[i] ?? Lock;
+                    return (
+                      <span
+                        key={part}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                      >
+                        <Ic className="size-3.5 text-emerald-600" />
+                        {part}
+                      </span>
+                    );
+                  })}
+                </div>
+              );
+            }
+            return (
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                <span className="font-bold text-primary">●</span> {t.hero.security}
+              </p>
+            );
+          })()}
         </div>
 
         {/* Quick-access tool chips */}
